@@ -20,7 +20,7 @@ if 'riwayat_transaksi' not in st.session_state:
     st.session_state.riwayat_transaksi = []
 
 if 'diskon_aktif' not in st.session_state:
-    st.session_state.diskon_aktif = 0  # Persen diskon
+    st.session_state.diskon_aktif = 0
 
 if 'daftar_produk' not in st.session_state:
     st.session_state.daftar_produk = {
@@ -416,9 +416,9 @@ else:
                     </div>
                 """, unsafe_allow_html=True)
 
-            # FITUR KLAIM KODE VOUCHER DISKON
             st.markdown("#### 🎟️ Punya Kode Voucher?")
             kode_input = st.text_input("Masukkan Kode Promo", placeholder="Cth: FLASHMARTINA")
             if st.button("Terapkan Voucher"):
                 if kode_input.upper() == "FLASHMARTINA":
-     
+                    st.session_state.diskon_aktif = 15
+             
