@@ -421,4 +421,11 @@ else:
                 st.rerun()
 
     elif "Promo" in tab_pilihan:
-        st.markdown("### 🔥 Promo Spesial Har
+        st.markdown("### 🔥 Promo Spesial Hari ini")
+        st.markdown('<div class="glass-card"><h4>🎁 Voucher Diskon Belanja Nusantara</h4><p style="color: #A1A1A6; font-size: 13px;">Gunakan kode <b>FLASHMARTINA</b> untuk diskon spesial!</p></div>', unsafe_allow_html=True)
+
+    else:
+        st.markdown("### 👤 Profil Pengguna")
+        st.markdown(f'<div class="glass-card"><b>{user_nama}</b><br><span style="color: #8E8E93; font-size: 13px;">No. Member Alfamart: {user_member}</span><hr style="border-color: rgba(255,255,255,0.1);"><div style="font-size: 14px;">⭐ Poin Member: <b>{user_poin} Pts</b></div></div>', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)  
