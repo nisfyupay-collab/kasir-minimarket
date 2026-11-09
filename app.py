@@ -2,13 +2,13 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 st.set_page_config(
-    page_title="FlashMart Tokopedia Edition",
+    page_title="FlashMart - Tokopedia Edition",
     page_icon="⚡",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
 
-# Menyisipkan Full HTML, CSS, & JS ala E-Commerce Modern langsung ke Streamlit
+# Kode Lengkap dengan Animasi Splash Screen & Katalog Lengkap
 flashmart_html = """
 <!DOCTYPE html>
 <html lang="id">
@@ -24,6 +24,58 @@ flashmart_html = """
             padding: 0;
             color: #333;
         }
+
+        /* --- ANIMASI SPLASH SCREEN --- */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+            animation: fadeOut 0.8s ease 2.2s forwards;
+        }
+        .splash-logo {
+            font-size: 64px;
+            background: white;
+            color: #FF9800;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            animation: bounceIn 0.8s ease;
+        }
+        .splash-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-top: 15px;
+            letter-spacing: 0.5px;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        /* --- TAMPILAN UTAMA APLIKASI --- */
         .app-container {
             max-width: 480px;
             margin: 0 auto;
@@ -63,6 +115,27 @@ flashmart_html = """
             border-radius: 12px;
             font-weight: bold;
             text-align: center;
+            font-size: 13px;
+        }
+        .category-scroll {
+            display: flex;
+            gap: 10px;
+            padding: 0 15px 15px 15px;
+            overflow-x: auto;
+        }
+        .cat-chip {
+            background: #f0f3f4;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .cat-chip.active {
+            background: #e8f5e9;
+            color: #03AC03;
+            border: 1px solid #03AC03;
         }
         .product-grid {
             display: grid;
@@ -74,15 +147,22 @@ flashmart_html = """
             background: #fff;
             border: 1px solid #eee;
             border-radius: 12px;
-            padding: 10px;
+            padding: 12px;
             text-align: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .product-title {
+            font-size: 13px;
+            font-weight: 600;
+            height: 35px;
+            overflow: hidden;
+            margin-bottom: 5px;
         }
         .product-price {
             color: #FA591D;
             font-weight: bold;
-            font-size: 15px;
-            margin: 8px 0;
+            font-size: 14px;
+            margin-bottom: 8px;
         }
         .btn-buy {
             background: #03AC03;
@@ -106,7 +186,7 @@ flashmart_html = """
             justify-content: space-around;
             padding: 10px 0;
             border-top: 1px solid #eee;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            box-shadow: -2px 0 10px rgba(0,0,0,0.05);
         }
         .nav-item {
             text-align: center;
@@ -119,6 +199,14 @@ flashmart_html = """
     </style>
 </head>
 <body>
+
+    <!-- SPLASH SCREEN ANIMASI MASUK -->
+    <div id="splash-screen">
+        <div class="splash-logo">⚡</div>
+        <div class="splash-title">FlashMart</div>
+    </div>
+
+    <!-- KONTEN UTAMA APLIKASI -->
     <div class="app-container">
         <!-- Header -->
         <div class="header">
@@ -131,23 +219,69 @@ flashmart_html = """
 
         <!-- Banner Promo -->
         <div class="banner">
-            🔥 Voucher Spesial: FLASHMARTINA (Diskon Rp 10rb)
+            🔥 Gunakan Voucher <b>FLASHMARTINA</b> untuk Diskon Rp 10.000!
         </div>
 
-        <!-- Katalog Produk -->
-        <div style="padding: 0 15px 10px 15px; font-weight: bold;">Rekomendasi Spesial</div>
+        <!-- Kategori Bar -->
+        <div class="category-scroll">
+            <div class="cat-chip active">Semua</div>
+            <div class="cat-chip">Sembako</div>
+            <div class="cat-chip">Minuman</div>
+            <div class="cat-chip">Makanan</div>
+            <div class="cat-chip">Perawatan</div>
+            <div class="cat-chip">Rumah Tangga</div>
+        </div>
+
+        <!-- Katalog Produk Lengkap -->
+        <div style="padding: 0 15px 10px 15px; font-weight: bold; font-size: 14px;">Produk Terlaris & Lengkap</div>
         <div class="product-grid">
             <div class="product-card">
                 <div style="font-size: 36px;">🍳</div>
-                <div style="font-size: 13px; font-weight: 600; height: 35px;">Minyak Goreng 2L</div>
+                <div class="product-title">Minyak Goreng 2L</div>
                 <div class="product-price">Rp 38.000</div>
-                <button class="btn-buy" onclick="alert('Berhasil masuk keranjang!')">+ Keranjang</button>
+                <button class="btn-buy" onclick="alert('Minyak Goreng 2L berhasil dimasukkan ke keranjang!')">+ Keranjang</button>
             </div>
             <div class="product-card">
                 <div style="font-size: 36px;">🌾</div>
-                <div style="font-size: 13px; font-weight: 600; height: 35px;">Beras Premium 5kg</div>
+                <div class="product-title">Beras Premium 5kg</div>
                 <div class="product-price">Rp 69.000</div>
-                <button class="btn-buy" onclick="alert('Berhasil masuk keranjang!')">+ Keranjang</button>
+                <button class="btn-buy" onclick="alert('Beras Premium 5kg berhasil dimasukkan ke keranjang!')">+ Keranjang</button>
+            </div>
+            <div class="product-card">
+                <div style="font-size: 36px;">🥛</div>
+                <div class="product-title">Susu UHT Ultra 1L</div>
+                <div class="product-price">Rp 19.500</div>
+                <button class="btn-buy" onclick="alert('Susu UHT 1L berhasil dimasukkan ke keranjang!')">+ Keranjang</button>
+            </div>
+            <div class="product-card">
+                <div style="font-size: 36px;">📦</div>
+                <div class="product-title">Mie Instan (1 Dus)</div>
+                <div class="product-price">Rp 115.000</div>
+                <button class="btn-buy" onclick="alert('Mie Instan 1 Dus berhasil dimasukkan ke keranjang!')">+ Keranjang</button>
+            </div>
+            <div class="product-card">
+                <div style="font-size: 36px;">🥚</div>
+                <div class="product-title">Telur Ayam Negeri 1kg</div>
+                <div class="product-price">Rp 28.000</div>
+                <button class="btn-buy" onclick="alert('Telur Ayam berhasil dimasukkan ke keranjang!')">+ Keranjang</button>
+            </div>
+            <div class="product-card">
+                <div style="font-size: 36px;">☕</div>
+                <div class="product-title">Kopi Bubuk Hitam 380g</div>
+                <div class="product-price">Rp 16.500</div>
+                <button class="btn-buy" onclick="alert('Kopi Bubuk berhasil dimasukkan ke keranjang!')">+ Keranjang</button>
+            </div>
+            <div class="product-card">
+                <div style="font-size: 36px;">🧼</div>
+                <div class="product-title">Sabun Mandi Cair 450ml</div>
+                <div class="product-price">Rp 24.000</div>
+                <button class="btn-buy" onclick="alert('Sabun Mandi berhasil dimasukkan ke keranjang!')">+ Keranjang</button>
+            </div>
+            <div class="product-card">
+                <div style="font-size: 36px;">🧴</div>
+                <div class="product-title">Shampoo Anti-Dandruff</div>
+                <div class="product-price">Rp 32.000</div>
+                <button class="btn-buy" onclick="alert('Shampoo berhasil dimasukkan ke keranjang!')">+ Keranjang</button>
             </div>
         </div>
 
@@ -163,6 +297,4 @@ flashmart_html = """
 </html>
 """
 
-# Render ke Streamlit dengan ukuran tinggi yang pas untuk mobile view
-components.html(flashmart_html, height=750, scrolling=True)
-
+components.html(flashmart_html, height=850, scrolling=True)
