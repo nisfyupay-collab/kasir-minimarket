@@ -7,7 +7,7 @@ st.set_page_config(page_title="FlashMart iOS Slate Edition", page_icon="⚡", la
 
 # --- INISIALISASI SESSION STATE ---
 if 'step_app' not in st.session_state:
-    st.session_state.step_app = 1  # 1: Splash Awal, 2: Login Slate, 3: Loading Masuk, 4: Main App
+    st.session_state.step_app = 1  # 1: Splash Screen Animasi, 2: Login Slate, 3: Main App
 
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
@@ -36,7 +36,7 @@ if 'poin_member' not in st.session_state:
 if 'riwayat_transaksi' not in st.session_state:
     st.session_state.riwayat_transaksi = []
 
-# --- CSS STYLING & ANIMASI KUSTOM ---
+# --- CSS STYLING & ANIMASI TRANSISI LAYAR PENUH (ZOOM & FADE) ---
 css_code = """
 <style>
     .stApp {
@@ -45,23 +45,34 @@ css_code = """
         color: #F5F5F7;
     }
 
-    @keyframes iconMorph {
-        0% { transform: scale(0.6) rotate(-10deg); opacity: 0; }
-        50% { transform: scale(1.1) rotate(5deg); opacity: 1; }
-        100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    /* Animasi Transisi Zoom Masuk ala Figma Prototype */
+    @keyframes zoomInScreen {
+        0% { transform: scale(0.85); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
     }
 
-    @keyframes pulseGlow {
-        0% { filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.4)); }
-        50% { filter: drop-shadow(0 0 30px rgba(0, 242, 254, 0.95)); }
-        100% { filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.4)); }
+    .screen-transition {
+        animation: zoomInScreen 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    .splash-icon-box {
-        font-size: 80px;
-        text-align: center;
-        animation: iconMorph 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite alternate, pulseGlow 2s infinite ease-in-out;
-        margin-bottom: 10px;
+    @keyframes pulseLogo {
+        0% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(0, 242, 254, 0.5)); }
+        50% { transform: scale(1.08); filter: drop-shadow(0 0 35px rgba(0, 242, 254, 0.95)); }
+        100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(0, 242, 254, 0.5)); }
+    }
+
+    .splash-logo-box {
+        background: linear-gradient(135deg, #007AFF 0%, #0056B3 100%);
+        width: 110px;
+        height: 110px;
+        border-radius: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 55px;
+        margin: 0 auto 20px auto;
+        animation: pulseLogo 2s infinite ease-in-out;
+        box-shadow: 0 15px 35px rgba(0, 122, 255, 0.5);
     }
 
     .slate-header {
@@ -133,13 +144,8 @@ css_code = """
         padding: 12px 16px;
         width: 100%;
         box-shadow: 0 6px 20px rgba(0, 122, 255, 0.45);
-        transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease;
+        transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
         cursor: pointer;
-    }
-
-    .stButton button:hover {
-        background: linear-gradient(135deg, #0056B3 100%, #003D82 100%);
-        transform: translateY(-2px);
     }
 
     .stButton button:active {
@@ -152,23 +158,25 @@ css_code = """
 """
 st.markdown(css_code, unsafe_allow_html=True)
 
-# --- TAHAP 1: SPLASH SCREEN UTAMA ---
+# --- TAHAP 1: SPLASH SCREEN (LOGO TRANSISI LAYAR PENUH) ---
 if st.session_state.step_app == 1:
-    st.markdown('<div class="glass-card" style="text-align: center; padding: 60px 20px; margin-top: 40px;">', unsafe_allow_html=True)
-    st.markdown('<div class="splash-icon-box">🛵⚡</div>', unsafe_allow_html=True)
-    st.markdown('<h1 style="font-weight: 800; font-size: 40px; background: linear-gradient(90deg, #00F2FE, #4FACFE); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;">FlashMart</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="color: #A1A1A6; font-size: 14px; margin-top: 6px;">Next-Gen On-Demand Retail Experience</p>', unsafe_allow_html=True)
+    st.markdown('<div class="screen-transition">', unsafe_allow_html=True)
+    st.markdown('<div class="glass-card" style="text-align: center; padding: 70px 20px; margin-top: 30px;">', unsafe_allow_html=True)
+    st.markdown('<div class="splash-logo-box">⚡</div>', unsafe_allow_html=True)
+    st.markdown('<h1 style="font-weight: 800; font-size: 38px; color: #FFFFFF; margin: 0;">FlashMart</h1>', unsafe_allow_html=True)
+    st.markdown('<p style="color: #8E8E93; font-size: 14px; margin-top: 6px;">Next-Gen On-Demand Retail</p>', unsafe_allow_html=True)
     
     st.markdown("<br><br>", unsafe_allow_html=True)
-    if st.button("Mulai Belanja ➔"):
+    if st.button("Mulai Aplikasi ➔"):
         st.session_state.step_app = 2
         st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div></div>', unsafe_allow_html=True)
 
-# --- TAHAP 2: AUTH / LOGIN (GAYA SLATE APP MELENGKUNG) ---
+# --- TAHAP 2: AUTH / LOGIN (SLATE APP STYLE) ---
 elif st.session_state.step_app == 2 and not st.session_state.logged_in:
+    st.markdown('<div class="screen-transition">', unsafe_allow_html=True)
     st.markdown('<div class="slate-header">', unsafe_allow_html=True)
-    st.markdown('<h1 style="font-size: 30px; font-weight: 800; letter-spacing: 2px; color: #FFFFFF; margin: 0;">F L A S H M A R T</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 style="font-size: 28px; font-weight: 800; letter-spacing: 2px; color: #FFFFFF; margin: 0;">F L A S H M A R T</h1>', unsafe_allow_html=True)
     st.markdown('<p style="color: #8E8E93; font-size: 13px; margin-top: 4px;">Masuk dan sinkronkan member Alfamart kamu.</p>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -180,36 +188,19 @@ elif st.session_state.step_app == 2 and not st.session_state.logged_in:
     no_alfamart = st.text_input("Nomor Member Alfamart", placeholder="Contoh: 899012345678")
 
     st.markdown("<br>", unsafe_allow_html=True)
-    if st.button("Masuk ke Aplikasi ➔"):
+    if st.button("Masuk ke Utama ➔"):
         if nama_user and no_alfamart:
             st.session_state.logged_in = True
             st.session_state.user_info = {"nama": nama_user, "alfamart": no_alfamart}
-            st.session_state.step_app = 3  # Menuju Tahap Splash Animasi Masuk
+            st.session_state.step_app = 3
             st.rerun()
         else:
             st.warning("⚠️ Mohon lengkapi nama dan nomor member terlebih dahulu!")
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div></div>', unsafe_allow_html=True)
 
-# --- TAHAP 3: ANIMASI SPLASH PEMBUKAAN SETELAH LOGIN ---
-elif st.session_state.step_app == 3:
-    st.markdown('<div class="glass-card" style="text-align: center; padding: 60px 20px; margin-top: 50px;">', unsafe_allow_html=True)
-    st.markdown('<div class="splash-icon-box">⚡🛒</div>', unsafe_allow_html=True)
-    st.markdown(f'<h2 style="color: #00F2FE; margin-top: 10px;">Halo, {st.session_state.user_info.get("nama", "User")}!</h2>', unsafe_allow_html=True)
-    st.markdown('<p style="color: #A1A1A6; font-size: 14px;">Menyiapkan toko kilat untukmu...</p>', unsafe_allow_html=True)
-    
-    # Progress Bar Animasi Masuk
-    bar = st.progress(0)
-    for i in range(100):
-        time.sleep(0.01)
-        bar.progress(i + 1)
-        
-    st.session_state.step_app = 4  # Masuk ke Aplikasi Utama
-    st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# --- TAHAP 4: MAIN APP CONTAINER ---
+# --- TAHAP 3: MAIN APP CONTAINER (DENGAN TRANSISI HALUS) ---
 else:
-    st.markdown('<div style="padding-bottom: 90px;">', unsafe_allow_html=True)
+    st.markdown('<div class="screen-transition" style="padding-bottom: 90px;">', unsafe_allow_html=True)
     
     user_nama = st.session_state.user_info.get('nama', 'User')
     user_member = st.session_state.user_info.get('alfamart', '-')
@@ -278,7 +269,7 @@ else:
 
     else:
         st.markdown("### 👤 Profil Pengguna")
-        st.markdown(f'<div class="glass-card"><b>{user_nama}</b><br><span style="color: #A1A1A6; font-size: 13px;">No. Member: {user_member}</span></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="glass-card"><b>{user_nama}</b><br><span style="color: #8E8E93; font-size: 13px;">No. Member: {user_member}</span></div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
     
