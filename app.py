@@ -7,7 +7,7 @@ st.set_page_config(page_title="FlashMart iOS Slate Edition", page_icon="⚡", la
 
 # --- INISIALISASI SESSION STATE ---
 if 'step_app' not in st.session_state:
-    st.session_state.step_app = 1  # 1: Splash, 2: Login Slate Style, 3: Main App
+    st.session_state.step_app = 1  # 1: Splash Awal, 2: Login Slate, 3: Loading Masuk, 4: Main App
 
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
@@ -36,17 +36,15 @@ if 'poin_member' not in st.session_state:
 if 'riwayat_transaksi' not in st.session_state:
     st.session_state.riwayat_transaksi = []
 
-# --- CSS STYLING & PALET WARNA KREATIF (FUTURISTIC GLASS & SLATE) ---
+# --- CSS STYLING & ANIMASI KUSTOM ---
 css_code = """
 <style>
-    /* Latar Belakang Gradasi Mewah Kreatif */
     .stApp {
         background: linear-gradient(135deg, #090A0F 0%, #131722 50%, #1F1435 100%);
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif !important;
         color: #F5F5F7;
     }
 
-    /* ANIMASI SPLASH SCREEN KREATIF */
     @keyframes iconMorph {
         0% { transform: scale(0.6) rotate(-10deg); opacity: 0; }
         50% { transform: scale(1.1) rotate(5deg); opacity: 1; }
@@ -66,7 +64,6 @@ css_code = """
         margin-bottom: 10px;
     }
 
-    /* SLATE AUTH HEADER CURVE STYLE */
     .slate-header {
         background: linear-gradient(180deg, #1A1D2A 0%, #090A0F 100%);
         border-bottom-left-radius: 35px;
@@ -80,7 +77,6 @@ css_code = """
         border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* KARTU KACA ESTETIK (GLASSMORPHISM) */
     .glass-card {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(25px);
@@ -98,7 +94,6 @@ css_code = """
         transform: scale(0.97);
     }
 
-    /* FLOATING BOTTOM DOCK ALA iPHONE */
     div.row-widget.stRadio > div {
         background: rgba(18, 20, 30, 0.88) !important;
         backdrop-filter: blur(35px) !important;
@@ -129,7 +124,6 @@ css_code = """
         cursor: pointer;
     }
 
-    /* EFEK POP TOMBOL UTAMA */
     .stButton button {
         background: linear-gradient(135deg, #007AFF 0%, #0056B3 100%);
         color: white !important;
@@ -144,7 +138,7 @@ css_code = """
     }
 
     .stButton button:hover {
-        background: linear-gradient(135deg, #0056B3 0%, #003D82 100%);
+        background: linear-gradient(135deg, #0056B3 100%, #003D82 100%);
         transform: translateY(-2px);
     }
 
@@ -158,7 +152,7 @@ css_code = """
 """
 st.markdown(css_code, unsafe_allow_html=True)
 
-# --- TAHAP 1: SPLASH SCREEN (ANIMASI E-COMMERCE KREATIF) ---
+# --- TAHAP 1: SPLASH SCREEN UTAMA ---
 if st.session_state.step_app == 1:
     st.markdown('<div class="glass-card" style="text-align: center; padding: 60px 20px; margin-top: 40px;">', unsafe_allow_html=True)
     st.markdown('<div class="splash-icon-box">🛵⚡</div>', unsafe_allow_html=True)
@@ -190,15 +184,30 @@ elif st.session_state.step_app == 2 and not st.session_state.logged_in:
         if nama_user and no_alfamart:
             st.session_state.logged_in = True
             st.session_state.user_info = {"nama": nama_user, "alfamart": no_alfamart}
-            st.session_state.step_app = 3
-            st.success("🎉 Berhasil terhubung!")
-            time.sleep(0.8)
+            st.session_state.step_app = 3  # Menuju Tahap Splash Animasi Masuk
             st.rerun()
         else:
             st.warning("⚠️ Mohon lengkapi nama dan nomor member terlebih dahulu!")
     st.markdown('</div>', unsafe_allow_html=True)
 
-# --- TAHAP 3: MAIN APP CONTAINER ---
+# --- TAHAP 3: ANIMASI SPLASH PEMBUKAAN SETELAH LOGIN ---
+elif st.session_state.step_app == 3:
+    st.markdown('<div class="glass-card" style="text-align: center; padding: 60px 20px; margin-top: 50px;">', unsafe_allow_html=True)
+    st.markdown('<div class="splash-icon-box">⚡🛒</div>', unsafe_allow_html=True)
+    st.markdown(f'<h2 style="color: #00F2FE; margin-top: 10px;">Halo, {st.session_state.user_info.get("nama", "User")}!</h2>', unsafe_allow_html=True)
+    st.markdown('<p style="color: #A1A1A6; font-size: 14px;">Menyiapkan toko kilat untukmu...</p>', unsafe_allow_html=True)
+    
+    # Progress Bar Animasi Masuk
+    bar = st.progress(0)
+    for i in range(100):
+        time.sleep(0.01)
+        bar.progress(i + 1)
+        
+    st.session_state.step_app = 4  # Masuk ke Aplikasi Utama
+    st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# --- TAHAP 4: MAIN APP CONTAINER ---
 else:
     st.markdown('<div style="padding-bottom: 90px;">', unsafe_allow_html=True)
     
@@ -272,4 +281,4 @@ else:
         st.markdown(f'<div class="glass-card"><b>{user_nama}</b><br><span style="color: #A1A1A6; font-size: 13px;">No. Member: {user_member}</span></div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
-            
+    
