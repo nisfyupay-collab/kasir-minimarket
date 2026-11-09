@@ -5,70 +5,101 @@ import time
 # Konfigurasi halaman
 st.set_page_config(page_title="FlashMart iOS Edition", page_icon="⚡", layout="centered")
 
-# --- KODE CSS KUSTOM & ANIMASI GERAK ALA iOS ---
+# --- KODE CSS KUSTOM & ANIMASI KETIK + SLIDE ---
 st.markdown("""
 <style>
     .stApp {
-        background-color: #F2F2F7;
+        background-color: #F8F9FA;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #111111;
     }
 
-    /* Animasi Motor Ojol Ngebut & Masuk dari Kiri */
+    /* Animasi Pergeseran Halaman (Slide In) */
+    @keyframes slideInRight {
+        0% { opacity: 0; transform: translateX(50px); }
+        100% { opacity: 1; transform: translateX(0); }
+    }
+
+    .slide-container {
+        animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Animasi Motor Ojol & Petir */
     @keyframes driveIn {
-        0% { opacity: 0; transform: translateX(-100px) scale(0.8); }
-        60% { opacity: 1; transform: translateX(15px) scale(1.05); }
+        0% { opacity: 0; transform: translateX(-80px) scale(0.8); }
         100% { opacity: 1; transform: translateX(0) scale(1); }
     }
 
-    /* Animasi Kilat Petir Berdenyut */
     @keyframes pulseGlow {
-        0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(255, 204, 0, 0.6)); }
-        50% { transform: scale(1.1); filter: drop-shadow(0 0 20px rgba(255, 204, 0, 0.9)); }
-        100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(255, 204, 0, 0.6)); }
+        0% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(255, 193, 7, 0.6)); }
+        50% { transform: scale(1.15); filter: drop-shadow(0 0 15px rgba(255, 193, 7, 0.9)); }
+        100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(255, 193, 7, 0.6)); }
     }
 
     .splash-logo {
-        font-size: 65px;
+        font-size: 70px;
         text-align: center;
-        animation: driveIn 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        margin-bottom: 5px;
+        animation: driveIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        margin-bottom: 10px;
     }
 
     .lightning-effect {
         display: inline-block;
-        animation: pulseGlow 1.5s infinite ease-in-out;
+        animation: pulseGlow 1.4s infinite ease-in-out;
     }
 
-    .splash-title {
-        text-align: center;
-        font-size: 38px;
+    /* Efek Animasi Penulisan / Ketik Teks (Typing Effect) */
+    @keyframes typing {
+        from { width: 0; }
+        to { width: 100%; }
+    }
+
+    @keyframes blinkCaret {
+        from, to { border-color: transparent; }
+        50% { border-color: #007AFF; }
+    }
+
+    .typing-title {
         font-weight: 800;
-        color: #1C1C1E;
-        animation: driveIn 1.5s ease-out forwards;
+        font-size: 38px;
+        color: #000000;
+        text-align: center;
+        overflow: hidden;
+        white-space: nowrap;
+        margin: 0 auto;
+        border-right: 3px solid #007AFF;
+        width: 11ch; /* Menyesuaikan panjang teks FlashMart */
+        animation: typing 1.5s steps(11, end), blinkCaret 0.75s step-end infinite;
     }
 
     .splash-subtitle {
         text-align: center;
-        color: #8E8E93;
-        font-size: 15px;
-        margin-top: 5px;
+        color: #555555;
+        font-size: 16px;
+        font-weight: 500;
+        margin-top: 12px;
+        animation: slideInRight 1.2s ease-out forwards;
     }
 
-    /* Tombol Kustom Ala iOS Glassmorphism */
+    /* Memastikan semua teks terlihat jelas */
+    h1, h2, h3, h4, h5, h6, p, span, label {
+        color: #111111 !important;
+    }
+
+    /* Tombol Kustom Ala iOS */
     .stButton button {
         background-color: #007AFF;
-        color: white;
+        color: white !important;
         border-radius: 14px;
         font-weight: 600;
         border: none;
         padding: 12px 20px;
         width: 100%;
         box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
-        transition: all 0.3s ease;
     }
     .stButton button:hover {
         background-color: #0056B3;
-        transform: translateY(-2px);
+        color: white !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -99,14 +130,18 @@ if 'riwayat_transaksi' not in st.session_state:
     st.session_state.riwayat_transaksi = []
 
 
-# --- TAHAP 1: SPLASH SCREEN (ANIMASI MOTOR OJOL & PETIR) ---
+# --- TAHAP 1: SPLASH SCREEN (DENGAN ANIMASI KETIK & MOTOR) ---
 if st.session_state.step_app == 1:
+    st.markdown('<div class="slide-container">', unsafe_allow_html=True)
     st.markdown("<br><br><br>", unsafe_allow_html=True)
+    
     st.markdown("""
         <div class="splash-logo">
             🛵<span class="lightning-effect">⚡</span>
         </div>
-        <div class="splash-title">FlashMart</div>
+        <div style="display: flex; justify-content: center;">
+            <div class="typing-title">FlashMart</div>
+        </div>
         <div class="splash-subtitle">Belanja Super Kilat & Praktis Ala iOS</div>
     """, unsafe_allow_html=True)
     
@@ -114,10 +149,12 @@ if st.session_state.step_app == 1:
     if st.button("Mulai Sekarang ➔"):
         st.session_state.step_app = 2
         st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# --- TAHAP 2: ONBOARDING / PETUNJUK APLIKASI (DENGAN TOMBOL NEXT) ---
+# --- TAHAP 2: ONBOARDING (DENGAN EFEK SLIDE MASUK) ---
 elif st.session_state.step_app == 2:
-    st.markdown("<h2 style='text-align: center; color: #1C1C1E;'>✨ Kenali FlashMart</h2>", unsafe_allow_html=True)
+    st.markdown('<div class="slide-container">', unsafe_allow_html=True)
+    st.markdown("### ✨ Kenali FlashMart")
     st.markdown("<br>", unsafe_allow_html=True)
     
     onboarding_page = st.radio(
@@ -126,8 +163,7 @@ elif st.session_state.step_app == 2:
             "1. Belanja Kebutuhan Harian Lengkap", 
             "2. Poin Member & Sinkronisasi Alfamart", 
             "3. Pengiriman Kilat Motor Petir"
-        ],
-        label_visibility="collapsed"
+        ]
     )
     
     st.markdown("<br>", unsafe_allow_html=True)
@@ -140,17 +176,18 @@ elif st.session_state.step_app == 2:
 
     st.markdown("<br><br>", unsafe_allow_html=True)
     
-    # Tombol Next di pojok kanan bawah
     _, col_btn = st.columns([1.5, 1])
     with col_btn:
         if st.button("Next ➔"):
             st.session_state.step_app = 3
             st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# --- TAHAP 3: HALAMAN LOGIN / SIGN UP ---
+# --- TAHAP 3: LOGIN / SIGN UP ---
 elif st.session_state.step_app == 3 and not st.session_state.logged_in:
+    st.markdown('<div class="slide-container">', unsafe_allow_html=True)
     st.markdown("### 🔐 Masuk / Daftar Akun")
-    st.markdown("<p style='color: #8E8E93; font-size: 14px;'>Hubungkan akun Google dan member Alfamart kamu.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #444444; font-size: 14px;'>Hubungkan akun Google dan member Alfamart kamu.</p>", unsafe_allow_html=True)
     
     nama_user = st.text_input("Nama Lengkap / Akun Google", placeholder="Contoh: Nisfyu")
     no_alfamart = st.text_input("Nomor Member Alfamart", placeholder="Contoh: 899012345678")
@@ -166,18 +203,19 @@ elif st.session_state.step_app == 3 and not st.session_state.logged_in:
             st.rerun()
         else:
             st.warning("⚠️ Mohon lengkapi nama dan nomor member terlebih dahulu ya!")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# --- TAHAP 4: HALAMAN UTAMA APLIKASI (BERANDA & KATALOG) ---
+# --- TAHAP 4: HALAMAN UTAMA ---
 else:
+    st.markdown('<div class="slide-container">', unsafe_allow_html=True)
     st.markdown(f"""
         <div style="padding: 5px 0;">
-            <h3 style="margin: 0; color: #1C1C1E;">⚡ FlashMart Mobile</h3>
-            <p style="color: #8E8E93; margin: 0; font-size: 13px;">Halo, <b>{st.session_state.user_info.get('nama', 'User')}</b> | Member: {st.session_state.user_info.get('alfamart', '-')}</p>
+            <h3 style="margin: 0; color: #111111;">⚡ FlashMart Mobile</h3>
+            <p style="color: #555555; margin: 0; font-size: 13px;">Halo, <b>{st.session_state.user_info.get('nama', 'User')}</b> | Member: {st.session_state.user_info.get('alfamart', '-')}</p>
         </div>
     """, unsafe_allow_html=True)
     st.markdown("---")
 
-    # Kartu Poin Member
     col1, col2 = st.columns(2)
     with col1:
         st.info("👤 **Tier:** Gold Member")
@@ -227,4 +265,5 @@ else:
         st.markdown("### 📜 Riwayat Sesi Ini")
         for r in reversed(st.session_state.riwayat_transaksi):
             st.text(f"[{r['waktu']}] {r['item']} - Rp {r['total']:,}")
-            
+    st.markdown('</div>', unsafe_allow_html=True)
+    
