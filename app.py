@@ -2,7 +2,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 st.set_page_config(
-    page_title="FlashMart - Ultimate Edition",
+    page_title="FlashMart - Ultimate Edition Pro",
     page_icon="⚡",
     layout="centered",
     initial_sidebar_state="collapsed",
@@ -14,7 +14,7 @@ flashmart_html = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlashMart Ultimate</title>
+    <title>FlashMart Ultimate Pro</title>
     <style>
         :root {
             --bg-color: #f8f9fa;
@@ -46,7 +46,7 @@ flashmart_html = """
             background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 9999; color: white;
-            animation: fadeOut 0.8s ease 2s forwards;
+            animation: fadeOut 0.8s ease 1.5s forwards;
         }
         .splash-logo {
             font-size: 64px; background: white; color: #FF9800; width: 100px; height: 100px;
@@ -96,17 +96,30 @@ flashmart_html = """
             box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-top: 10px;
         }
         .search-bar input { border: none; outline: none; width: 100%; margin-left: 10px; font-size: 14px; background: transparent; color: #333; }
+        
+        .category-scroll {
+            display: flex; gap: 8px; overflow-x: auto; padding: 12px 15px; scrollbar-width: none;
+        }
+        .category-scroll::-webkit-scrollbar { display: none; }
+        .cat-chip {
+            background: var(--card-bg); border: 1px solid var(--border-color); padding: 6px 14px;
+            border-radius: 20px; font-size: 12px; cursor: pointer; white-space: nowrap; color: var(--text-color);
+            font-weight: 600;
+        }
+        .cat-chip.active { background: #03AC03; color: white; border-color: #03AC03; }
+
         .banner {
-            margin: 15px; background: linear-gradient(135deg, #ff8800, #ffbb00); color: white;
+            margin: 0 15px 15px 15px; background: linear-gradient(135deg, #ff8800, #ffbb00); color: white;
             padding: 12px; border-radius: 12px; font-weight: bold; text-align: center; font-size: 12px;
         }
         .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 15px; }
         .product-card {
             background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px;
-            text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: transform 0.2s;
+            text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: transform 0.2s; position: relative;
         }
         .product-card:active { transform: scale(0.96); }
-        .product-title { font-size: 13px; font-weight: 600; height: 35px; overflow: hidden; margin-bottom: 5px; color: var(--text-color); }
+        .product-title { font-size: 13px; font-weight: 600; height: 35px; overflow: hidden; margin-bottom: 2px; color: var(--text-color); }
+        .product-stock { font-size: 11px; color: #777; margin-bottom: 5px; }
         .product-price { color: #FA591D; font-weight: bold; font-size: 14px; margin-bottom: 8px; }
         
         .btn-group { display: flex; gap: 5px; }
@@ -134,41 +147,55 @@ flashmart_html = """
         }
         .tracker-box { background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; margin-bottom: 10px; }
         .stepper { display: flex; justify-content: space-between; margin-top: 10px; font-size: 11px; color: #03AC03; font-weight: bold; }
+        
+        .admin-input {
+            width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--border-color);
+            background: var(--card-bg); color: var(--text-color); box-sizing: border-box;
+        }
     </style>
 </head>
 <body data-theme="light">
 
     <div id="splash-screen">
         <div class="splash-logo">⚡</div>
-        <div style="font-size: 22px; font-weight: 800; margin-top: 15px;">FlashMart Ultimate</div>
+        <div style="font-size: 22px; font-weight: 800; margin-top: 15px;">FlashMart Ultimate Pro</div>
     </div>
 
     <div class="app-container">
         
+        <!-- BERANDA -->
         <div id="view-home" class="view-section active" style="padding: 0 0 15px 0;">
             <div class="header">
-                <h3 style="margin:0;">⚡ FlashMart Store</h3>
+                <h3 style="margin:0;">⚡ FlashMart Store Pro</h3>
                 <div class="search-bar">
                     <span>🔍</span>
-                    <input type="text" placeholder="Cari kebutuhan harianmu...">
+                    <input type="text" id="search-box" placeholder="Cari kebutuhan harianmu..." oninput="filterProducts()">
                 </div>
+            </div>
+
+            <div class="category-scroll" id="category-container">
+                <div class="cat-chip active" onclick="selectCategory('Semua', this)">Semua</div>
+                <div class="cat-chip" onclick="selectCategory('Sembako', this)">Sembako</div>
+                <div class="cat-chip" onclick="selectCategory('Minuman', this)">Minuman</div>
+                <div class="cat-chip" onclick="selectCategory('Perawatan', this)">Perawatan</div>
             </div>
 
             <div class="banner">
                 🔥 Gunakan Voucher <b>FLASHMARTINA</b> untuk Diskon Rp 10.000!
             </div>
 
-            <div style="padding: 0 15px 10px 15px; font-weight: bold; font-size: 14px;">Produk Terlaris</div>
+            <div style="padding: 0 15px 10px 15px; font-weight: bold; font-size: 14px;">Katalog Produk Pilihan</div>
             <div class="product-grid" id="product-list"></div>
         </div>
 
+        <!-- KERANJANG -->
         <div id="view-cart" class="view-section">
             <h3>🛒 Keranjang Belanja</h3>
             <div id="cart-items-container">
                 <p style="color: #777; text-align: center; margin-top: 30px;">Keranjang masih kosong.</p>
             </div>
             <div id="cart-summary" style="display:none; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
-                <input type="text" id="voucher-input" placeholder="Kode Voucher (FLASHMARTINA)" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 10px; box-sizing: border-box; background: var(--card-bg); color: var(--text-color);">
+                <input type="text" id="voucher-input" placeholder="Kode Voucher (FLASHMARTINA)" class="admin-input">
                 <button class="ripple-btn" onclick="applyVoucher()" style="background: #333; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-bottom: 15px;">Gunakan Voucher</button>
                 
                 <div style="font-size: 14px; margin-bottom: 5px;">Subtotal: <span id="subtotal-text" style="float: right; font-weight: bold;">Rp 0</span></div>
@@ -176,7 +203,7 @@ flashmart_html = """
                 
                 <div style="margin: 15px 0;">
                     <label style="font-size: 13px; font-weight: bold;">Metode Pembayaran:</label>
-                    <select id="payment-method" style="width: 100%; padding: 8px; margin-top: 5px; border-radius: 6px; background: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color);">
+                    <select id="payment-method" class="admin-input" style="margin-top: 5px;">
                         <option value="QRIS">QRIS (Instant Cashback)</option>
                         <option value="Transfer Bank">Transfer Bank (BCA/Mandiri)</option>
                         <option value="COD">Bayar di Tempat (COD)</option>
@@ -189,6 +216,7 @@ flashmart_html = """
             </div>
         </div>
 
+        <!-- RIWAYAT & KURIR -->
         <div id="view-history" class="view-section">
             <h3>📜 Riwayat & Pelacakan Kurir</h3>
             <div id="history-container">
@@ -196,8 +224,9 @@ flashmart_html = """
             </div>
         </div>
 
+        <!-- AKUN & MANAJEMEN STOK -->
         <div id="view-account" class="view-section">
-            <h3>👤 Pengaturan Akun</h3>
+            <h3>👤 Akun & Kelola Stok</h3>
             <div class="profile-card">
                 <div style="font-size: 18px; font-weight: bold;">⚡ Pelanggan Setia</div>
                 <div style="font-size: 13px; opacity: 0.9; margin-top: 4px;">No: 08123456789 • Gold VIP</div>
@@ -207,7 +236,22 @@ flashmart_html = """
                 </div>
             </div>
 
-            <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; margin-top: 15px;">
+            <!-- FORM TAMBAH PRODUK BARU -->
+            <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+                <h4 style="margin-top: 0; color: #03AC03;">📦 Tambah Produk Baru</h4>
+                <input type="text" id="new-name" placeholder="Nama Produk" class="admin-input">
+                <input type="number" id="new-price" placeholder="Harga (Rp)" class="admin-input">
+                <input type="number" id="new-stock" placeholder="Jumlah Stok" class="admin-input">
+                <select id="new-category" class="admin-input">
+                    <option value="Sembako">Sembako</option>
+                    <option value="Minuman">Minuman</option>
+                    <option value="Perawatan">Perawatan</option>
+                </select>
+                <input type="text" id="new-icon" placeholder="Emoji Ikon (Contoh: 🍪)" class="admin-input">
+                <button class="ripple-btn" onclick="addNewProduct()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer;">Simpan Produk</button>
+            </div>
+
+            <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; font-weight: bold;">
                     <span>🌙 Tampilan Mode Gelap</span>
                     <input type="checkbox" id="theme-toggle" onchange="toggleTheme()" style="width: 20px; height: 20px; cursor: pointer;">
@@ -215,6 +259,7 @@ flashmart_html = """
             </div>
         </div>
 
+        <!-- NAVIGASI BAWAH -->
         <div class="bottom-nav">
             <button class="nav-item active ripple-btn" onclick="switchTab('home', this)">
                 <div>🏠</div>Beranda
@@ -232,21 +277,22 @@ flashmart_html = """
     </div>
 
     <script>
-        const products = [
-            { id: 1, name: "Minyak Goreng 2L", price: 38000, icon: "🍳" },
-            { id: 2, name: "Beras Premium 5kg", price: 69000, icon: "🌾" },
-            { id: 3, name: "Susu UHT Ultra 1L", price: 19500, icon: "🥛" },
-            { id: 4, name: "Mie Instan (1 Dus)", price: 115000, icon: "📦" },
-            { id: 5, name: "Telur Ayam Negeri 1kg", price: 28000, icon: "🥚" },
-            { id: 6, name: "Kopi Bubuk Hitam 380g", price: 16500, icon: "☕" },
-            { id: 7, name: "Sabun Mandi Cair 450ml", price: 24000, icon: "🧼" },
-            { id: 8, name: "Shampoo Anti-Dandruff", price: 32000, icon: "🧴" }
+        let products = [
+            { id: 1, name: "Minyak Goreng 2L", price: 38000, stock: 15, category: "Sembako", icon: "🍳" },
+            { id: 2, name: "Beras Premium 5kg", price: 69000, stock: 10, category: "Sembako", icon: "🌾" },
+            { id: 3, name: "Susu UHT Ultra 1L", price: 19500, stock: 25, category: "Minuman", icon: "🥛" },
+            { id: 4, name: "Mie Instan (1 Dus)", price: 115000, stock: 8, category: "Sembako", icon: "📦" },
+            { id: 5, name: "Telur Ayam Negeri 1kg", price: 28000, stock: 12, category: "Sembako", icon: "🥚" },
+            { id: 6, name: "Kopi Bubuk Hitam 380g", price: 16500, stock: 20, category: "Minuman", icon: "☕" },
+            { id: 7, name: "Sabun Mandi Cair 450ml", price: 24000, stock: 14, category: "Perawatan", icon: "🧼" },
+            { id: 8, name: "Shampoo Anti-Dandruff", price: 32000, stock: 18, category: "Perawatan", icon: "🧴" }
         ];
 
         let cart = {};
         let points = 150;
         let history = [];
         let discountActive = false;
+        let activeCategory = 'Semua';
 
         document.addEventListener('click', function (e) {
             const target = e.target.closest('.ripple-btn');
@@ -263,12 +309,17 @@ flashmart_html = """
             }
         });
 
-        function renderProducts() {
+        function renderProducts(listToRender = products) {
             const list = document.getElementById('product-list');
-            list.innerHTML = products.map(p => `
+            if (listToRender.length === 0) {
+                list.innerHTML = '<p style="grid-column: span 2; text-align: center; color: #777;">Produk tidak ditemukan.</p>';
+                return;
+            }
+            list.innerHTML = listToRender.map(p => `
                 <div class="product-card">
                     <div style="font-size: 34px;">` + p.icon + `</div>
                     <div class="product-title">` + p.name + `</div>
+                    <div class="product-stock">Stok: ` + p.stock + `</div>
                     <div class="product-price">Rp ` + p.price.toLocaleString('id-ID') + `</div>
                     <div class="btn-group">
                         <button class="ripple-btn btn-cart" onclick="addToCart(` + p.id + `)">+ Keranjang</button>
@@ -276,6 +327,23 @@ flashmart_html = """
                     </div>
                 </div>
             `).join('');
+        }
+
+        function selectCategory(category, element) {
+            activeCategory = category;
+            document.querySelectorAll('.cat-chip').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            filterProducts();
+        }
+
+        function filterProducts() {
+            const query = document.getElementById('search-box').value.toLowerCase();
+            const filtered = products.filter(p => {
+                const matchCat = (activeCategory === 'Semua' || p.category === activeCategory);
+                const matchQuery = p.name.toLowerCase().includes(query);
+                return matchCat && matchQuery;
+            });
+            renderProducts(filtered);
         }
 
         function switchTab(tabName, element) {
@@ -290,8 +358,14 @@ flashmart_html = """
 
         function addToCart(id) {
             const prod = products.find(p => p.id === id);
+            if (prod.stock <= 0) {
+                alert("Stok barang habis!");
+                return;
+            }
+            prod.stock -= 1;
             if (cart[id]) { cart[id].qty += 1; } 
             else { cart[id] = { ...prod, qty: 1 }; }
+            filterProducts();
             alert(prod.name + " ditambahkan ke keranjang!");
         }
 
@@ -338,9 +412,18 @@ flashmart_html = """
         }
 
         function changeQty(id, delta) {
-            cart[id].qty += delta;
-            if (cart[id].qty <= 0) delete cart[id];
+            const prod = products.find(p => p.id == id);
+            if (delta > 0) {
+                if (prod.stock <= 0) { alert("Stok habis!"); return; }
+                prod.stock -= 1;
+                cart[id].qty += 1;
+            } else {
+                prod.stock += 1;
+                cart[id].qty -= 1;
+                if (cart[id].qty <= 0) delete cart[id];
+            }
             renderCart();
+            filterProducts();
         }
 
         function applyVoucher() {
@@ -408,9 +491,33 @@ flashmart_html = """
                         <span>📦 Dikemas</span>
                         <span>🛵 Diantar Kurir</span>
                         <span>🏡 Sampai</span>
-               </div>
+                    </div>
                 </div>
             `).join('');
+        }
+
+        function addNewProduct() {
+            const name = document.getElementById('new-name').value.trim();
+            const price = parseInt(document.getElementById('new-price').value);
+            const stock = parseInt(document.getElementById('new-stock').value);
+            const category = document.getElementById('new-category').value;
+            const icon = document.getElementById('new-icon').value.trim() || "📦";
+
+            if (!name || isNaN(price) || isNaN(stock)) {
+                alert("Mohon lengkapi data produk dengan benar!");
+                return;
+            }
+
+            const newId = products.length + 1;
+            products.push({ id: newId, name, price, stock, category, icon });
+            
+            document.getElementById('new-name').value = '';
+            document.getElementById('new-price').value = '';
+            document.getElementById('new-stock').value = '';
+            document.getElementById('new-icon').value = '';
+
+            alert("✅ Produk baru berhasil ditambahkan ke katalog!");
+            filterProducts();
         }
 
         function toggleTheme() {
