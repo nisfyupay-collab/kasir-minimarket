@@ -20,14 +20,62 @@ if 'keranjang' not in st.session_state:
 
 if 'daftar_produk' not in st.session_state:
     st.session_state.daftar_produk = {
-        "101": {"nama": "Beras Premium Sania 5kg", "kategori": "Sembako", "harga": 68000, "stok": 50},
-        "102": {"nama": "Minyak Goreng Bimoli 2L", "kategori": "Sembako", "harga": 34000, "stok": 60},
-        "103": {"nama": "Gula Pasir Gulaku 1kg", "kategori": "Sembako", "harga": 16500, "stok": 80},
-        "104": {"nama": "Telur Ayam Negeri 1kg", "kategori": "Sembako", "harga": 28000, "stok": 45},
-        "201": {"nama": "Mie Instan Indomie Goreng (1 Dus)", "kategori": "Makanan", "harga": 115000, "stok": 30},
-        "301": {"nama": "Air Mineral Aqua 600ml (1 Dus)", "kategori": "Minuman", "harga": 42000, "stok": 100},
-        "401": {"nama": "Kecap Manis Bango 550ml", "kategori": "Bumbu Dapur", "harga": 26000, "stok": 40},
-        "501": {"nama": "Sabun Mandi Cair Lifebuoy 450ml", "kategori": "Perawatan Diri", "harga": 23000, "stok": 40}
+        "101": {
+            "nama": "Beras Premium Sania 5kg", 
+            "kategori": "Sembako", 
+            "harga": 68000, 
+            "stok": 50, 
+            "foto": "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=300&q=80"
+        },
+        "102": {
+            "nama": "Minyak Goreng Bimoli 2L", 
+            "kategori": "Sembako", 
+            "harga": 34000, 
+            "stok": 60, 
+            "foto": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=300&q=80"
+        },
+        "103": {
+            "nama": "Gula Pasir Gulaku 1kg", 
+            "kategori": "Sembako", 
+            "harga": 16500, 
+            "stok": 80, 
+            "foto": "https://images.unsplash.com/photo-1581441363689-1f3c3c3dbf91?auto=format&fit=crop&w=300&q=80"
+        },
+        "104": {
+            "nama": "Telur Ayam Negeri 1kg", 
+            "kategori": "Sembako", 
+            "harga": 28000, 
+            "stok": 45, 
+            "foto": "https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&w=300&q=80"
+        },
+        "201": {
+            "nama": "Mie Instan Indomie Goreng (1 Dus)", 
+            "kategori": "Makanan", 
+            "harga": 115000, 
+            "stok": 30, 
+            "foto": "https://images.unsplash.com/photo-1612929633738-8fe46f7ec841?auto=format&fit=crop&w=300&q=80"
+        },
+        "301": {
+            "nama": "Air Mineral Aqua 600ml (1 Dus)", 
+            "kategori": "Minuman", 
+            "harga": 42000, 
+            "stok": 100, 
+            "foto": "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=300&q=80"
+        },
+        "401": {
+            "nama": "Kecap Manis Bango 550ml", 
+            "kategori": "Bumbu Dapur", 
+            "harga": 26000, 
+            "stok": 40, 
+            "foto": "https://images.unsplash.com/photo-1558857563-b3c10a2d53a2?auto=format&fit=crop&w=300&q=80"
+        },
+        "501": {
+            "nama": "Sabun Mandi Cair Lifebuoy 450ml", 
+            "kategori": "Perawatan Diri", 
+            "harga": 23000, 
+            "stok": 40, 
+            "foto": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=300&q=80"
+        }
     }
 
 if 'poin_member' not in st.session_state:
@@ -36,7 +84,7 @@ if 'poin_member' not in st.session_state:
 if 'riwayat_transaksi' not in st.session_state:
     st.session_state.riwayat_transaksi = []
 
-# --- CSS STYLING & ANIMASI TRANSISI LAYAR PENUH (ZOOM & FADE) ---
+# --- CSS STYLING & DESAIN FOTO PRODUK KARTU KACA ---
 css_code = """
 <style>
     .stApp {
@@ -45,7 +93,6 @@ css_code = """
         color: #F5F5F7;
     }
 
-    /* Animasi Transisi Zoom Masuk ala Figma Prototype */
     @keyframes zoomInScreen {
         0% { transform: scale(0.85); opacity: 0; }
         100% { transform: scale(1); opacity: 1; }
@@ -95,7 +142,7 @@ css_code = """
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-top: 1px solid rgba(255, 255, 255, 0.22);
         border-radius: 22px;
-        padding: 18px;
+        padding: 16px;
         box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
         margin-bottom: 14px;
         transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -105,6 +152,7 @@ css_code = """
         transform: scale(0.97);
     }
 
+    /* FLOATING BOTTOM DOCK */
     div.row-widget.stRadio > div {
         background: rgba(18, 20, 30, 0.88) !important;
         backdrop-filter: blur(35px) !important;
@@ -158,7 +206,7 @@ css_code = """
 """
 st.markdown(css_code, unsafe_allow_html=True)
 
-# --- TAHAP 1: SPLASH SCREEN (LOGO TRANSISI LAYAR PENUH) ---
+# --- TAHAP 1: SPLASH SCREEN ---
 if st.session_state.step_app == 1:
     st.markdown('<div class="screen-transition">', unsafe_allow_html=True)
     st.markdown('<div class="glass-card" style="text-align: center; padding: 70px 20px; margin-top: 30px;">', unsafe_allow_html=True)
@@ -198,7 +246,7 @@ elif st.session_state.step_app == 2 and not st.session_state.logged_in:
             st.warning("⚠️ Mohon lengkapi nama dan nomor member terlebih dahulu!")
     st.markdown('</div></div>', unsafe_allow_html=True)
 
-# --- TAHAP 3: MAIN APP CONTAINER (DENGAN TRANSISI HALUS) ---
+# --- TAHAP 3: MAIN APP CONTAINER ---
 else:
     st.markdown('<div class="screen-transition" style="padding-bottom: 90px;">', unsafe_allow_html=True)
     
@@ -228,48 +276,91 @@ else:
         if keyword_cari:
             for kode, item in st.session_state.daftar_produk.items():
                 if keyword_cari.lower() in item['nama'].lower():
-                    st.markdown(f'<div class="glass-card"><b>{item["nama"]}</b><br><span style="color: #00F2FE;">Rp {item["harga"]:,}</span></div>', unsafe_allow_html=True)
+                    st.markdown(f"""
+                        <div class="glass-card" style="display: flex; align-items: center; gap: 14px;">
+                            <img src="{item['foto']}" style="width: 70px; height: 70px; border-radius: 14px; object-fit: cover;">
+                            <div>
+                                <b style="font-size: 14px;">{item['nama']}</b><br>
+                                <span style="color: #00F2FE; font-weight: 600;">Rp {item['harga']:,}</span>
+                                <div style="font-size: 11px; color: #8E8E93;">Stok: {item['stok']}</div>
+                            </div>
+                        </div>
+                    """, unsafe_allow_html=True)
         else:
             st.markdown('<div class="glass-card" style="background: linear-gradient(135deg, #FF416C, #FF4B2B); text-align: center;"><h3 style="margin:0; color:white;">🔥 FLASH SALE SEKARANG</h3><p style="margin:4px 0 0 0; font-size:12px; color:white;">Bebas ongkir kilat seluruh Indonesia!</p></div>', unsafe_allow_html=True)
+            
+            st.markdown("### 🛒 Produk Unggulan Terlaris")
             for kode, item in list(st.session_state.daftar_produk.items())[:3]:
-                st.markdown(f'<div class="glass-card" style="display: flex; justify-content: space-between;"><div><b>{item["nama"]}</b><br><span style="color: #00F2FE;">Rp {item["harga"]:,}</span></div><div>Stok: {item["stok"]}</div></div>', unsafe_allow_html=True)
+                st.markdown(f"""
+                    <div class="glass-card" style="display: flex; align-items: center; gap: 14px;">
+                        <img src="{item['foto']}" style="width: 65px; height: 65px; border-radius: 12px; object-fit: cover;">
+                        <div style="flex-grow: 1;">
+                            <b style="font-size: 14px;">{item['nama']}</b><br>
+                            <span style="color: #00F2FE; font-weight: 600;">Rp {item['harga']:,}</span>
+                        </div>
+                        <div style="font-size: 11px; color: #8E8E93; text-align: right;">Stok: {item['stok']}</div>
+                    </div>
+                """, unsafe_allow_html=True)
 
     elif "Belanja" in tab_pilihan:
-        st.markdown("### 🛒 Katalog Produk")
-        pilihan_kode = st.selectbox("Pilih Kode Produk:", list(st.session_state.daftar_produk.keys()))
+        st.markdown("### 🛒 Katalog Produk Lengkap")
+        pilihan_kode = st.selectbox("Pilih Produk:", list(st.session_state.daftar_produk.keys()), format_func=lambda x: st.session_state.daftar_produk[x]['nama'])
+        
+        # Tampilkan detail foto produk yang dipilih
+        prod_aktif = st.session_state.daftar_produk[pilihan_kode]
+        st.markdown(f"""
+            <div class="glass-card" style="text-align: center;">
+                <img src="{prod_aktif['foto']}" style="width: 140px; height: 140px; border-radius: 18px; object-fit: cover; margin-bottom: 10px;">
+                <h3 style="margin: 0; font-size: 16px;">{prod_aktif['nama']}</h3>
+                <p style="color: #00F2FE; font-weight: 700; font-size: 15px; margin: 4px 0;">Rp {prod_aktif['harga']:,}</p>
+                <p style="color: #8E8E93; font-size: 12px; margin: 0;">Kategori: {prod_aktif['kategori']} | Stok: {prod_aktif['stok']}</p>
+            </div>
+        """, unsafe_allow_html=True)
+
         jumlah_beli = st.number_input("Jumlah Beli:", min_value=1, value=1, step=1)
-        produk_pilihan = st.session_state.daftar_produk[pilihan_kode]
-        subtotal = produk_pilihan['harga'] * jumlah_beli
+        subtotal = prod_aktif['harga'] * jumlah_beli
 
         if st.button("Masukkan ke Keranjang 🛍️"):
-            st.session_state.keranjang.append({
-                "kode": pilihan_kode, "nama": produk_pilihan['nama'], "jumlah": jumlah_beli, "subtotal": subtotal
-            })
-            st.success(f"✅ **{produk_pilihan['nama']}** masuk keranjang!")
+            if jumlah_beli > prod_aktif['stok']:
+                st.error("❌ Stok tidak mencukupi!")
+            else:
+                st.session_state.keranjang.append({
+                    "kode": pilihan_kode, "nama": prod_aktif['nama'], "jumlah": jumlah_beli, "subtotal": subtotal, "foto": prod_aktif['foto']
+                })
+                st.success(f"✅ **{prod_aktif['nama']}** berhasil masuk keranjang!")
 
     elif "🛍️" in tab_pilihan:
-        st.markdown("### 🛍️ Keranjang Belanja")
+        st.markdown("### 🛍️ Keranjang Belanja Anda")
         if not st.session_state.keranjang:
-            st.info("Keranjang belanja masih kosong.")
+            st.info("Keranjang belanja masih kosong. Yuk pilih produk di menu Belanja!")
         else:
             total_belanja = 0
             for item_k in st.session_state.keranjang:
                 total_belanja += item_k['subtotal']
-                st.markdown(f'<div class="glass-card"><b>{item_k["nama"]}</b><br><span style="color: #00F2FE;">Jumlah: {item_k["jumlah"]} | Subtotal: Rp {item_k["subtotal"]:,}</span></div>', unsafe_allow_html=True)
+                st.markdown(f"""
+                    <div class="glass-card" style="display: flex; align-items: center; gap: 12px;">
+                        <img src="{item_k['foto']}" style="width: 55px; height: 55px; border-radius: 10px; object-fit: cover;">
+                        <div>
+                            <b style="font-size: 13px;">{item_k['nama']}</b><br>
+                            <span style="color: #00F2FE; font-size: 12px;">Qty: {item_k['jumlah']} | Subtotal: Rp {item_k['subtotal']:,}</span>
+                        </div>
+                    </div>
+                """, unsafe_allow_html=True)
 
-            if st.button("Checkout Sekarang ⚡"):
+            st.markdown(f"#### Total Pembayaran: Rp {total_belanja:,}")
+            if st.button("Checkout & Bayar Sekarang ⚡"):
                 st.session_state.keranjang = []
-                st.success("🎉 Pembayaran Berhasil!")
+                st.success("🎉 Pembayaran Berhasil! Pesanan sedang diantar kurir kilat.")
                 time.sleep(1)
                 st.rerun()
 
     elif "Promo" in tab_pilihan:
         st.markdown("### 🔥 Promo Spesial Hari Ini")
-        st.markdown('<div class="glass-card"><h4>🎁 Voucher Diskon Belanja</h4><p style="color: #A1A1A6; font-size: 13px;">Gunakan kode <b>FLASHMARTINA</b></p></div>', unsafe_allow_html=True)
+        st.markdown('<div class="glass-card"><h4>🎁 Voucher Diskon Belanja Nusantara</h4><p style="color: #A1A1A6; font-size: 13px;">Gunakan kode <b>FLASHMARTINA</b> untuk diskon spesial!</p></div>', unsafe_allow_html=True)
 
     else:
         st.markdown("### 👤 Profil Pengguna")
-        st.markdown(f'<div class="glass-card"><b>{user_nama}</b><br><span style="color: #8E8E93; font-size: 13px;">No. Member: {user_member}</span></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="glass-card"><b>{user_nama}</b><br><span style="color: #8E8E93; font-size: 13px;">No. Member Alfamart: {user_member}</span><hr style="border-color: rgba(255,255,255,0.1);"><div style="font-size: 14px;">⭐ Poin Member: <b>{user_poin} Pts</b></div></div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
     
