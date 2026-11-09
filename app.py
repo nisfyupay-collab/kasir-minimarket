@@ -16,6 +16,12 @@ if 'user_info' not in st.session_state:
 if 'keranjang' not in st.session_state:
     st.session_state.keranjang = []
 
+if 'riwayat_transaksi' not in st.session_state:
+    st.session_state.riwayat_transaksi = []
+
+if 'diskon_aktif' not in st.session_state:
+    st.session_state.diskon_aktif = 0  # Persen diskon
+
 if 'daftar_produk' not in st.session_state:
     st.session_state.daftar_produk = {
         "101": {
@@ -113,9 +119,6 @@ if 'daftar_produk' not in st.session_state:
 
 if 'poin_member' not in st.session_state:
     st.session_state.poin_member = 520
-
-if 'riwayat_transaksi' not in st.session_state:
-    st.session_state.riwayat_transaksi = []
 
 css_code = """
 <style>
@@ -285,7 +288,7 @@ else:
         st.markdown("""
             <div class="promo-banner">
                 <h3 style="margin: 0; font-size: 16px; font-weight: 800;">🚨 FLASH SALE KILAT HARI INI! ⚡</h3>
-                <p style="margin: 4px 0 0 0; font-size: 12px; opacity: 0.9;">Barang impianmu diskon gila-gilaan sampai 90%! Jangan sampai kehabisan atau nyesel belakangan!</p>
+                <p style="margin: 4px 0 0 0; font-size: 12px; opacity: 0.9;">Barang impianmu diskon gila-gilaan sampai 90%! Gunakan kode <b>FLASHMARTINA</b> di keranjang!</p>
             </div>
         """, unsafe_allow_html=True)
 
@@ -413,19 +416,9 @@ else:
                     </div>
                 """, unsafe_allow_html=True)
 
-            st.markdown(f"#### Total Pembayaran: Rp {total_belanja:,}")
-            if st.button("Checkout & Bayar Sekarang ⚡"):
-                st.session_state.keranjang = []
-                st.success("🎉 Pembayaran Berhasil! Pesanan sedang diantar kurir kilat.")
-                time.sleep(1)
-                st.rerun()
-
-    elif "Promo" in tab_pilihan:
-        st.markdown("### 🔥 Promo Spesial Hari ini")
-        st.markdown('<div class="glass-card"><h4>🎁 Voucher Diskon Belanja Nusantara</h4><p style="color: #A1A1A6; font-size: 13px;">Gunakan kode <b>FLASHMARTINA</b> untuk diskon spesial!</p></div>', unsafe_allow_html=True)
-
-    else:
-        st.markdown("### 👤 Profil Pengguna")
-        st.markdown(f'<div class="glass-card"><b>{user_nama}</b><br><span style="color: #8E8E93; font-size: 13px;">No. Member Alfamart: {user_member}</span><hr style="border-color: rgba(255,255,255,0.1);"><div style="font-size: 14px;">⭐ Poin Member: <b>{user_poin} Pts</b></div></div>', unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)  
+            # FITUR KLAIM KODE VOUCHER DISKON
+            st.markdown("#### 🎟️ Punya Kode Voucher?")
+            kode_input = st.text_input("Masukkan Kode Promo", placeholder="Cth: FLASHMARTINA")
+            if st.button("Terapkan Voucher"):
+                if kode_input.upper() == "FLASHMARTINA":
+     
