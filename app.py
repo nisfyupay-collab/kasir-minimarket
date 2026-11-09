@@ -424,4 +424,4 @@ flashmart_html = """
 </html>
 """
 
-components.html(flashmart_html, height=880
+components.html(flashmart_html, height=880, scrolling=True)
