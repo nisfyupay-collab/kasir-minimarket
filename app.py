@@ -5,17 +5,15 @@ import time
 # Konfigurasi halaman
 st.set_page_config(page_title="FlashMart Indonesia Edition", page_icon="⚡", layout="centered")
 
-# --- KODE CSS KUSTOM: FONT iOS/SAMSUNG, FLOATING DOCK, & EFEK POP ---
+# --- KODE CSS KUSTOM ---
 st.markdown("""
 <style>
-    /* Menggunakan Font Sistem iOS & Samsung One UI */
     .stApp {
         background: linear-gradient(135deg, #0B0E14 0%, #171A26 50%, #221533 100%);
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
         color: #F5F5F7;
     }
 
-    /* Efek Liquid Glass & Glassmorphism Card */
     .glass-card {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(25px);
@@ -33,7 +31,6 @@ st.markdown("""
         transform: scale(0.97);
     }
 
-    /* Animasi Pergeseran Halus */
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(15px); }
         to { opacity: 1; transform: translateY(0); }
@@ -43,7 +40,6 @@ st.markdown("""
         animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    /* Header Lokasi & Profil */
     .header-box {
         background: rgba(255, 255, 255, 0.07);
         backdrop-filter: blur(20px);
@@ -53,7 +49,6 @@ st.markdown("""
         border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
-    /* FLOATING GLASS DOCK (MENU BAWAH ALA iPHONE) */
     div.row-widget.stRadio > div {
         background: rgba(20, 20, 30, 0.8) !important;
         backdrop-filter: blur(35px) !important;
@@ -89,7 +84,6 @@ st.markdown("""
         transform: scale(0.9) !important;
     }
 
-    /* TOMBOL UTAMA DENGAN EFEK POP */
     .stButton button {
         background: linear-gradient(135deg, #007AFF 0%, #0056B3 100%);
         color: white !important;
@@ -119,7 +113,7 @@ st.markdown("""
 
 # --- INISIALISASI SESSION STATE ---
 if 'step_app' not in st.session_state:
-    st.session_state.step_app = 1  # 1: Splash, 2: Onboarding, 3: Login, 4: Menu Utama
+    st.session_state.step_app = 1
 
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
@@ -130,7 +124,6 @@ if 'user_info' not in st.session_state:
 if 'keranjang' not in st.session_state:
     st.session_state.keranjang = []
 
-# Katalog Produk Super Lengkap Nasional
 if 'daftar_produk' not in st.session_state:
     st.session_state.daftar_produk = {
         "101": {"nama": "Beras Premium Sania 5kg", "kategori": "Sembako", "harga": 68000, "stok": 50},
@@ -237,11 +230,10 @@ elif st.session_state.step_app == 3 and not st.session_state.logged_in:
             st.warning("⚠️ Mohon lengkapi nama dan nomor member terlebih dahulu!")
     st.markdown('</div></div>', unsafe_allow_html=True)
 
-# --- TAHAP 4: APLIKASI UTAMA DENGAN FLOATING DOCK & TAB KERANJANG ---
+# --- TAHAP 4: APLIKASI UTAMA ---
 else:
     st.markdown('<div class="fade-in" style="padding-bottom: 90px;">', unsafe_allow_html=True)
     
-    # Header Lokasi & Profil
     st.markdown(f"""
         <div class="header-box">
             <div style="font-size: 12px; color: #A1A1A6;">📍 Lokasi Pengiriman</div>
@@ -254,7 +246,6 @@ else:
         </div>
     """, unsafe_allow_html=True)
 
-    # Navigasi Floating Dock Bawah dengan Ikon Keranjang Ala iPhone
     jumlah_di_keranjang = len(st.session_state.keranjang)
     label_keranjang = f"🛍️ Keranjang ({jumlah_di_keranjang})" if jumlah_di_keranjang > 0 else "🛍️ Keranjang"
 
@@ -266,7 +257,6 @@ else:
     )
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # --- TAB 1: BERANDA ---
     if "Beranda" in tab_pilihan:
         st.markdown("### 🔍 Cari Produk Seluruh Indonesia")
         keyword_cari = st.text_input("Cari produk...", placeholder="Ketik nama produk (misal: beras, minyak, mie)...", label_visibility="collapsed")
@@ -319,7 +309,6 @@ else:
                     </div>
                 """, unsafe_allow_html=True)
 
-    # --- TAB 2: BELANJA (KATALOG & TAMBAH KE KERANJANG) ---
     elif "Belanja" in tab_pilihan:
         st.markdown("### 🛒 Katalog Super Lengkap")
         kategori_filter = st.selectbox("Pilih Kategori:", ["Semua", "Sembako", "Makanan", "Minuman", "Bumbu Dapur", "Perawatan Diri", "Kebutuhan Rumah", "Elektronik"])
@@ -356,7 +345,6 @@ else:
                 })
                 st.success(f"✅ Berhasil memasukkan **{produk_pilihan['nama']}** ke keranjang!")
 
-    # --- TAB 3: KERANJANG & CHECKOUT ---
     elif "Keranjang" in tab_pilihan:
         st.markdown("### 🛍️ Keranjang Belanja Anda")
         if not st.session_state.keranjang:
@@ -375,7 +363,6 @@ else:
             st.markdown(f"#### Total Pembayaran: Rp {total_belanja:,}")
             
             if st.button("Checkout & Bayar Sekarang ⚡"):
-                # Proses pengurangan stok dan penambahan poin
                 poin_didapat = int(total_belanja // 10000)
                 st.session_state.poin_member += poin_didapat
                 
@@ -386,12 +373,11 @@ else:
                         "waktu": waktu, "item": f"{item_k['nama']} (x{item_k['jumlah']})", "total": item_k['subtotal']
                     })
                 
-                st.session_state.keranjang = []  # Kosongkan keranjang
+                st.session_state.keranjang = []
                 st.success(f"🎉 Pembayaran Berhasil! +{poin_didapat} Poin ditambahkan ke akun Alfamart.")
                 time.sleep(1)
                 st.rerun()
 
-    # --- TAB 4: PROMO ---
     elif "Promo" in tab_pilihan:
         st.markdown("### 🔥 Promo Nasional Hari Ini")
         st.markdown("""
@@ -400,4 +386,16 @@ else:
                 <p style="color: #A1A1A6; font-size: 13px;">Gunakan kode voucher <b>FLASHMARTINA</b> untuk mendapatkan potongan harga langsung sebesar 25% di seluruh kategori produk!</p>
             </div>
             <div class="glass-card">
-                <h4>⚡
+                <h4>⚡ Ekstra Poin 2x Lipat</h4>
+                <p style="color: #A1A1A6; font-size: 13px;">Setiap transaksi produk kategori sembako dan makanan akan mendapatkan dobel poin member Alfamart.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+    else:
+        st.markdown("### 👤 Profil Pengguna")
+        st.markdown(f"""
+            <div class="glass-card">
+                <div style="font-size: 16px; font-weight: 700;">{st.session_state.user_info.get('nama', 'User')}</div>
+                <div style="color: #A1A1A6; font-size: 13px; margin-top: 2px;">No. Member Alfamart: {st.session_state.user_info.get('alfamart', '-')}</div>
+                <hr style="border-color: rgba(255,255,255,0.1); margin: 10px 0;">
+                <div style="font-size: 14px;">⭐ Total Poin: 
