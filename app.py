@@ -5,13 +5,13 @@ import time
 # Konfigurasi halaman
 st.set_page_config(page_title="FlashMart Indonesia Edition", page_icon="⚡", layout="centered")
 
-# --- KODE CSS KUSTOM: COLOROS/IOS LIQUID GLASS & BOTTOM NAVIGATION ---
+# --- KODE CSS KUSTOM: FONT iOS/SAMSUNG, FLOATING DOCK, & EFEK POP ---
 st.markdown("""
 <style>
-    /* Latar Belakang Gradasi Mewah ala ColorOS/iOS */
+    /* Menggunakan Font Sistem iOS & Samsung One UI */
     .stApp {
         background: linear-gradient(135deg, #0B0E14 0%, #171A26 50%, #221533 100%);
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
         color: #F5F5F7;
     }
 
@@ -22,13 +22,18 @@ st.markdown("""
         -webkit-backdrop-filter: blur(25px);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-top: 1px solid rgba(255, 255, 255, 0.22);
-        border-radius: 20px;
+        border-radius: 22px;
         padding: 16px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         margin-bottom: 12px;
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    /* Animasi Pergeseran Halus ala ColorOS */
+    .glass-card:active {
+        transform: scale(0.97);
+    }
+
+    /* Animasi Pergeseran Halus */
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(15px); }
         to { opacity: 1; transform: translateY(0); }
@@ -38,31 +43,73 @@ st.markdown("""
         animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    /* Header Lokasi & Profil ala Alfagift */
+    /* Header Lokasi & Profil */
     .header-box {
         background: rgba(255, 255, 255, 0.07);
         backdrop-filter: blur(20px);
-        border-radius: 16px;
+        border-radius: 18px;
         padding: 12px 16px;
         margin-bottom: 12px;
         border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
-    /* Tombol Kustom Ala iOS/ColorOS */
+    /* FLOATING GLASS DOCK (MENU BAWAH ALA iPHONE) */
+    div.row-widget.stRadio > div {
+        background: rgba(20, 20, 30, 0.8) !important;
+        backdrop-filter: blur(35px) !important;
+        -webkit-backdrop-filter: blur(35px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-radius: 40px !important;
+        padding: 6px 10px !important;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7) !important;
+        position: fixed !important;
+        bottom: 15px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 92% !important;
+        max-width: 420px !important;
+        z-index: 999999 !important;
+    }
+
+    div.row-widget.stRadio label input {
+        display: none !important;
+    }
+
+    div.row-widget.stRadio label {
+        background: transparent !important;
+        border: none !important;
+        padding: 6px 2px !important;
+        text-align: center !important;
+        border-radius: 20px !important;
+        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        cursor: pointer;
+    }
+
+    div.row-widget.stRadio label:active {
+        transform: scale(0.9) !important;
+    }
+
+    /* TOMBOL UTAMA DENGAN EFEK POP */
     .stButton button {
         background: linear-gradient(135deg, #007AFF 0%, #0056B3 100%);
         color: white !important;
-        border-radius: 14px;
+        border-radius: 16px;
         font-weight: 600;
         border: 1px solid rgba(255, 255, 255, 0.2);
-        padding: 10px 16px;
+        padding: 12px 16px;
         width: 100%;
         box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4);
-        transition: all 0.3s ease;
+        transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease;
+        cursor: pointer;
     }
+
     .stButton button:hover {
-        background: linear-gradient(135deg, #0056B3 100%, #003D82 100%);
-        transform: translateY(-2px);
+        background: linear-gradient(135deg, #0056B3 0%, #003D82 100%);
+        transform: translateY(-2px) scale(1.01);
+    }
+
+    .stButton button:active {
+        transform: scale(0.92) !important;
     }
 
     #MainMenu {visibility: hidden;}
@@ -80,44 +127,33 @@ if 'logged_in' not in st.session_state:
 if 'user_info' not in st.session_state:
     st.session_state.user_info = {}
 
-if 'active_tab' not in st.session_state:
-    st.session_state.active_tab = "Beranda"
+if 'keranjang' not in st.session_state:
+    st.session_state.keranjang = []
 
-# Katalog Produk Super Lengkap Nasional (Simulasi Basis Data Produk Indonesia)
+# Katalog Produk Super Lengkap Nasional
 if 'daftar_produk' not in st.session_state:
     st.session_state.daftar_produk = {
-        # Sembako & Kebutuhan Pokok
         "101": {"nama": "Beras Premium Sania 5kg", "kategori": "Sembako", "harga": 68000, "stok": 50},
         "102": {"nama": "Minyak Goreng Bimoli 2L", "kategori": "Sembako", "harga": 34000, "stok": 60},
         "103": {"nama": "Gula Pasir Gulaku 1kg", "kategori": "Sembako", "harga": 16500, "stok": 80},
         "104": {"nama": "Telur Ayam Negeri 1kg", "kategori": "Sembako", "harga": 28000, "stok": 45},
         "105": {"nama": "Tepung Terigu Segitiga Biru 1kg", "kategori": "Sembako", "harga": 14500, "stok": 40},
-        
-        # Makanan & Mie Instan
         "201": {"nama": "Mie Instan Indomie Goreng (1 Dus)", "kategori": "Makanan", "harga": 115000, "stok": 30},
         "202": {"nama": "Mie Instan Sedap Soto (1 Dus)", "kategori": "Makanan", "harga": 110000, "stok": 25},
         "203": {"nama": "Biskuit Roma Kaleng Assorted", "kategori": "Makanan", "harga": 48000, "stok": 35},
         "204": {"nama": "Chocolatos Drink Renceng", "kategori": "Makanan", "harga": 12000, "stok": 60},
-
-        # Minuman & Susu
         "301": {"nama": "Air Mineral Aqua 600ml (1 Dus)", "kategori": "Minuman", "harga": 42000, "stok": 100},
         "302": {"nama": "Susu UHT Ultra Milk Full Cream 1L", "kategori": "Minuman", "harga": 19000, "stok": 50},
         "303": {"nama": "Teh Kotak Sosro 300ml (1 Dus)", "kategori": "Minuman", "harga": 45000, "stok": 40},
         "304": {"nama": "Kopi Kapal Api Special 380g", "kategori": "Minuman", "harga": 32000, "stok": 35},
-
-        # Bumbu Dapur Nusantara
         "401": {"nama": "Kecap Manis Bango 550ml", "kategori": "Bumbu Dapur", "harga": 26000, "stok": 40},
         "402": {"nama": "Saus Sambal ABC 335ml", "kategori": "Bumbu Dapur", "harga": 17500, "stok": 45},
         "403": {"nama": "Penyedap Rasa Royco Ayam 230g", "kategori": "Bumbu Dapur", "harga": 9500, "stok": 60},
         "404": {"nama": "Santan Kara Instant 200ml", "kategori": "Bumbu Dapur", "harga": 10500, "stok": 50},
-
-        # Perawatan Diri & Kecantikan
         "501": {"nama": "Sabun Mandi Cair Lifebuoy 450ml", "kategori": "Perawatan Diri", "harga": 23000, "stok": 40},
         "502": {"nama": "Shampoo Pantene Anti-Dandruff 160ml", "kategori": "Perawatan Diri", "harga": 21000, "stok": 30},
         "503": {"nama": "Pasta Gigi Pepsodent 225g", "kategori": "Perawatan Diri", "harga": 16000, "stok": 50},
         "504": {"nama": "Powl Men & Lovely Facial Wash 100g", "kategori": "Perawatan Diri", "harga": 25000, "stok": 25},
-
-        # Kebutuhan Rumah Tangga & Elektronik Kecil
         "601": {"nama": "Deterjen Cair Rinso Anti Noda 750ml", "kategori": "Kebutuhan Rumah", "harga": 20500, "stok": 45},
         "602": {"nama": "Pembersih Lantai SOS 750ml", "kategori": "Kebutuhan Rumah", "harga": 15000, "stok": 35},
         "603": {"nama": "Kabel Data Type-C Fast Charging", "kategori": "Elektronik", "harga": 35000, "stok": 20},
@@ -137,7 +173,7 @@ if st.session_state.step_app == 1:
     st.markdown("""
         <div style="font-size: 80px; margin-bottom: 10px;">🛵⚡</div>
         <h1 style="font-weight: 800; font-size: 38px; background: linear-gradient(90deg, #00F2FE, #4FACFE); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;">FlashMart</h1>
-        <p style="color: #A1A1A6; font-size: 14px; margin-top: 5px;">Indonesia's Next-Gen Retail Ecosystem</p>
+        <p style="color: #A1A1A6; font-size: 14px; margin-top: 5px;">iOS & One UI Powered Experience</p>
     """, unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     if st.button("Mulai Sekarang ➔"):
@@ -201,9 +237,9 @@ elif st.session_state.step_app == 3 and not st.session_state.logged_in:
             st.warning("⚠️ Mohon lengkapi nama dan nomor member terlebih dahulu!")
     st.markdown('</div></div>', unsafe_allow_html=True)
 
-# --- TAHAP 4: APLIKASI UTAMA DENGAN TAB NAVIGASI BAWAH ---
+# --- TAHAP 4: APLIKASI UTAMA DENGAN FLOATING DOCK & TAB KERANJANG ---
 else:
-    st.markdown('<div class="fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="fade-in" style="padding-bottom: 90px;">', unsafe_allow_html=True)
     
     # Header Lokasi & Profil
     st.markdown(f"""
@@ -218,21 +254,23 @@ else:
         </div>
     """, unsafe_allow_html=True)
 
-    # Navigasi Tab Bawah
+    # Navigasi Floating Dock Bawah dengan Ikon Keranjang Ala iPhone
+    jumlah_di_keranjang = len(st.session_state.keranjang)
+    label_keranjang = f"🛍️ Keranjang ({jumlah_di_keranjang})" if jumlah_di_keranjang > 0 else "🛍️ Keranjang"
+
     tab_pilihan = st.radio(
         "Navigasi:", 
-        ["🏠 Beranda", "🛒 Belanja", "🔥 Promo", "📦 Pesanan", "👤 Akun"],
+        ["🏠 Beranda", "🛒 Belanja", label_keranjang, "🔥 Promo", "👤 Akun"],
         horizontal=True,
         label_visibility="collapsed"
     )
-    st.markdown("---")
+    st.markdown("<br>", unsafe_allow_html=True)
 
     # --- TAB 1: BERANDA ---
     if "Beranda" in tab_pilihan:
         st.markdown("### 🔍 Cari Produk Seluruh Indonesia")
         keyword_cari = st.text_input("Cari produk...", placeholder="Ketik nama produk (misal: beras, minyak, mie)...", label_visibility="collapsed")
         
-        # Jika pengguna mengetik di kolom pencarian
         if keyword_cari:
             st.markdown(f"#### Hasil Pencarian untuk: '{keyword_cari}'")
             hasil_ketemu = False
@@ -251,7 +289,6 @@ else:
             if not hasil_ketemu:
                 st.warning("❌ Maaf, produk tidak ditemukan dalam database nasional.")
         else:
-            # Banner Promo Nasional
             st.markdown("""
                 <div style="background: linear-gradient(135deg, #FF416C, #FF4B2B); padding: 16px; border-radius: 18px; margin: 15px 0; text-align: center; box-shadow: 0 8px 25px rgba(255,65,108,0.4);">
                     <h3 style="margin: 0; color: white !important;">🔥 NASIONAL FLASH SALE</h3>
@@ -282,7 +319,7 @@ else:
                     </div>
                 """, unsafe_allow_html=True)
 
-    # --- TAB 2: BELANJA ---
+    # --- TAB 2: BELANJA (KATALOG & TAMBAH KE KERANJANG) ---
     elif "Belanja" in tab_pilihan:
         st.markdown("### 🛒 Katalog Super Lengkap")
         kategori_filter = st.selectbox("Pilih Kategori:", ["Semua", "Sembako", "Makanan", "Minuman", "Bumbu Dapur", "Perawatan Diri", "Kebutuhan Rumah", "Elektronik"])
@@ -299,7 +336,7 @@ else:
                 })
         st.table(data_tabel)
 
-        st.markdown("### 💳 Checkout Kilat")
+        st.markdown("### ➕ Tambah ke Keranjang")
         pilihan_kode = st.selectbox("Pilih Kode Produk:", list(st.session_state.daftar_produk.keys()))
         jumlah_beli = st.number_input("Jumlah Beli:", min_value=1, value=1, step=1)
 
@@ -307,21 +344,54 @@ else:
         subtotal = produk_pilihan['harga'] * jumlah_beli
         st.write(f"Barang: **{produk_pilihan['nama']}** | Subtotal: **Rp {subtotal:,}**")
 
-        if st.button("Bayar Sekarang"):
+        if st.button("Masukkan ke Keranjang 🛍️"):
             if jumlah_beli > produk_pilihan['stok']:
                 st.error("❌ Stok tidak mencukupi!")
             else:
-                st.session_state.daftar_produk[pilihan_kode]['stok'] -= jumlah_beli
-                poin_didapat = int(subtotal // 10000)
+                st.session_state.keranjang.append({
+                    "kode": pilihan_kode,
+                    "nama": produk_pilihan['nama'],
+                    "jumlah": jumlah_beli,
+                    "subtotal": subtotal
+                })
+                st.success(f"✅ Berhasil memasukkan **{produk_pilihan['nama']}** ke keranjang!")
+
+    # --- TAB 3: KERANJANG & CHECKOUT ---
+    elif "Keranjang" in tab_pilihan:
+        st.markdown("### 🛍️ Keranjang Belanja Anda")
+        if not st.session_state.keranjang:
+            st.info("Keranjang belanja masih kosong. Yuk pilih produk di menu Belanja!")
+        else:
+            total_belanja = 0
+            for i, item_k in enumerate(st.session_state.keranjang):
+                total_belanja += item_k['subtotal']
+                st.markdown(f"""
+                    <div class="glass-card">
+                        <div style="font-weight: 600; font-size: 14px;">{item_k['nama']}</div>
+                        <div style="font-size: 13px; color: #00F2FE; margin-top: 2px;">Jumlah: {item_k['jumlah']} | Subtotal: Rp {item_k['subtotal']:,}</div>
+                    </div>
+                """, unsafe_allow_html=True)
+
+            st.markdown(f"#### Total Pembayaran: Rp {total_belanja:,}")
+            
+            if st.button("Checkout & Bayar Sekarang ⚡"):
+                # Proses pengurangan stok dan penambahan poin
+                poin_didapat = int(total_belanja // 10000)
                 st.session_state.poin_member += poin_didapat
                 
                 waktu = datetime.datetime.now().strftime('%H:%M:%S')
-                st.session_state.riwayat_transaksi.append({
-                    "waktu": waktu, "item": produk_pilihan['nama'], "total": subtotal
-                })
-                st.success(f"✅ Transaksi Berhasil! +{poin_didapat} Poin ditambahkan ke akun Alfamart.")
+                for item_k in st.session_state.keranjang:
+                    st.session_state.daftar_produk[item_k['kode']]['stok'] -= item_k['jumlah']
+                    st.session_state.riwayat_transaksi.append({
+                        "waktu": waktu, "item": f"{item_k['nama']} (x{item_k['jumlah']})", "total": item_k['subtotal']
+                    })
+                
+                st.session_state.keranjang = []  # Kosongkan keranjang
+                st.success(f"🎉 Pembayaran Berhasil! +{poin_didapat} Poin ditambahkan ke akun Alfamart.")
+                time.sleep(1)
+                st.rerun()
 
-    # --- TAB 3: PROMO ---
+    # --- TAB 4: PROMO ---
     elif "Promo" in tab_pilihan:
         st.markdown("### 🔥 Promo Nasional Hari Ini")
         st.markdown("""
@@ -330,38 +400,4 @@ else:
                 <p style="color: #A1A1A6; font-size: 13px;">Gunakan kode voucher <b>FLASHMARTINA</b> untuk mendapatkan potongan harga langsung sebesar 25% di seluruh kategori produk!</p>
             </div>
             <div class="glass-card">
-                <h4>⚡ Ekstra Poin 2x Lipat</h4>
-                <p style="color: #A1A1A6; font-size: 13px;">Setiap transaksi produk kategori sembako dan makanan akan mendapatkan dobel poin member Alfamart.</p>
-            </div>
-        """, unsafe_allow_html=True)
-
-    # --- TAB 4: PESANAN ---
-    elif "Pesanan" in tab_pilihan:
-        st.markdown("### 📦 Riwayat Pesanan")
-        if not st.session_state.riwayat_transaksi:
-            st.info("Belum ada riwayat transaksi pada sesi ini.")
-        else:
-            for r in reversed(st.session_state.riwayat_transaksi):
-                st.markdown(f"""
-                    <div class="glass-card">
-                        <div style="font-weight: 600; color: #00F2FE;">[{r['waktu']}] Pengiriman Kilat Selesai ⚡</div>
-                        <div style="font-size: 14px; margin-top: 4px;">{r['item']}</div>
-                        <div style="font-size: 13px; color: #A1A1A6; margin-top: 2px;">Total: Rp {r['total']:,}</div>
-                    </div>
-                """, unsafe_allow_html=True)
-
-    # --- TAB 5: AKUN ---
-    else:
-        st.markdown("### 👤 Profil Pengguna")
-        st.markdown(f"""
-            <div class="glass-card">
-                <div style="font-size: 16px; font-weight: 700;">{st.session_state.user_info.get('nama', 'User')}</div>
-                <div style="color: #A1A1A6; font-size: 13px; margin-top: 2px;">No. Member Alfamart: {st.session_state.user_info.get('alfamart', '-')}</div>
-                <hr style="border-color: rgba(255,255,255,0.1); margin: 10px 0;">
-                <div style="font-size: 14px;">⭐ Total Poin: <b>{st.session_state.poin_member} Pts</b></div>
-                <div style="font-size: 14px; margin-top: 5px;">🏆 Status Tier: <b>Gold Member Nasional</b></div>
-            </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
-    
+                <h4>⚡
