@@ -97,6 +97,22 @@ flashmart_html = """
         }
         .search-bar input { border: none; outline: none; width: 100%; margin-left: 10px; font-size: 14px; background: transparent; color: #333; }
         
+        .store-selector {
+            margin: 12px 15px 0 15px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .store-selector select {
+            border: none; background: transparent; color: #03AC03; font-weight: bold; outline: none; cursor: pointer; font-size: 13px;
+        }
+
         .category-scroll {
             display: flex; gap: 8px; overflow-x: auto; padding: 12px 15px; scrollbar-width: none;
         }
@@ -173,18 +189,30 @@ flashmart_html = """
                 </div>
             </div>
 
+            <!-- PILIH TOKO ONLINE -->
+            <div class="store-selector">
+                <span>🏪 Pilih Toko:</span>
+                <select id="store-select" onchange="changeStore()">
+                    <option value="Pusat">FlashMart Pusat (Lengkap)</option>
+                    <option value="Express">FlashMart Express (Kilat)</option>
+                    <option value="Grosir">FlashMart Grosir (Partai Besar)</option>
+                </select>
+            </div>
+
             <div class="category-scroll" id="category-container">
                 <div class="cat-chip active" onclick="selectCategory('Semua', this)">Semua</div>
                 <div class="cat-chip" onclick="selectCategory('Sembako', this)">Sembako</div>
                 <div class="cat-chip" onclick="selectCategory('Minuman', this)">Minuman</div>
                 <div class="cat-chip" onclick="selectCategory('Perawatan', this)">Perawatan</div>
+                <div class="cat-chip" onclick="selectCategory('Elektronik', this)">Elektronik</div>
+                <div class="cat-chip" onclick="selectCategory('Camilan', this)">Camilan</div>
             </div>
 
             <div class="banner">
                 🔥 Gunakan Voucher <b>FLASHMARTINA</b> untuk Diskon Rp 10.000!
             </div>
 
-            <div style="padding: 0 15px 10px 15px; font-weight: bold; font-size: 14px;">Katalog Produk Pilihan</div>
+            <div style="padding: 0 15px 10px 15px; font-weight: bold; font-size: 14px;" id="store-title-label">Katalog Produk - FlashMart Pusat</div>
             <div class="product-grid" id="product-list"></div>
         </div>
 
@@ -238,7 +266,7 @@ flashmart_html = """
 
             <!-- FORM TAMBAH PRODUK BARU -->
             <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px;">
-                <h4 style="margin-top: 0; color: #03AC03;">📦 Tambah Produk Baru</h4>
+                <h4 style="margin-top: 0; color: #03AC03;">📦 Tambah Produk Baru ke Toko Aktif</h4>
                 <input type="text" id="new-name" placeholder="Nama Produk" class="admin-input">
                 <input type="number" id="new-price" placeholder="Harga (Rp)" class="admin-input">
                 <input type="number" id="new-stock" placeholder="Jumlah Stok" class="admin-input">
@@ -246,6 +274,8 @@ flashmart_html = """
                     <option value="Sembako">Sembako</option>
                     <option value="Minuman">Minuman</option>
                     <option value="Perawatan">Perawatan</option>
+                    <option value="Elektronik">Elektronik</option>
+                    <option value="Camilan">Camilan</option>
                 </select>
                 <input type="text" id="new-icon" placeholder="Emoji Ikon (Contoh: 🍪)" class="admin-input">
                 <button class="ripple-btn" onclick="addNewProduct()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer;">Simpan Produk</button>
@@ -277,17 +307,38 @@ flashmart_html = """
     </div>
 
     <script>
-        let products = [
-            { id: 1, name: "Minyak Goreng 2L", price: 38000, stock: 15, category: "Sembako", icon: "🍳" },
-            { id: 2, name: "Beras Premium 5kg", price: 69000, stock: 10, category: "Sembako", icon: "🌾" },
-            { id: 3, name: "Susu UHT Ultra 1L", price: 19500, stock: 25, category: "Minuman", icon: "🥛" },
-            { id: 4, name: "Mie Instan (1 Dus)", price: 115000, stock: 8, category: "Sembako", icon: "📦" },
-            { id: 5, name: "Telur Ayam Negeri 1kg", price: 28000, stock: 12, category: "Sembako", icon: "🥚" },
-            { id: 6, name: "Kopi Bubuk Hitam 380g", price: 16500, stock: 20, category: "Minuman", icon: "☕" },
-            { id: 7, name: "Sabun Mandi Cair 450ml", price: 24000, stock: 14, category: "Perawatan", icon: "🧼" },
-            { id: 8, name: "Shampoo Anti-Dandruff", price: 32000, stock: 18, category: "Perawatan", icon: "🧴" }
-        ];
+        // Database Produk Berdasarkan Toko Online
+        const storesData = {
+            "Pusat": [
+                { id: 101, name: "Minyak Goreng 2L", price: 38000, stock: 25, category: "Sembako", icon: "🍳" },
+                { id: 102, name: "Beras Premium 5kg", price: 69000, stock: 15, category: "Sembako", icon: "🌾" },
+                { id: 103, name: "Susu UHT Ultra 1L", price: 19500, stock: 30, category: "Minuman", icon: "🥛" },
+                { id: 104, name: "Mie Instan (1 Dus)", price: 115000, stock: 12, category: "Sembako", icon: "📦" },
+                { id: 105, name: "Telur Ayam Negeri 1kg", price: 28000, stock: 20, category: "Sembako", icon: "🥚" },
+                { id: 106, name: "Kopi Bubuk Hitam 380g", price: 16500, stock: 18, category: "Minuman", icon: "☕" },
+                { id: 107, name: "Sabun Mandi Cair 450ml", price: 24000, stock: 14, category: "Perawatan", icon: "🧼" },
+                { id: 108, name: "Shampoo Anti-Dandruff", price: 32000, stock: 10, category: "Perawatan", icon: "🧴" },
+                { id: 109, name: "Kipas Angin Meja Mini", price: 125000, stock: 5, category: "Elektronik", icon: "🌀" },
+                { id: 110, name: "Keripik Singkong Balado", price: 12000, stock: 40, category: "Camilan", icon: "🍟" }
+            ],
+            "Express": [
+                { id: 201, name: "Air Mineral 600ml (1 Dus)", price: 35000, stock: 50, category: "Minuman", icon: "💧" },
+                { id: 202, name: "Roti Tawar Gandum", price: 18000, stock: 15, category: "Camilan", icon: "🍞" },
+                { id: 203, name: "Susu Kotak Kecil 250ml", price: 6000, stock: 60, category: "Minuman", icon: "🧃" },
+                { id: 204, name: "Cokelat Batang Premium", price: 15000, stock: 25, category: "Camilan", icon: "🍫" },
+                { id: 205, name: "Baterai Alkali AA (Isi 2)", price: 22000, stock: 30, category: "Elektronik", icon: "🔋" },
+                { id: 206, name: "Tisu Basah Antiseptik", price: 11000, stock: 35, category: "Perawatan", icon: "🧻" }
+            ],
+            "Grosir": [
+                { id: 301, name: "Beras Karung 25kg", price: 330000, stock: 8, category: "Sembako", icon: "🛍️" },
+                { id: 302, name: "Minyak Goreng Jerigen 5L", price: 92000, stock: 10, category: "Sembako", icon: "🛢️" },
+                { id: 303, name: "Gula Pasir 10kg", price: 145000, stock: 12, category: "Sembako", icon: "🍬" },
+                { id: 304, name: "Deterjen Bubuk 5kg", price: 68000, stock: 15, category: "Perawatan", icon: "🧼" },
+                { id: 305, name: "Mie Instan (3 Dus Sekaligus)", price: 340000, stock: 6, category: "Sembako", icon: "📦" }
+            ]
+        };
 
+        let currentStore = "Pusat";
         let cart = {};
         let points = 150;
         let history = [];
@@ -309,10 +360,22 @@ flashmart_html = """
             }
         });
 
-        function renderProducts(listToRender = products) {
+        function changeStore() {
+            currentStore = document.getElementById('store-select').value;
+            document.getElementById('store-title-label').innerText = "Katalog Produk - FlashMart " + currentStore;
+            activeCategory = 'Semua';
+            document.querySelectorAll('.cat-chip').forEach((el, index) => {
+                if (index === 0) el.classList.add('active');
+                else el.classList.remove('active');
+            });
+            document.getElementById('search-box').value = '';
+            filterProducts();
+        }
+
+        function renderProducts(listToRender) {
             const list = document.getElementById('product-list');
-            if (listToRender.length === 0) {
-                list.innerHTML = '<p style="grid-column: span 2; text-align: center; color: #777;">Produk tidak ditemukan.</p>';
+            if (listToRender.length === 0){
+                list.innerHTML = '<p style="grid-column: span 2; text-align: center; color: #777;">Tidak ada produk di toko ini.</p>';
                 return;
             }
             list.innerHTML = listToRender.map(p => `
@@ -338,7 +401,8 @@ flashmart_html = """
 
         function filterProducts() {
             const query = document.getElementById('search-box').value.toLowerCase();
-            const filtered = products.filter(p => {
+            const storeProducts = storesData[currentStore];
+            const filtered = storeProducts.filter(p => {
                 const matchCat = (activeCategory === 'Semua' || p.category === activeCategory);
                 const matchQuery = p.name.toLowerCase().includes(query);
                 return matchCat && matchQuery;
@@ -357,14 +421,14 @@ flashmart_html = """
         }
 
         function addToCart(id) {
-            const prod = products.find(p => p.id === id);
+            const prod = storesData[currentStore].find(p => p.id === id);
             if (prod.stock <= 0) {
                 alert("Stok barang habis!");
                 return;
             }
             prod.stock -= 1;
             if (cart[id]) { cart[id].qty += 1; } 
-            else { cart[id] = { ...prod, qty: 1 }; }
+            else { cart[id] = { ...prod, qty: 1, store: currentStore }; }
             filterProducts();
             alert(prod.name + " ditambahkan ke keranjang!");
         }
@@ -397,6 +461,7 @@ flashmart_html = """
                     <div class="cart-item">
                         <div>
                             <div style="font-weight: bold; font-size: 13px;">` + item.icon + ` ` + item.name + `</div>
+                            <div style="font-size: 11px; color: #03AC03; font-weight: bold;">Toko: FlashMart ` + item.store + `</div>
                             <div style="font-size: 12px; color: #888;">Rp ` + item.price.toLocaleString('id-ID') + ` x ` + item.qty + `</div>
                         </div>
                         <div>
@@ -412,7 +477,13 @@ flashmart_html = """
         }
 
         function changeQty(id, delta) {
-            const prod = products.find(p => p.id == id);
+            // Cari produk di semua store data
+            let prod = null;
+            for (let s in storesData) {
+                let found = storesData[s].find(p => p.id == id);
+                if (found) { prod = found; break; }
+            }
+
             if (delta > 0) {
                 if (prod.stock <= 0) { alert("Stok habis!"); return; }
                 prod.stock -= 1;
@@ -508,15 +579,15 @@ flashmart_html = """
                 return;
             }
 
-            const newId = products.length + 1;
-            products.push({ id: newId, name, price, stock, category, icon });
+            const newId = Date.now();
+            storesData[currentStore].push({ id: newId, name, price, stock, category, icon });
             
             document.getElementById('new-name').value = '';
             document.getElementById('new-price').value = '';
             document.getElementById('new-stock').value = '';
             document.getElementById('new-icon').value = '';
 
-            alert("✅ Produk baru berhasil ditambahkan ke katalog!");
+            alert("✅ Produk baru berhasil ditambahkan ke toko FlashMart " + currentStore + "!");
             filterProducts();
         }
 
@@ -525,7 +596,7 @@ flashmart_html = """
             document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
         }
 
-        renderProducts();
+        filterProducts();
     </script>
 </body>
 </html>
