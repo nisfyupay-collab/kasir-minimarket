@@ -408,4 +408,20 @@ flashmart_html = """
                         <span>📦 Dikemas</span>
                         <span>🛵 Diantar Kurir</span>
                         <span>🏡 Sampai</span>
- 
+ </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleTheme() {
+            const isDark = document.getElementById('theme-toggle').checked;
+            document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        }
+
+        renderProducts();
+    </script>
+</body>
+</html>
+"""
+
+components.html(flashmart_html, height=880, scrolling=True)
