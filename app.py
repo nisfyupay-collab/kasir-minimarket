@@ -232,5 +232,57 @@ else:
     with col1:
         st.info("👤 **Tier:** Gold Member")
     with col2:
-        st.success(f"⭐ **Poin:** {
+        st.success(f"⭐ **Poin:** {st.session_state.poin_member} Pts")
+
+    # Katalog Produk Lengkap
+    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+    st.markdown("### 🛒 Katalog Produk Lengkap")
+    
+    kategori_pilihan = st.selectbox("Filter Kategori:", ["Semua", "Sembako", "Makanan", "Minuman", "Bumbu Dapur", "Perawatan Diri", "Kebutuhan Rumah"])
+
+    data_tabel = []
+    for kode, item in st.session_state.daftar_produk.items():
+        if kategori_pilihan == "Semua" or item["kategori"] == kategori_pilihan:
+            data_tabel.append({
+                "Kode": kode,
+                "Produk": item["nama"],
+                "Kategori": item["kategori"],
+                "Harga": f"Rp {item['harga']:,}",
+                "Stok": item["stok"]
+            })
+
+    st.table(data_tabel)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # Checkout & Transaksi
+    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+    st.markdown("### 💳 Checkout Belanja")
+    pilihan_kode = st.selectbox("Pilih Kode Produk:", list(st.session_state.daftar_produk.keys()))
+    jumlah_beli = st.number_input("Jumlah Beli:", min_value=1, value=1, step=1)
+
+    produk_pilihan = st.session_state.daftar_produk[pilihan_kode]
+    subtotal = produk_pilihan['harga'] * jumlah_beli
+
+    st.write(f"Barang: **{produk_pilihan['nama']}** | Subtotal: **Rp {subtotal:,}**")
+
+    if st.button("Bayar Sekarang"):
+        if jumlah_beli > produk_pilihan['stok']:
+            st.error("❌ Stok tidak mencukupi!")
+        else:
+            st.session_state.daftar_produk[pilihan_kode]['stok'] -= jumlah_beli
+            poin_didapat = int(subtotal // 10000)
+            st.session_state.poin_member += poin_didapat
             
+            waktu = datetime.datetime.now().strftime('%H:%M:%S')
+            st.session_state.riwayat_transaksi.append({
+                "waktu": waktu, "item": produk_pilihan['nama'], "total": subtotal
+            })
+            st.success(f"✅ Transaksi Berhasil! +{poin_didapat} Poin ditambahkan ke akun Alfamart.")
+
+    if st.session_state.riwayat_transaksi:
+        st.markdown("---")
+        st.markdown("### 📜 Riwayat Sesi Ini")
+        for r in reversed(st.session_state.riwayat_transaksi):
+            st.text(f"[{r['waktu']}] {r['item']} - Rp {r['total']:,}")
+    st.markdown('</div></div>', unsafe_allow_html=True)
+    
