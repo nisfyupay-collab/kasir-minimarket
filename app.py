@@ -2,10 +2,8 @@ import streamlit as st
 import datetime
 import time
 
-# Konfigurasi Halaman
 st.set_page_config(page_title="FlashMart iOS Slate Edition", page_icon="⚡", layout="centered")
 
-# --- INISIALISASI SESSION STATE ---
 if 'step_app' not in st.session_state:
     st.session_state.step_app = 1
 
@@ -119,7 +117,6 @@ if 'poin_member' not in st.session_state:
 if 'riwayat_transaksi' not in st.session_state:
     st.session_state.riwayat_transaksi = []
 
-# --- CSS STYLING & ANIMASI NOTIFIKASI ---
 css_code = """
 <style>
     .stApp {
@@ -127,22 +124,18 @@ css_code = """
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif !important;
         color: #F5F5F7;
     }
-
     @keyframes zoomInScreen {
         0% { transform: scale(0.85); opacity: 0; }
         100% { transform: scale(1); opacity: 1; }
     }
-
     .screen-transition {
         animation: zoomInScreen 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-
     @keyframes pulseGlow {
         0% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 65, 108, 0.4); }
         50% { transform: scale(1.02); box-shadow: 0 0 30px rgba(255, 75, 43, 0.85); }
         100% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 65, 108, 0.4); }
     }
-
     .promo-banner {
         background: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%);
         border-radius: 20px;
@@ -153,7 +146,6 @@ css_code = """
         animation: pulseGlow 2.5s infinite ease-in-out;
         border: 1px solid rgba(255, 255, 255, 0.3);
     }
-
     .splash-logo-box {
         background: linear-gradient(135deg, #007AFF 0%, #0056B3 100%);
         width: 110px;
@@ -166,7 +158,6 @@ css_code = """
         margin: 0 auto 20px auto;
         box-shadow: 0 15px 35px rgba(0, 122, 255, 0.5);
     }
-
     .slate-header {
         background: linear-gradient(180deg, #1A1D2A 0%, #090A0F 100%);
         border-bottom-left-radius: 35px;
@@ -179,7 +170,6 @@ css_code = """
         box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         border-bottom: 1px solid rgba(255,255,255,0.1);
     }
-
     .glass-card {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(25px);
@@ -190,13 +180,7 @@ css_code = """
         padding: 16px;
         box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
         margin-bottom: 14px;
-        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-
-    .glass-card:active {
-        transform: scale(0.97);
-    }
-
     div.row-widget.stRadio > div {
         background: rgba(18, 20, 30, 0.88) !important;
         backdrop-filter: blur(35px) !important;
@@ -213,11 +197,7 @@ css_code = """
         max-width: 420px !important;
         z-index: 999999 !important;
     }
-
-    div.row-widget.stRadio label input {
-        display: none !important;
-    }
-
+    div.row-widget.stRadio label input { display: none !important; }
     div.row-widget.stRadio label {
         background: transparent !important;
         border: none !important;
@@ -226,7 +206,6 @@ css_code = """
         border-radius: 20px !important;
         cursor: pointer;
     }
-
     .stButton button {
         background: linear-gradient(135deg, #007AFF 0%, #0056B3 100%);
         color: white !important;
@@ -236,42 +215,32 @@ css_code = """
         padding: 12px 16px;
         width: 100%;
         box-shadow: 0 6px 20px rgba(0, 122, 255, 0.45);
-        transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
         cursor: pointer;
     }
-
-    .stButton button:active {
-        transform: scale(0.92) !important;
-    }
-
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
 </style>
 """
 st.markdown(css_code, unsafe_allow_html=True)
 
-# --- TAHAP 1: SPLASH SCREEN ---
 if st.session_state.step_app == 1:
     st.markdown('<div class="screen-transition">', unsafe_allow_html=True)
     st.markdown('<div class="glass-card" style="text-align: center; padding: 70px 20px; margin-top: 30px;">', unsafe_allow_html=True)
     st.markdown('<div class="splash-logo-box">⚡</div>', unsafe_allow_html=True)
     st.markdown('<h1 style="font-weight: 800; font-size: 38px; color: #FFFFFF; margin: 0;">FlashMart</h1>', unsafe_allow_html=True)
     st.markdown('<p style="color: #8E8E93; font-size: 14px; margin-top: 6px;">Next-Gen On-Demand Retail</p>', unsafe_allow_html=True)
-    
     st.markdown("<br><br>", unsafe_allow_html=True)
     if st.button("Mulai Aplikasi ➔"):
         st.session_state.step_app = 2
         st.rerun()
     st.markdown('</div></div>', unsafe_allow_html=True)
 
-# --- TAHAP 2: AUTH / LOGIN (SLATE APP STYLE) ---
 elif st.session_state.step_app == 2 and not st.session_state.logged_in:
     st.markdown('<div class="screen-transition">', unsafe_allow_html=True)
     st.markdown('<div class="slate-header">', unsafe_allow_html=True)
     st.markdown('<h1 style="font-size: 28px; font-weight: 800; letter-spacing: 2px; color: #FFFFFF; margin: 0;">F L A S H M A R T</h1>', unsafe_allow_html=True)
     st.markdown('<p style="color: #8E8E93; font-size: 13px; margin-top: 4px;">Masuk dan sinkronkan member Alfamart kamu.</p>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
-
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown('<div class="glass-card">', unsafe_allow_html=True)
     st.markdown('<h3 style="color: #FFFFFF; margin-top:0;">🔐 Login Akun</h3>', unsafe_allow_html=True)
@@ -290,7 +259,6 @@ elif st.session_state.step_app == 2 and not st.session_state.logged_in:
             st.warning("⚠️ Mohon lengkapi nama dan nomor member terlebih dahulu!")
     st.markdown('</div></div>', unsafe_allow_html=True)
 
-# --- TAHAP 3: MAIN APP CONTAINER ---
 else:
     st.markdown('<div class="screen-transition" style="padding-bottom: 90px;">', unsafe_allow_html=True)
     
@@ -314,7 +282,6 @@ else:
     st.markdown("<br>", unsafe_allow_html=True)
 
     if "Beranda" in tab_pilihan:
-        # BANNER NOTIFIKASI REKOMENDASI ANIMASI MENARIK
         st.markdown("""
             <div class="promo-banner">
                 <h3 style="margin: 0; font-size: 16px; font-weight: 800;">🚨 FLASH SALE KILAT HARI INI! ⚡</h3>
@@ -380,7 +347,6 @@ else:
 
     elif "Belanja" in tab_pilihan:
         st.markdown("### 🛒 Katalog & Kategori Produk")
-        
         pilihan_kategori = st.selectbox("Filter Kategori:", ["Semua", "Sembako", "Makanan", "Minuman", "Facewash", "Makeup", "Kebutuhan"])
         
         produk_terfilter = {k: v for k, v in st.session_state.daftar_produk.items() if pilihan_kategori == "Semua" or v['kategori'] == pilihan_kategori}
@@ -442,4 +408,17 @@ else:
                         <img src="{item_k['foto']}" style="width: 55px; height: 55px; border-radius: 10px; object-fit: cover;">
                         <div>
                             <b style="font-size: 13px;">{item_k['nama']}</b><br>
-                            <span style="color: 
+                            <span style="color: #00F2FE; font-size: 12px;">Qty: {item_k['jumlah']} | Subtotal: Rp {item_k['subtotal']:,}</span>
+                        </div>
+                    </div>
+                """, unsafe_allow_html=True)
+
+            st.markdown(f"#### Total Pembayaran: Rp {total_belanja:,}")
+            if st.button("Checkout & Bayar Sekarang ⚡"):
+                st.session_state.keranjang = []
+                st.success("🎉 Pembayaran Berhasil! Pesanan sedang diantar kurir kilat.")
+                time.sleep(1)
+                st.rerun()
+
+    elif "Promo" in tab_pilihan:
+        st.markdown("### 🔥 Promo Spesial Har
