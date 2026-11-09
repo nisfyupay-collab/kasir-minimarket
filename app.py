@@ -7,7 +7,7 @@ st.set_page_config(page_title="FlashMart iOS Slate Edition", page_icon="⚡", la
 
 # --- INISIALISASI SESSION STATE ---
 if 'step_app' not in st.session_state:
-    st.session_state.step_app = 1  # 1: Splash Screen, 2: Login Slate, 3: Main App
+    st.session_state.step_app = 1
 
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
@@ -119,7 +119,7 @@ if 'poin_member' not in st.session_state:
 if 'riwayat_transaksi' not in st.session_state:
     st.session_state.riwayat_transaksi = []
 
-# --- CSS STYLING & ANIMASI KUSTOM ---
+# --- CSS STYLING & ANIMASI NOTIFIKASI ---
 css_code = """
 <style>
     .stApp {
@@ -137,10 +137,21 @@ css_code = """
         animation: zoomInScreen 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    @keyframes pulseLogo {
-        0% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(0, 242, 254, 0.5)); }
-        50% { transform: scale(1.08); filter: drop-shadow(0 0 35px rgba(0, 242, 254, 0.95)); }
-        100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(0, 242, 254, 0.5)); }
+    @keyframes pulseGlow {
+        0% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 65, 108, 0.4); }
+        50% { transform: scale(1.02); box-shadow: 0 0 30px rgba(255, 75, 43, 0.85); }
+        100% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 65, 108, 0.4); }
+    }
+
+    .promo-banner {
+        background: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%);
+        border-radius: 20px;
+        padding: 16px;
+        text-align: center;
+        color: white;
+        margin-bottom: 16px;
+        animation: pulseGlow 2.5s infinite ease-in-out;
+        border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
     .splash-logo-box {
@@ -153,7 +164,6 @@ css_code = """
         justify-content: center;
         font-size: 55px;
         margin: 0 auto 20px auto;
-        animation: pulseLogo 2s infinite ease-in-out;
         box-shadow: 0 15px 35px rgba(0, 122, 255, 0.5);
     }
 
@@ -304,6 +314,14 @@ else:
     st.markdown("<br>", unsafe_allow_html=True)
 
     if "Beranda" in tab_pilihan:
+        # BANNER NOTIFIKASI REKOMENDASI ANIMASI MENARIK
+        st.markdown("""
+            <div class="promo-banner">
+                <h3 style="margin: 0; font-size: 16px; font-weight: 800;">🚨 FLASH SALE KILAT HARI INI! ⚡</h3>
+                <p style="margin: 4px 0 0 0; font-size: 12px; opacity: 0.9;">Barang impianmu diskon gila-gilaan sampai 90%! Jangan sampai kehabisan atau nyesel belakangan!</p>
+            </div>
+        """, unsafe_allow_html=True)
+
         st.markdown("### 🔍 Cari Produk")
         keyword_cari = st.text_input("Cari produk...", placeholder="Ketik nama produk...", label_visibility="collapsed")
         
@@ -321,8 +339,6 @@ else:
                         </div>
                     """, unsafe_allow_html=True)
         else:
-            st.markdown('<div class="glass-card" style="background: linear-gradient(135deg, #FF416C, #FF4B2B); text-align: center;"><h3 style="margin:0; color:white;">🔥 FLASH SALE SEKARANG</h3><p style="margin:4px 0 0 0; font-size:12px; color:white;">Bebas ongkir kilat seluruh Indonesia!</p></div>', unsafe_allow_html=True)
-            
             st.markdown("### 🏷️ Kategori Pilihan")
             col_cat1, col_cat2, col_cat3, col_cat4 = st.columns(4)
             selected_cat = None
@@ -426,11 +442,4 @@ else:
                         <img src="{item_k['foto']}" style="width: 55px; height: 55px; border-radius: 10px; object-fit: cover;">
                         <div>
                             <b style="font-size: 13px;">{item_k['nama']}</b><br>
-                            <span style="color: #00F2FE; font-size: 12px;">Qty: {item_k['jumlah']} | Subtotal: Rp {item_k['subtotal']:,}</span>
-                        </div>
-                    </div>
-                """, unsafe_allow_html=True)
-
-            st.markdown(f"#### Total Pembayaran: Rp {total_belanja:,}")
-            if st.button("Checkout & Bayar Sekarang ⚡"):
-        
+                            <span style="color: 
