@@ -7,7 +7,7 @@ st.set_page_config(page_title="FlashMart iOS Slate Edition", page_icon="⚡", la
 
 # --- INISIALISASI SESSION STATE ---
 if 'step_app' not in st.session_state:
-    st.session_state.step_app = 1  # 1: Splash Screen Animasi, 2: Login Slate, 3: Main App
+    st.session_state.step_app = 1  # 1: Splash Screen, 2: Login Slate, 3: Main App
 
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
@@ -84,7 +84,7 @@ if 'poin_member' not in st.session_state:
 if 'riwayat_transaksi' not in st.session_state:
     st.session_state.riwayat_transaksi = []
 
-# --- CSS STYLING & DESAIN FOTO PRODUK KARTU KACA ---
+# --- CSS STYLING & ANIMASI KUSTOM ---
 css_code = """
 <style>
     .stApp {
@@ -306,7 +306,6 @@ else:
         st.markdown("### 🛒 Katalog Produk Lengkap")
         pilihan_kode = st.selectbox("Pilih Produk:", list(st.session_state.daftar_produk.keys()), format_func=lambda x: st.session_state.daftar_produk[x]['nama'])
         
-        # Tampilkan detail foto produk yang dipilih
         prod_aktif = st.session_state.daftar_produk[pilihan_kode]
         st.markdown(f"""
             <div class="glass-card" style="text-align: center;">
@@ -320,14 +319,33 @@ else:
         jumlah_beli = st.number_input("Jumlah Beli:", min_value=1, value=1, step=1)
         subtotal = prod_aktif['harga'] * jumlah_beli
 
-        if st.button("Masukkan ke Keranjang 🛍️"):
-            if jumlah_beli > prod_aktif['stok']:
-                st.error("❌ Stok tidak mencukupi!")
-            else:
-                st.session_state.keranjang.append({
-                    "kode": pilihan_kode, "nama": prod_aktif['nama'], "jumlah": jumlah_beli, "subtotal": subtotal, "foto": prod_aktif['foto']
-                })
-                st.success(f"✅ **{prod_aktif['nama']}** berhasil masuk keranjang!")
+        # DUA TOMBOL UTAMA: MASUKKAN KERANJANG & BELI SEKARANG
+        col_btn1, col_btn2 = st.columns(2)
+        with col_btn1:
+            if st.button("➕ Keranjang"):
+                if jumlah_beli > prod_aktif['stok']:
+                    st.error("❌ Stok tidak mencukupi!")
+                else:
+                    st.session_state.keranjang.append({
+                        "kode": pilihan_kode, "nama": prod_aktif['nama'], "jumlah": jumlah_beli, "subtotal": subtotal, "foto": prod_aktif['foto']
+                    })
+                    st.success(f"✅ Masuk keranjang!")
+        with col_btn2:
+            if st.button("⚡ Beli Sekarang"):
+                if jumlah_beli > prod_aktif['stok']:
+                    st.error("❌ Stok tidak mencukupi!")
+                else:
+                    # Langsung proses poin & transaksi instan
+                    poin_didapat = int(subtotal // 10000)
+                    st.session_state.poin_member += poin_didapat
+                    st.session_state.daftar_produk[pilihan_kode]['stok'] -= jumlah_beli
+                    waktu = datetime.datetime.now().strftime('%H:%M:%S')
+                    st.session_state.riwayat_transaksi.append({
+                        "waktu": waktu, "item": f"{prod_aktif['nama']} (x{jumlah_beli})", "total": subtotal
+                    })
+                    st.success(f"🎉 Pembayaran Kilat Berhasil! +{poin_didapat} Pts")
+                    time.sleep(1)
+                    st.rerun()
 
     elif "🛍️" in tab_pilihan:
         st.markdown("### 🛍️ Keranjang Belanja Anda")
