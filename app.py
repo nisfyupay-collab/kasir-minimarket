@@ -187,7 +187,6 @@ css_code = """
         transform: scale(0.97);
     }
 
-    /* FLOATING BOTTOM DOCK */
     div.row-widget.stRadio > div {
         background: rgba(18, 20, 30, 0.88) !important;
         backdrop-filter: blur(35px) !important;
@@ -324,7 +323,6 @@ else:
         else:
             st.markdown('<div class="glass-card" style="background: linear-gradient(135deg, #FF416C, #FF4B2B); text-align: center;"><h3 style="margin:0; color:white;">🔥 FLASH SALE SEKARANG</h3><p style="margin:4px 0 0 0; font-size:12px; color:white;">Bebas ongkir kilat seluruh Indonesia!</p></div>', unsafe_allow_html=True)
             
-            # Filter Kategori Cepat di Beranda
             st.markdown("### 🏷️ Kategori Pilihan")
             col_cat1, col_cat2, col_cat3, col_cat4 = st.columns(4)
             selected_cat = None
@@ -367,10 +365,8 @@ else:
     elif "Belanja" in tab_pilihan:
         st.markdown("### 🛒 Katalog & Kategori Produk")
         
-        # Pilihan Filter Kategori
         pilihan_kategori = st.selectbox("Filter Kategori:", ["Semua", "Sembako", "Makanan", "Minuman", "Facewash", "Makeup", "Kebutuhan"])
         
-        # Saring produk berdasarkan kategori yang dipilih
         produk_terfilter = {k: v for k, v in st.session_state.daftar_produk.items() if pilihan_kategori == "Semua" or v['kategori'] == pilihan_kategori}
         
         if not produk_terfilter:
@@ -400,7 +396,7 @@ else:
                         st.session_state.keranjang.append({
                             "kode": pilihan_kode, "nama": prod_aktif['nama'], "jumlah": jumlah_beli, "subtotal": subtotal, "foto": prod_aktif['foto']
                         })
-                        st.success(f"✅ Masuk keranjang!")
+                        st.success("✅ Masuk keranjang!")
             with col_btn2:
                 if st.button("⚡ Beli Sekarang"):
                     if jumlah_beli > prod_aktif['stok']:
@@ -433,4 +429,8 @@ else:
                             <span style="color: #00F2FE; font-size: 12px;">Qty: {item_k['jumlah']} | Subtotal: Rp {item_k['subtotal']:,}</span>
                         </div>
                     </div>
-            
+                """, unsafe_allow_html=True)
+
+            st.markdown(f"#### Total Pembayaran: Rp {total_belanja:,}")
+            if st.button("Checkout & Bayar Sekarang ⚡"):
+        
