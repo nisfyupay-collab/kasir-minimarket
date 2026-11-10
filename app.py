@@ -402,8 +402,7 @@ setTimeout(function() {
     if (splash) {
         splash.style.opacity = '0';
         setTimeout(() => splash.style.display = 'none', 500);
-    }
-}, 1500);
+    }, 1500);
 
         };
 
