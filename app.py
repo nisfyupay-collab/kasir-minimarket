@@ -396,6 +396,15 @@ flashmart_html = """
                 { id: 304, name: "Deterjen Bubuk 5kg", price: 68000, stock: 15, category: "Perawatan", icon: "🧼" },
                 { id: 305, name: "Mie Instan (3 Dus Sekaligus)", price: 340000, stock: 6, category: "Sembako", icon: "📦" }
             ]
+            // Menghilangkan splash screen otomatis setelah animasi selesai
+setTimeout(function() {
+    const splash = document.getElementById('splash-screen');
+    if (splash) {
+        splash.style.opacity = '0';
+        setTimeout(() => splash.style.display = 'none', 500);
+    }
+}, 1500);
+
         };
 
         let currentStore = "Pusat";
