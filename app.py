@@ -8,7 +8,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-flashmart_html = r"""
+flashmart_html = r""
 <!DOCTYPE html>
 <html lang="id">
 <head>
