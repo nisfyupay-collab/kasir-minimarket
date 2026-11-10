@@ -8,7 +8,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-flashmart_html = """
+flashmart_html = r"""
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -333,7 +333,7 @@ flashmart_html = """
                     <option value="11000">Pulsa 10.000 (Rp 11.000)</option>
                     <option value="26000">Pulsa 25.000 (Rp 26.000)</option>
                     <option value="51000">Pulsa 50.000 (Rp 51.000)</option>
-                    <option value="101000">Pulsa 100.000 (Rp 101.000)</option>
+                     <option value="101000">Pulsa 100.000 (Rp 101.000)</option>
                     <option value="35000">Paket Data 5GB 30 Hari (Rp 35.000)</option>
                     <option value="65000">Paket Data 15GB 30 Hari (Rp 65.000)</option>
                 </select>
@@ -723,4 +723,4 @@ flashmart_html = """
                 return;
             }
 
-  
+ 
