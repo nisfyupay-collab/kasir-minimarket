@@ -63,29 +63,25 @@ flashmart_html = """
             to { opacity: 0; visibility: hidden; }
         }
 
-        /* Modal Pop-up Animasi Pembayaran Berhasil */
+        /* Modal Struk Belanja Estetik (Receiptify Style) */
         #success-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center;
-            z-index: 10000; backdrop-filter: blur(4px);
+            background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center;
+            z-index: 10000; backdrop-filter: blur(4px); overflow-y: auto; padding: 20px;
         }
-        .modal-content {
-            background: var(--card-bg); width: 85%; max-width: 380px; padding: 25px; border-radius: 20px;
-            text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); animation: popUp 0.4s ease;
+        .receipt-card {
+            background: #fff; color: #333; width: 100%; max-width: 340px; padding: 20px;
+            border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); font-family: 'Courier New', Courier, monospace;
+            position: relative; animation: popUp 0.4s ease; margin: auto;
+        }
+        .receipt-card::before {
+            content: ""; position: absolute; top: -10px; left: 0; width: 100%; height: 10px;
+            background: radial-gradient(circle, transparent, transparent 50%, #fff 50%, #fff 100%);
+            background-size: 16px 20px;
         }
         @keyframes popUp {
             0% { transform: scale(0.7); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
-        }
-        .success-icon {
-            width: 70px; height: 70px; background: #E8F5E9; color: #03AC03; border-radius: 50%;
-            display: flex; justify-content: center; align-items: center; font-size: 36px; margin: 0 auto 15px auto;
-            box-shadow: 0 4px 12px rgba(3, 172, 3, 0.3); animation: pulseGreen 1.5s infinite;
-        }
-        @keyframes pulseGreen {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.08); }
-            100% { transform: scale(1); }
         }
 
         .ripple-btn { position: relative; overflow: hidden; cursor: pointer; }
@@ -128,7 +124,6 @@ flashmart_html = """
             padding: 12px; border-radius: 12px; font-weight: bold; text-align: center; font-size: 12px;
         }
         
-        /* Grid Menu Pulsa Quick Link */
         .digital-grid {
             display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 0 15px 15px 15px; text-align: center;
         }
@@ -173,7 +168,6 @@ flashmart_html = """
             background: var(--card-bg); color: var(--text-color); box-sizing: border-box;
         }
 
-        /* QR Code Box Styling */
         .qr-box {
             background: white; border: 2px dashed #03AC03; padding: 15px; border-radius: 12px; text-align: center; margin: 10px 0;
         }
@@ -188,13 +182,41 @@ flashmart_html = """
         <div style="font-size: 22px; font-weight: 800; margin-top: 15px;">FlashMart Ultimate Pro</div>
     </div>
 
-    <!-- POP-UP MODAL PEMBAYARAN BERHASIL -->
+    <!-- POP-UP MODAL STRUK BELANJA (RECEIPTIFY STYLE) -->
     <div id="success-modal">
-        <div class="modal-content">
-            <div class="success-icon">✓</div>
-            <h3 style="margin: 0 0 10px 0; color: #03AC03;">Pembayaran Berhasil!</h3>
-            <p style="font-size: 13px; color: #666; margin-bottom: 20px;" id="modal-desc">Transaksi kamu telah diverifikasi. Kurir sedang memproses pesananmu!</p>
-            <button class="ripple-btn" onclick="closeModal()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 12px; border-radius: 10px; font-weight: bold;">Tutup & Lihat Pesanan</button>
+        <div class="receipt-card">
+            <h3 style="text-align: center; margin: 0 0 5px 0; font-size: 16px; font-weight: 900;">FLASHMART ULTIMATE</h3>
+            <p style="text-align: center; font-size: 11px; margin: 0 0 10px 0; color: #666;">Jl. Raya Minimarket No. 88, Indonesia</p>
+            <div style="font-size: 11px; border-bottom: 1px dashed #333; padding-bottom: 8px; margin-bottom: 8px;" id="receipt-meta">
+                Waktu: 2026-11-10 09:00<br>
+                Kasir: Auto-System v3.5
+            </div>
+            
+            <div style="font-size: 11px; font-weight: bold; display: flex; justify-content: border-bottom; border-bottom: 1px dashed #333; padding-bottom: 4px; margin-bottom: 6px;">
+                <span style="flex: 2;">ITEM</span>
+                <span style="flex: 1; text-align: center;">QTY</span>
+                <span style="flex: 1; text-align: right;">SUBTOTAL</span>
+            </div>
+            
+            <div id="receipt-items-list" style="font-size: 11px; max-height: 140px; overflow-y: auto; margin-bottom: 8px; border-bottom: 1px dashed #333; padding-bottom: 8px;">
+                <!-- Diisi via Javascript -->
+            </div>
+
+            <div style="font-size: 11px; line-height: 1.5;">
+                <div style="display: flex; justify-content: space-between;"><span>SUBTOTAL:</span><span id="receipt-subtotal">Rp 0</span></div>
+                <div style="display: flex; justify-content: space-between;" id="receipt-disc-row"><span>DISKON:</span><span id="receipt-discount">- Rp 0</span></div>
+                <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 13px; margin: 4px 0;"><span>TOTAL:</span><span id="receipt-total">Rp 0</span></div>
+                <div style="display: flex; justify-content: space-between;"><span>BAYAR (CASH):</span><span id="receipt-cash">Rp 0</span></div>
+                <div style="display: flex; justify-content: space-between; font-weight: bold; color: #03AC03;" id="receipt-change-row"><span>KEMBALIAN:</span><span id="receipt-change">Rp 0</span></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 15px; font-size: 10px; color: #555;">
+                <p style="margin: 0 0 5px 0;">THANK YOU FOR SHOPPING!</p>
+                <div style="font-family: 'Libre Barcode 39', cursive; font-size: 28px; letter-spacing: 2px;">*FLASHMART9988*</div>
+                <span style="font-size: 9px; color: #888;">receiptify.flashmart.app</span>
+            </div>
+
+            <button class="ripple-btn" onclick="closeModal()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 10px; border-radius: 6px; font-weight: bold; margin-top: 15px; font-size: 12px; font-family: sans-serif;">Selesai & Tutup Struk</button>
         </div>
     </div>
 
@@ -262,14 +284,22 @@ flashmart_html = """
                 <div style="margin: 15px 0;">
                     <label style="font-size: 13px; font-weight: bold;">Metode Pembayaran:</label>
                     <select id="payment-method" class="admin-input" style="margin-top: 5px;" onchange="toggleQR()">
+                        <option value="Tunai">Tunai / Cash (Bayar di Kasir)</option>
                         <option value="QRIS">QRIS (Scan & Cashback Instant)</option>
                         <option value="Transfer Bank">Transfer Bank (BCA / Mandiri / BRI)</option>
                         <option value="COD">Bayar di Tempat (COD)</option>
                     </select>
                 </div>
 
+                <!-- INPUT UANG TUNAI & HITUNG KEMBALIAN OTOMATIS -->
+                <div id="cash-payment-box" style="margin-bottom: 15px;">
+                    <label style="font-size: 13px; font-weight: bold;">Nominal Uang Pembeli (Rp):</label>
+                    <input type="number" id="cash-given" placeholder="Contoh: 100000" class="admin-input" style="margin-top: 5px;" oninput="calculateChange()">
+                    <div style="font-size: 14px; font-weight: bold; color: #03AC03; margin-top: 4px;" id="change-text">Uang Kembalian: Rp 0</div>
+                </div>
+
                 <!-- DYNAMIC QR CODE BOX -->
-                <div id="qris-display" class="qr-box">
+                <div id="qris-display" class="qr-box" style="display: none;">
                     <div style="font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px;">Scan Kode QRIS Di Bawah Ini:</div>
                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=FLASHMART-ULTIMATE-PAYMENT-QRIS-PRO" alt="QRIS Code">
                     <div style="font-size: 11px; color: #666; margin-top: 5px;">Dapat di-scan memakai GoPay, OVO, Dana, ShopeePay & M-Banking.</div>
@@ -277,7 +307,7 @@ flashmart_html = """
 
                 <div style="font-size: 16px; font-weight: bold; margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 10px;">Total: <span id="grandtotal-text" style="float: right; color: #FA591D;">Rp 0</span></div>
                 
-                <button class="ripple-btn" onclick="checkout()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; margin-top: 15px; cursor: pointer;">💳 Bayar Sekarang</button>
+                <button class="ripple-btn" onclick="checkout()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; margin-top: 15px; cursor: pointer;">💳 Selesaikan Transaksi & Cetak Struk</button>
             </div>
         </div>
 
@@ -286,7 +316,7 @@ flashmart_html = """
             <h3>📱 Isi Pulsa & Paket Data Online</h3>
             <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px;">
                 <label style="font-size: 13px; font-weight: bold;">1. Pilih Operator Sinyal:</label>
-                <select id="pulsa-operator" class="admin-input" style="margin-top: 5px;" onchange="updatePulsaOptions()">
+                <select id="pulsa-operator" class="admin-input" style="margin-top: 5px;">
                     <option value="Telkomsel">Telkomsel (Negeri / BUMN)</option>
                     <option value="Indosat">Indosat Ooredoo Hutchison</option>
                     <option value="XL">XL Axiata</option>
@@ -303,7 +333,7 @@ flashmart_html = """
                     <option value="11000">Pulsa 10.000 (Rp 11.000)</option>
                     <option value="26000">Pulsa 25.000 (Rp 26.000)</option>
                     <option value="51000">Pulsa 50.000 (Rp 51.000)</option>
-                    <option value="101000">Pulsa 100.000 (Rp 101.000)</option>
+                     <option value="101000">Pulsa 100.000 (Rp 101.000)</option>
                     <option value="35000">Paket Data 5GB 30 Hari (Rp 35.000)</option>
                     <option value="65000">Paket Data 15GB 30 Hari (Rp 65.000)</option>
                 </select>
@@ -346,7 +376,7 @@ flashmart_html = """
                     <option value="Camilan">Camilan</option>
                 </select>
                 <input type="text" id="new-icon" placeholder="Emoji Ikon (Contoh: 🍪)" class="admin-input">
-               <button class="ripple-btn" onclick="addNewProduct()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer;">Simpan Produk</button>
+                <button class="ripple-btn" onclick="addNewProduct()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer;">Simpan Produk</button>
             </div>
 
             <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px;">
@@ -433,10 +463,34 @@ flashmart_html = """
         function toggleQR() {
             const method = document.getElementById('payment-method').value;
             const qrisBox = document.getElementById('qris-display');
+            const cashBox = document.getElementById('cash-payment-box');
+            
             if (method === 'QRIS') {
                 qrisBox.style.display = 'block';
+                cashBox.style.display = 'none';
+            } else if (method === 'Tunai') {
+                qrisBox.style.display = 'none';
+                cashBox.style.display = 'block';
             } else {
                 qrisBox.style.display = 'none';
+                cashBox.style.display = 'none';
+            }
+        }
+
+        function calculateChange() {
+            let subtotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const discount = discountActive ? 10000 : 0;
+            const grandTotal = Math.max(0, subtotal - discount);
+            const cashGiven = parseFloat(document.getElementById('cash-given').value) || 0;
+            const change = cashGiven - grandTotal;
+
+            const changeText = document.getElementById('change-text');
+            if (change >= 0) {
+                changeText.innerText = "Uang Kembalian: Rp " + change.toLocaleString('id-ID');
+                changeText.style.color = "#03AC03";
+            } else {
+                changeText.innerText = "Uang Kurang: Rp " + Math.abs(change).toLocaleString('id-ID');
+                changeText.style.color = "#FA591D";
             }
         }
 
@@ -554,6 +608,7 @@ flashmart_html = """
             });
             container.innerHTML = html;
             updateSummary(subtotal);
+            calculateChange();
         }
 
         function changeQty(id, delta) {
@@ -587,6 +642,7 @@ flashmart_html = """
             }
             let subtotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0);
             updateSummary(subtotal);
+            calculateChange();
         }
 
         function updateSummary(subtotal) {
@@ -606,24 +662,58 @@ flashmart_html = """
             const discount = discountActive ? 10000 : 0;
             const grandTotal = Math.max(0, subtotal - discount);
             const method = document.getElementById('payment-method').value;
+            const cashGiven = parseFloat(document.getElementById('cash-given').value) || grandTotal;
+            const change = cashGiven - grandTotal;
+
+            if (method === 'Tunai' && cashGiven < grandTotal) {
+                alert("Nominal uang tunai kurang dari total belanja!");
+                return;
+            }
 
             const earnedPoints = Math.floor(grandTotal / 10000);
             points += earnedPoints;
             document.getElementById('user-points').innerText = points + ' Poin';
 
+            const now = new Date().toLocaleString('id-ID');
+
+            // Render ke Struk Receiptify Style
+            document.getElementById('receipt-meta').innerHTML = "Waktu: " + now + "<br>Metode: " + method;
+            let receiptHtml = '';
+            for (let id in cart) {
+                const item = cart[id];
+                receiptHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                    <span style="flex: 2;">${item.name}</span>
+                    <span style="flex: 1; text-align: center;">${item.qty}</span>
+                    <span style="flex: 1; text-align: right;">Rp ${(item.price * item.qty).toLocaleString('id-ID')}</span>
+                </div>`;
+            }
+            document.getElementById('receipt-items-list').innerHTML = receiptHtml;
+            document.getElementById('receipt-subtotal').innerText = "Rp " + subtotal.toLocaleString('id-ID');
+            
+            if (discount > 0) {
+                document.getElementById('receipt-disc-row').style.display = 'flex';
+                document.getElementById('receipt-discount').innerText = "- Rp " + discount.toLocaleString('id-ID');
+            } else {
+                document.getElementById('receipt-disc-row').style.display = 'none';
+            }
+            
+            document.getElementById('receipt-total').innerText = "Rp " + grandTotal.toLocaleString('id-ID');
+            document.getElementById('receipt-cash').innerText = "Rp " + cashGiven.toLocaleString('id-ID');
+            document.getElementById('receipt-change').innerText = "Rp " + change.toLocaleString('id-ID');
+
             history.unshift({
-                date: new Date().toLocaleString('id-ID'),
+                date: now,
                 total: grandTotal,
                 payment: method,
                 earned: earnedPoints,
-                status: "Kurir Menuju Lokasi 🛵"
+                status: "Selesai & Lunas ✅"
             });
 
             cart = {};
             discountActive = false;
+            document.getElementById('cash-given').value = '';
 
-            // Tampilkan Modal Pembayaran Berhasil
-            document.getElementById('modal-desc').innerText = "Pembayaran via " + method + " sebesar Rp " + grandTotal.toLocaleString('id-ID') + " Berhasil! Mendapatkan +" + earnedPoints + " Poin VIP.";
+            // Tampilkan Struk
             document.getElementById('success-modal').style.display = 'flex';
         }
 
@@ -640,17 +730,32 @@ flashmart_html = """
             const earnedPoints = Math.floor(price / 10000);
             points += earnedPoints;
             document.getElementById('user-points').innerText = points + ' Poin';
+            const now = new Date().toLocaleString('id-ID');
+
+            // Render Struk Pulsa
+            document.getElementById('receipt-meta').innerHTML = "Waktu: " + now + "<br>Jenis: Pulsa / PPOB";
+            document.getElementById('receipt-items-list').innerHTML = `
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="flex: 2;">${op} (${phone})</span>
+                    <span style="flex: 1; text-align: center;">1</span>
+                    <span style="flex: 1; text-align: right;">Rp ${price.toLocaleString('id-ID')}</span>
+                </div>
+            `;
+            document.getElementById('receipt-subtotal').innerText = "Rp " + price.toLocaleString('id-ID');
+            document.getElementById('receipt-disc-row').style.display = 'none';
+            document.getElementById('receipt-total').innerText = "Rp " + price.toLocaleString('id-ID');
+            document.getElementById('receipt-cash').innerText = "Rp " + price.toLocaleString('id-ID');
+            document.getElementById('receipt-change').innerText = "Rp 0";
 
             history.unshift({
-                date: new Date().toLocaleString('id-ID'),
+                date: now,
                 total: price,
-                payment: "QRIS Instant",
+                payment: "Pulsa " + op,
                 earned: earnedPoints,
-                status: "Pulsa " + op + " Selesai Ditransfer 📱"
+                status: "Pulsa Sukses Terkirim 📱"
             });
 
             document.getElementById('pulsa-phone').value = '';
-            document.getElementById('modal-desc').innerText = "Pengisian Pulsa / Data " + op + " ke nomor " + phone + " Berhasil dikirim!";
             document.getElementById('success-modal').style.display = 'flex';
         }
 
@@ -716,3 +821,4 @@ flashmart_html = """
 """
 
 components.html(flashmart_html, height=880, scrolling=True)
+               
