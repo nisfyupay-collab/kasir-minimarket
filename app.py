@@ -30,14 +30,6 @@ flashmart_html = """
             --nav-bg: #1e1e1e;
             --border-color: #333333;
         }
-#splash-screen {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    z-index: 9999; color: white;
-    transition: opacity 0.5s ease; /* Tambahkan baris ini */
-}
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -45,27 +37,59 @@ flashmart_html = """
             color: var(--text-color);
             margin: 0;
             padding: 0;
-            -webkit-tap-highlight-color: transparent;
+            transition: background 0.3s, color 0.3s;
         }
 
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 9999; color: white;
+            animation: fadeOut 0.8s ease 1.5s forwards;
+        }
+        .splash-logo {
+            font-size: 64px; background: white; color: #FF9800; width: 100px; height: 100px;
+            display: flex; justify-content: center; align-items: center; border-radius: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            animation: bounceIn 0.8s ease;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        /* Modal Struk Belanja Estetik (Receiptify Style) */
         #success-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center;
             z-index: 10000; backdrop-filter: blur(4px); overflow-y: auto; padding: 20px;
-            box-sizing: border-box;
         }
         .receipt-card {
             background: #fff; color: #333; width: 100%; max-width: 340px; padding: 20px;
             border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); font-family: 'Courier New', Courier, monospace;
-            position: relative; margin: auto; box-sizing: border-box;
+            position: relative; animation: popUp 0.4s ease; margin: auto;
         }
         .receipt-card::before {
             content: ""; position: absolute; top: -10px; left: 0; width: 100%; height: 10px;
             background: radial-gradient(circle, transparent, transparent 50%, #fff 50%, #fff 100%);
             background-size: 16px 20px;
         }
+        @keyframes popUp {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
 
         .ripple-btn { position: relative; overflow: hidden; cursor: pointer; }
+        .ripple {
+            position: absolute; background: rgba(255, 255, 255, 0.7); border-radius: 50%;
+            transform: scale(0); animation: rippleEffect 0.5s linear; pointer-events: none;
+        }
+        @keyframes rippleEffect { to { transform: scale(4); opacity: 0; } }
 
         .app-container {
             max-width: 480px; margin: 0 auto; background: var(--bg-color); min-height: 100vh;
@@ -111,8 +135,9 @@ flashmart_html = """
         .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 15px; }
         .product-card {
             background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px;
-            text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); position: relative;
+            text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: transform 0.2s; position: relative;
         }
+        .product-card:active { transform: scale(0.96); }
         .product-title { font-size: 13px; font-weight: 600; height: 35px; overflow: hidden; margin-bottom: 2px; color: var(--text-color); }
         .product-stock { font-size: 11px; color: #777; margin-bottom: 5px; }
         .product-price { color: #FA591D; font-weight: bold; font-size: 14px; margin-bottom: 8px; }
@@ -130,7 +155,7 @@ flashmart_html = """
         .nav-item.active { color: #03AC03; font-weight: bold; }
         .nav-item div { font-size: 20px; }
 
-        .view-section { display: none; padding: 15px; box-sizing: border-box; }
+        .view-section { display: none; padding: 15px; }
         .view-section.active { display: block; }
         
         .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding: 10px 0; }
@@ -151,22 +176,31 @@ flashmart_html = """
 </head>
 <body data-theme="light">
 
+    <!-- SPLASH SCREEN -->
+    <div id="splash-screen">
+        <div class="splash-logo">⚡</div>
+        <div style="font-size: 22px; font-weight: 800; margin-top: 15px;">FlashMart Ultimate Pro</div>
+    </div>
+
     <!-- POP-UP MODAL STRUK BELANJA (RECEIPTIFY STYLE) -->
     <div id="success-modal">
         <div class="receipt-card">
             <h3 style="text-align: center; margin: 0 0 5px 0; font-size: 16px; font-weight: 900;">FLASHMART ULTIMATE</h3>
             <p style="text-align: center; font-size: 11px; margin: 0 0 10px 0; color: #666;">Jl. Raya Minimarket No. 88, Indonesia</p>
             <div style="font-size: 11px; border-bottom: 1px dashed #333; padding-bottom: 8px; margin-bottom: 8px;" id="receipt-meta">
-                Waktu: 2026-11-10 09:00<br>Kasir: Auto-System v3.5
+                Waktu: 2026-11-10 09:00<br>
+                Kasir: Auto-System v3.5
             </div>
             
-            <div style="font-size: 11px; font-weight: bold; display: flex; border-bottom: 1px dashed #333; padding-bottom: 4px; margin-bottom: 6px;">
+            <div style="font-size: 11px; font-weight: bold; display: flex; justify-content: border-bottom; border-bottom: 1px dashed #333; padding-bottom: 4px; margin-bottom: 6px;">
                 <span style="flex: 2;">ITEM</span>
                 <span style="flex: 1; text-align: center;">QTY</span>
                 <span style="flex: 1; text-align: right;">SUBTOTAL</span>
             </div>
             
-            <div id="receipt-items-list" style="font-size: 11px; max-height: 140px; overflow-y: auto; margin-bottom: 8px; border-bottom: 1px dashed #333; padding-bottom: 8px;"></div>
+            <div id="receipt-items-list" style="font-size: 11px; max-height: 140px; overflow-y: auto; margin-bottom: 8px; border-bottom: 1px dashed #333; padding-bottom: 8px;">
+                <!-- Diisi via Javascript -->
+            </div>
 
             <div style="font-size: 11px; line-height: 1.5;">
                 <div style="display: flex; justify-content: space-between;"><span>SUBTOTAL:</span><span id="receipt-subtotal">Rp 0</span></div>
@@ -178,17 +212,18 @@ flashmart_html = """
 
             <div style="text-align: center; margin-top: 15px; font-size: 10px; color: #555;">
                 <p style="margin: 0 0 5px 0;">THANK YOU FOR SHOPPING!</p>
-                <div style="font-family: monospace; font-size: 20px; letter-spacing: 2px;">*FLASHMART9988*</div>
+                <div style="font-family: 'Libre Barcode 39', cursive; font-size: 28px; letter-spacing: 2px;">*FLASHMART9988*</div>
+                <span style="font-size: 9px; color: #888;">receiptify.flashmart.app</span>
             </div>
 
-            <button onclick="closeModal()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 10px; border-radius: 6px; font-weight: bold; margin-top: 15px; font-size: 12px; cursor: pointer;">Selesai & Tutup Struk</button>
+            <button class="ripple-btn" onclick="closeModal()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 10px; border-radius: 6px; font-weight: bold; margin-top: 15px; font-size: 12px; font-family: sans-serif;">Selesai & Tutup Struk</button>
         </div>
     </div>
 
     <div class="app-container">
         
         <!-- BERANDA -->
-        <div id="view-home" class="view-section active">
+        <div id="view-home" class="view-section active" style="padding: 0 0 15px 0;">
             <div class="header">
                 <h3 style="margin:0;">⚡ FlashMart Store Pro</h3>
                 <div class="search-bar">
@@ -197,6 +232,7 @@ flashmart_html = """
                 </div>
             </div>
 
+            <!-- PILIH TOKO ONLINE -->
             <div class="store-selector">
                 <span>🏪 Pilih Toko:</span>
                 <select id="store-select" onchange="changeStore()">
@@ -206,12 +242,13 @@ flashmart_html = """
                 </select>
             </div>
 
+            <!-- QUICK LINK PEMBELIAN PULSA & DIGITAL -->
             <div style="padding: 12px 15px 5px 15px; font-weight: bold; font-size: 13px;">📱 Layanan Pulsa & PPOB</div>
             <div class="digital-grid">
-                <div class="digital-item" onclick="switchTab('pulsa', document.querySelectorAll('.nav-item')[2])">📱 Pulsa</div>
-                <div class="digital-item" onclick="switchTab('pulsa', document.querySelectorAll('.nav-item')[2])">🌐 Kuota Data</div>
-                <div class="digital-item" onclick="switchTab('pulsa', document.querySelectorAll('.nav-item')[2])">⚡ Token PLN</div>
-                <div class="digital-item" onclick="switchTab('pulsa', document.querySelectorAll('.nav-item')[2])">🎮 E-Money</div>
+                <div class="digital-item ripple-btn" onclick="switchTab('pulsa', document.querySelectorAll('.nav-item')[3])">📱 Pulsa</div>
+                <div class="digital-item ripple-btn" onclick="switchTab('pulsa', document.querySelectorAll('.nav-item')[3])">🌐 Kuota Data</div>
+                <div class="digital-item ripple-btn" onclick="switchTab('pulsa', document.querySelectorAll('.nav-item')[3])">⚡ Token PLN</div>
+                <div class="digital-item ripple-btn" onclick="switchTab('pulsa', document.querySelectorAll('.nav-item')[3])">🎮 E-Money</div>
             </div>
 
             <div class="category-scroll" id="category-container">
@@ -239,7 +276,7 @@ flashmart_html = """
             </div>
             <div id="cart-summary" style="display:none; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
                 <input type="text" id="voucher-input" placeholder="Kode Voucher (FLASHMARTINA)" class="admin-input">
-                <button onclick="applyVoucher()" style="background: #333; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-bottom: 15px;">Gunakan Voucher</button>
+                <button class="ripple-btn" onclick="applyVoucher()" style="background: #333; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-bottom: 15px;">Gunakan Voucher</button>
                 
                 <div style="font-size: 14px; margin-bottom: 5px;">Subtotal: <span id="subtotal-text" style="float: right; font-weight: bold;">Rp 0</span></div>
                 <div id="discount-row" style="font-size: 14px; margin-bottom: 5px; color: #03AC03; display: none;">Diskon: <span id="discount-text" style="float: right; font-weight: bold;">- Rp 0</span></div>
@@ -254,35 +291,37 @@ flashmart_html = """
                     </select>
                 </div>
 
+                <!-- INPUT UANG TUNAI & HITUNG KEMBALIAN OTOMATIS -->
                 <div id="cash-payment-box" style="margin-bottom: 15px;">
                     <label style="font-size: 13px; font-weight: bold;">Nominal Uang Pembeli (Rp):</label>
                     <input type="number" id="cash-given" placeholder="Contoh: 100000" class="admin-input" style="margin-top: 5px;" oninput="calculateChange()">
                     <div style="font-size: 14px; font-weight: bold; color: #03AC03; margin-top: 4px;" id="change-text">Uang Kembalian: Rp 0</div>
                 </div>
 
+                <!-- DYNAMIC QR CODE BOX -->
                 <div id="qris-display" class="qr-box" style="display: none;">
                     <div style="font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px;">Scan Kode QRIS Di Bawah Ini:</div>
                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=FLASHMART-ULTIMATE-PAYMENT-QRIS-PRO" alt="QRIS Code">
-                    <div style="font-size: 11px; color: #666; margin-top: 5px;">Dapat di-scan memakai GoPay, OVO, Dana & M-Banking.</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 5px;">Dapat di-scan memakai GoPay, OVO, Dana, ShopeePay & M-Banking.</div>
                 </div>
 
                 <div style="font-size: 16px; font-weight: bold; margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 10px;">Total: <span id="grandtotal-text" style="float: right; color: #FA591D;">Rp 0</span></div>
                 
-                <button onclick="checkout()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; margin-top: 15px; cursor: pointer;">💳 Selesaikan Transaksi & Cetak Struk</button>
+                <button class="ripple-btn" onclick="checkout()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; margin-top: 15px; cursor: pointer;">💳 Selesaikan Transaksi & Cetak Struk</button>
             </div>
         </div>
 
-        <!-- TAB PULSA -->
+        <!-- TAB ISI PULSA & DATA OPERATOR -->
         <div id="view-pulsa" class="view-section">
             <h3>📱 Isi Pulsa & Paket Data Online</h3>
             <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px;">
                 <label style="font-size: 13px; font-weight: bold;">1. Pilih Operator Sinyal:</label>
                 <select id="pulsa-operator" class="admin-input" style="margin-top: 5px;">
-                    <option value="Telkomsel">Telkomsel</option>
-                    <option value="Indosat">Indosat</option>
+                    <option value="Telkomsel">Telkomsel (Negeri / BUMN)</option>
+                    <option value="Indosat">Indosat Ooredoo Hutchison</option>
                     <option value="XL">XL Axiata</option>
                     <option value="Tri">Tri (3)</option>
-                    <option value="Smartfren">Smartfren</option>
+                    <option value="Smartfren">Smartfren Telecom</option>
                     <option value="Axis">Axis</option>
                 </select>
 
@@ -295,15 +334,15 @@ flashmart_html = """
                     <option value="26000">Pulsa 25.000 (Rp 26.000)</option>
                     <option value="51000">Pulsa 50.000 (Rp 51.000)</option>
                     <option value="101000">Pulsa 100.000 (Rp 101.000)</option>
-                    <option value="35000">Paket Data 5GB (Rp 35.000)</option>
-                    <option value="65000">Paket Data 15GB (Rp 65.000)</option>
+                    <option value="35000">Paket Data 5GB 30 Hari (Rp 35.000)</option>
+                    <option value="65000">Paket Data 15GB 30 Hari (Rp 65.000)</option>
                 </select>
 
-                <button onclick="buyPulsa()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px;">⚡ Beli Pulsa Sekarang</button>
+                <button class="ripple-btn" onclick="buyPulsa()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px;">⚡ Beli Pulsa Sekarang</button>
             </div>
         </div>
 
-        <!-- RIWAYAT -->
+        <!-- RIWAYAT & KURIR -->
         <div id="view-history" class="view-section">
             <h3>📜 Riwayat & Pelacakan Kurir</h3>
             <div id="history-container">
@@ -311,7 +350,7 @@ flashmart_html = """
             </div>
         </div>
 
-        <!-- AKUN -->
+        <!-- AKUN & MANAJEMEN STOK -->
         <div id="view-account" class="view-section">
             <h3>👤 Akun & Kelola Stok</h3>
             <div class="profile-card">
@@ -323,8 +362,9 @@ flashmart_html = """
                 </div>
             </div>
 
+            <!-- FORM TAMBAH PRODUK BARU -->
             <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px;">
-                <h4 style="margin-top: 0; color: #03AC03;">📦 Tambah Produk Baru</h4>
+                <h4 style="margin-top: 0; color: #03AC03;">📦 Tambah Produk Baru ke Toko Aktif</h4>
                 <input type="text" id="new-name" placeholder="Nama Produk" class="admin-input">
                 <input type="number" id="new-price" placeholder="Harga (Rp)" class="admin-input">
                 <input type="number" id="new-stock" placeholder="Jumlah Stok" class="admin-input">
@@ -336,7 +376,7 @@ flashmart_html = """
                     <option value="Camilan">Camilan</option>
                 </select>
                 <input type="text" id="new-icon" placeholder="Emoji Ikon (Contoh: 🍪)" class="admin-input">
-                <button onclick="addNewProduct()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer;">Simpan Produk</button>
+                <button class="ripple-btn" onclick="addNewProduct()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer;">Simpan Produk</button>
             </div>
 
             <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px;">
@@ -349,19 +389,19 @@ flashmart_html = """
 
         <!-- NAVIGASI BAWAH -->
         <div class="bottom-nav">
-            <button class="nav-item active" onclick="switchTab('home', this)">
+            <button class="nav-item active ripple-btn" onclick="switchTab('home', this)">
                 <div>🏠</div>Beranda
             </button>
-            <button class="nav-item" onclick="switchTab('cart', this)">
+            <button class="nav-item ripple-btn" onclick="switchTab('cart', this)">
                 <div>🛒</div>Keranjang
             </button>
-            <button class="nav-item" onclick="switchTab('pulsa', this)">
+            <button class="nav-item ripple-btn" onclick="switchTab('pulsa', this)">
                 <div>📱</div>Pulsa
             </button>
-            <button class="nav-item" onclick="switchTab('history', this)">
+            <button class="nav-item ripple-btn" onclick="switchTab('history', this)">
                 <div>🚚</div>Lacakan
             </button>
-            <button class="nav-item" onclick="switchTab('account', this)">
+            <button class="nav-item ripple-btn" onclick="switchTab('account', this)">
                 <div>👤</div>Akun
             </button>
         </div>
@@ -396,14 +436,6 @@ flashmart_html = """
                 { id: 304, name: "Deterjen Bubuk 5kg", price: 68000, stock: 15, category: "Perawatan", icon: "🧼" },
                 { id: 305, name: "Mie Instan (3 Dus Sekaligus)", price: 340000, stock: 6, category: "Sembako", icon: "📦" }
             ]
-            // Menghilangkan splash screen otomatis setelah animasi selesai
-setTimeout(function() {
-    const splash = document.getElementById('splash-screen');
-    if (splash) {
-        splash.style.opacity = '0';
-        setTimeout(() => splash.style.display = 'none', 500);
-    }, 1500);
-
         };
 
         let currentStore = "Pusat";
@@ -412,6 +444,21 @@ setTimeout(function() {
         let history = [];
         let discountActive = false;
         let activeCategory = 'Semua';
+
+        document.addEventListener('click', function (e) {
+            const target = e.target.closest('.ripple-btn');
+            if (target) {
+                const circle = document.createElement('span');
+                const diameter = Math.max(target.clientWidth, target.clientHeight);
+                const radius = diameter / 2;
+                circle.style.width = circle.style.height = diameter + 'px';
+                circle.style.left = (e.clientX - target.getBoundingClientRect().left - radius) + 'px';
+                circle.style.top = (e.clientY - target.getBoundingClientRect().top - radius) + 'px';
+                circle.classList.add('ripple');
+                target.appendChild(circle);
+                setTimeout(() => circle.remove(), 500);
+            }
+        });
 
         function toggleQR() {
             const method = document.getElementById('payment-method').value;
@@ -472,8 +519,8 @@ setTimeout(function() {
                     <div class="product-stock">Stok: ` + p.stock + `</div>
                     <div class="product-price">Rp ` + p.price.toLocaleString('id-ID') + `</div>
                     <div class="btn-group">
-                        <button class="btn-cart" onclick="addToCart(` + p.id + `)">+ Keranjang</button>
-                        <button class="btn-buy-now" onclick="buyNow(` + p.id + `)">Beli</button>
+                        <button class="ripple-btn btn-cart" onclick="addToCart(` + p.id + `)">+ Keranjang</button>
+                        <button class="ripple-btn btn-buy-now" onclick="buyNow(` + p.id + `)">Beli</button>
                     </div>
                 </div>
             `).join('');
@@ -588,7 +635,7 @@ setTimeout(function() {
             const code = document.getElementById('voucher-input').value.trim().toUpperCase();
             if (code === 'FLASHMARTINA') {
                 discountActive = true;
-                alert("🎉 Voucher Berhasil Digunakan! Potongan Rp 10.000");
+                alert("🎉 Voucher FLASHMARTINA Berhasil Digunakan! Potongan Rp 10.000");
             } else {
                 discountActive = false;
                 alert("❌ Kode Voucher tidak valid.");
@@ -626,8 +673,11 @@ setTimeout(function() {
             const earnedPoints = Math.floor(grandTotal / 10000);
             points += earnedPoints;
             document.getElementById('user-points').innerText = points + ' Poin';
+
             const now = new Date().toLocaleString('id-ID');
 
+            // Render ke Struk Receiptify Style
+            document.getElementById('receipt-meta').innerHTML = "Waktu: " + now + "<br>Metode: " + method;
             let receiptHtml = '';
             for (let id in cart) {
                 const item = cart[id];
@@ -638,7 +688,6 @@ setTimeout(function() {
                 </div>`;
             }
             document.getElementById('receipt-items-list').innerHTML = receiptHtml;
-            document.getElementById('receipt-meta').innerHTML = "Waktu: " + now + "<br>Metode: " + method;
             document.getElementById('receipt-subtotal').innerText = "Rp " + subtotal.toLocaleString('id-ID');
             
             if (discount > 0) {
@@ -663,6 +712,8 @@ setTimeout(function() {
             cart = {};
             discountActive = false;
             document.getElementById('cash-given').value = '';
+
+            // Tampilkan Struk
             document.getElementById('success-modal').style.display = 'flex';
         }
 
@@ -681,6 +732,7 @@ setTimeout(function() {
             document.getElementById('user-points').innerText = points + ' Poin';
             const now = new Date().toLocaleString('id-ID');
 
+            // Render Struk Pulsa
             document.getElementById('receipt-meta').innerHTML = "Waktu: " + now + "<br>Jenis: Pulsa / PPOB";
             document.getElementById('receipt-items-list').innerHTML = `
                 <div style="display: flex; justify-content: space-between;">
@@ -753,7 +805,7 @@ setTimeout(function() {
             document.getElementById('new-stock').value = '';
             document.getElementById('new-icon').value = '';
 
-            alert("✅ Produk baru berhasil ditambahkan!");
+            alert("✅ Produk baru berhasil ditambahkan ke toko FlashMart " + currentStore + "!");
             filterProducts();
         }
 
@@ -762,7 +814,6 @@ setTimeout(function() {
             document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
         }
 
-        // Jalankan render produk pertama kali saat halaman dimuat
         filterProducts();
     </script>
 </body>
