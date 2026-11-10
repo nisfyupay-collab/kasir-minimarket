@@ -30,6 +30,14 @@ flashmart_html = """
             --nav-bg: #1e1e1e;
             --border-color: #333333;
         }
+#splash-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    z-index: 9999; color: white;
+    transition: opacity 0.5s ease; /* Tambahkan baris ini */
+}
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
