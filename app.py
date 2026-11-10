@@ -192,7 +192,7 @@ flashmart_html = """
                 Kasir: Auto-System v3.5
             </div>
             
-            <div style="font-size: 11px; font-weight: bold; display: flex; justify-content: border-bottom; border-bottom: 1px dashed #333; padding-bottom: 4px; margin-bottom: 6px;">
+            <div style="font-size: 11px; font-weight: bold; display: flex; border-bottom: 1px dashed #333; padding-bottom: 4px; margin-bottom: 6px;">
                 <span style="flex: 2;">ITEM</span>
                 <span style="flex: 1; text-align: center;">QTY</span>
                 <span style="flex: 1; text-align: right;">SUBTOTAL</span>
@@ -212,7 +212,7 @@ flashmart_html = """
 
             <div style="text-align: center; margin-top: 15px; font-size: 10px; color: #555;">
                 <p style="margin: 0 0 5px 0;">THANK YOU FOR SHOPPING!</p>
-                <div style="font-family: 'Libre Barcode 39', cursive; font-size: 28px; letter-spacing: 2px;">*FLASHMART9988*</div>
+                <div style="font-family: monospace; font-size: 20px; letter-spacing: 2px;">*FLASHMART9988*</div>
                 <span style="font-size: 9px; color: #888;">receiptify.flashmart.app</span>
             </div>
 
@@ -245,10 +245,10 @@ flashmart_html = """
             <!-- QUICK LINK PEMBELIAN PULSA & DIGITAL -->
             <div style="padding: 12px 15px 5px 15px; font-weight: bold; font-size: 13px;">📱 Layanan Pulsa & PPOB</div>
             <div class="digital-grid">
-                <div class="digital-item ripple-btn" onclick="switchTab('pulsa', document.querySelectorAll('.nav-item')[3])">📱 Pulsa</div>
-                <div class="digital-item ripple-btn" onclick="switchTab('pulsa', document.querySelectorAll('.nav-item')[3])">🌐 Kuota Data</div>
-                <div class="digital-item ripple-btn" onclick="switchTab('pulsa', document.querySelectorAll('.nav-item')[3])">⚡ Token PLN</div>
-                <div class="digital-item ripple-btn" onclick="switchTab('pulsa', document.querySelectorAll('.nav-item')[3])">🎮 E-Money</div>
+                <div class="digital-item ripple-btn" onclick="switchTab('pulsa', document.querySelectorAll('.nav-item')[2])">📱 Pulsa</div>
+                <div class="digital-item ripple-btn" onclick="switchTab('pulsa', document.querySelectorAll('.nav-item')[2])">🌐 Kuota Data</div>
+                <div class="digital-item ripple-btn" onclick="switchTab('pulsa', document.querySelectorAll('.nav-item')[2])">⚡ Token PLN</div>
+                <div class="digital-item ripple-btn" onclick="switchTab('pulsa', document.querySelectorAll('.nav-item')[2])">🎮 E-Money</div>
             </div>
 
             <div class="category-scroll" id="category-container">
@@ -333,7 +333,7 @@ flashmart_html = """
                     <option value="11000">Pulsa 10.000 (Rp 11.000)</option>
                     <option value="26000">Pulsa 25.000 (Rp 26.000)</option>
                     <option value="51000">Pulsa 50.000 (Rp 51.000)</option>
-                     <option value="101000">Pulsa 100.000 (Rp 101.000)</option>
+                    <option value="101000">Pulsa 100.000 (Rp 101.000)</option>
                     <option value="35000">Paket Data 5GB 30 Hari (Rp 35.000)</option>
                     <option value="65000">Paket Data 15GB 30 Hari (Rp 65.000)</option>
                 </select>
@@ -673,11 +673,8 @@ flashmart_html = """
             const earnedPoints = Math.floor(grandTotal / 10000);
             points += earnedPoints;
             document.getElementById('user-points').innerText = points + ' Poin';
-
             const now = new Date().toLocaleString('id-ID');
 
-            // Render ke Struk Receiptify Style
-            document.getElementById('receipt-meta').innerHTML = "Waktu: " + now + "<br>Metode: " + method;
             let receiptHtml = '';
             for (let id in cart) {
                 const item = cart[id];
@@ -688,6 +685,7 @@ flashmart_html = """
                 </div>`;
             }
             document.getElementById('receipt-items-list').innerHTML = receiptHtml;
+            document.getElementById('receipt-meta').innerHTML = "Waktu: " + now + "<br>Metode: " + method;
             document.getElementById('receipt-subtotal').innerText = "Rp " + subtotal.toLocaleString('id-ID');
             
             if (discount > 0) {
@@ -712,8 +710,6 @@ flashmart_html = """
             cart = {};
             discountActive = false;
             document.getElementById('cash-given').value = '';
-
-            // Tampilkan Struk
             document.getElementById('success-modal').style.display = 'flex';
         }
 
@@ -727,98 +723,4 @@ flashmart_html = """
                 return;
             }
 
-            const earnedPoints = Math.floor(price / 10000);
-            points += earnedPoints;
-            document.getElementById('user-points').innerText = points + ' Poin';
-            const now = new Date().toLocaleString('id-ID');
-
-            // Render Struk Pulsa
-            document.getElementById('receipt-meta').innerHTML = "Waktu: " + now + "<br>Jenis: Pulsa / PPOB";
-            document.getElementById('receipt-items-list').innerHTML = `
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="flex: 2;">${op} (${phone})</span>
-                    <span style="flex: 1; text-align: center;">1</span>
-                    <span style="flex: 1; text-align: right;">Rp ${price.toLocaleString('id-ID')}</span>
-                </div>
-            `;
-            document.getElementById('receipt-subtotal').innerText = "Rp " + price.toLocaleString('id-ID');
-            document.getElementById('receipt-disc-row').style.display = 'none';
-            document.getElementById('receipt-total').innerText = "Rp " + price.toLocaleString('id-ID');
-            document.getElementById('receipt-cash').innerText = "Rp " + price.toLocaleString('id-ID');
-            document.getElementById('receipt-change').innerText = "Rp 0";
-
-            history.unshift({
-                date: now,
-                total: price,
-                payment: "Pulsa " + op,
-                earned: earnedPoints,
-                status: "Pulsa Sukses Terkirim 📱"
-            });
-
-            document.getElementById('pulsa-phone').value = '';
-            document.getElementById('success-modal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('success-modal').style.display = 'none';
-            switchTab('history', document.querySelectorAll('.nav-item')[3]);
-        }
-
-        function renderHistory() {
-            const container = document.getElementById('history-container');
-            if (history.length === 0) {
-                container.innerHTML = '<p style="color: #777; text-align: center; margin-top: 30px;">Belum ada riwayat transaksi.</p>';
-                return;
-            }
-
-            container.innerHTML = history.map(tx => `
-                <div class="tracker-box">
-                    <div style="font-size: 11px; color: #888;">` + tx.date + ` • Metode: ` + tx.payment + `</div>
-                    <div style="font-weight: bold; font-size: 14px; margin: 4px 0;">Total: Rp ` + tx.total.toLocaleString('id-ID') + `</div>
-                    <div style="color: #FA591D; font-size: 12px; font-weight: bold;">Status: ` + tx.status + `</div>
-                    <div class="stepper">
-                        <span>📦 Proses</span>
-                        <span>⚡ Dikonfirmasi</span>
-                        <span>🏡 Selesai</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function addNewProduct() {
-            const name = document.getElementById('new-name').value.trim();
-            const price = parseInt(document.getElementById('new-price').value);
-            const stock = parseInt(document.getElementById('new-stock').value);
-            const category = document.getElementById('new-category').value;
-            const icon = document.getElementById('new-icon').value.trim() || "📦";
-
-            if (!name || isNaN(price) || isNaN(stock)) {
-                alert("Mohon lengkapi data produk dengan benar!");
-                return;
-            }
-
-            const newId = Date.now();
-            storesData[currentStore].push({ id: newId, name, price, stock, category, icon });
-            
-            document.getElementById('new-name').value = '';
-            document.getElementById('new-price').value = '';
-            document.getElementById('new-stock').value = '';
-            document.getElementById('new-icon').value = '';
-
-            alert("✅ Produk baru berhasil ditambahkan ke toko FlashMart " + currentStore + "!");
-            filterProducts();
-        }
-
-        function toggleTheme() {
-            const isDark = document.getElementById('theme-toggle').checked;
-            document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
-        }
-
-        filterProducts();
-    </script>
-</body>
-</html>
-"""
-
-components.html(flashmart_html, height=880, scrolling=True)
-               
+  
