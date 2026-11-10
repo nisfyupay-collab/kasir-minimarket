@@ -724,4 +724,33 @@ flashmart_html = """
             const category = document.getElementById('new-category').value;
             const icon = document.getElementById('new-icon').value.trim() || "📦";
 
-            if (!name || i
+            if (!name || isNaN(price) || isNaN(stock)) {
+                alert("Mohon lengkapi data produk dengan benar!");
+                return;
+            }
+
+            const newId = Date.now();
+            storesData[currentStore].push({ id: newId, name, price, stock, category, icon });
+            
+            document.getElementById('new-name').value = '';
+            document.getElementById('new-price').value = '';
+            document.getElementById('new-stock').value = '';
+            document.getElementById('new-icon').value = '';
+
+            alert("✅ Produk baru berhasil ditambahkan!");
+            filterProducts();
+        }
+
+        function toggleTheme() {
+            const isDark = document.getElementById('theme-toggle').checked;
+            document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        }
+
+        // Jalankan render produk pertama kali saat halaman dimuat
+        filterProducts();
+    </script>
+</body>
+</html>
+"""
+
+components.html(flashmart_html, height=880, scrolling=True)
