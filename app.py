@@ -84,16 +84,16 @@ flashmart_html = '''
             100% { filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); }
         }
 
-        #success-modal {
+        #success-modal, #tracking-detail-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center;
             z-index: 10000; backdrop-filter: blur(4px); overflow-y: auto; padding: 20px;
         }
-        .receipt-card {
-            background: #fff; color: #333; width: 100%; max-width: 340px; padding: 20px;
-            border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); font-family: 'Courier New', Courier, monospace;
-            position: relative; margin: auto;
+        .receipt-card, .tracking-card {
+            background: var(--card-bg); color: var(--text-color); width: 100%; max-width: 360px; padding: 20px;
+            border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); position: relative; margin: auto;
         }
+        .receipt-card { font-family: 'Courier New', Courier, monospace; background: #fff; color: #333; }
         .receipt-card::before {
             content: ""; position: absolute; top: -10px; left: 0; width: 100%; height: 10px;
             background: radial-gradient(circle, transparent, transparent 50%, #fff 50%, #fff 100%);
@@ -171,7 +171,11 @@ flashmart_html = '''
         
         .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding: 10px 0; }
         .profile-card { background: linear-gradient(135deg, #03AC03 0%, #42B549 100%); color: white; padding: 16px; border-radius: 16px; margin-bottom: 15px; }
-        .tracker-box { background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; margin-bottom: 10px; }
+        .tracker-box { 
+            background: var(--card-bg); border: 1px solid var(--border-color); padding: 14px; border-radius: 12px; margin-bottom: 12px;
+            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+        .tracker-box:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color: #03AC03; }
         .stepper { display: flex; justify-content: space-between; margin-top: 10px; font-size: 11px; color: #03AC03; font-weight: bold; }
         
         .admin-input {
@@ -227,6 +231,20 @@ flashmart_html = '''
             </div>
 
             <button class="ripple-btn" onclick="closeModal()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 10px; border-radius: 6px; font-weight: bold; margin-top: 15px; font-size: 12px; cursor: pointer;">Selesai & Tutup Struk</button>
+        </div>
+    </div>
+
+    <!-- MODAL DETAIL & PETA PELACAKAN KURIR -->
+    <div id="tracking-detail-modal">
+        <div class="tracking-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 12px;">
+                <h3 style="margin: 0; font-size: 16px; color: #03AC03;">📍 Detail Pelacakan Paket</h3>
+                <button onclick="closeTrackingModal()" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #777;">✕</button>
+            </div>
+            <div id="tracking-detail-content" style="font-size: 13px; line-height: 1.6;">
+                <!-- Diisi via JavaScript -->
+            </div>
+            <button class="ripple-btn" onclick="closeTrackingModal()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 15px; cursor: pointer; font-size: 13px;">Tutup</button>
         </div>
     </div>
 
@@ -365,9 +383,10 @@ flashmart_html = '''
             </div>
         </div>
 
-        <!-- RIWAYAT -->
+        <!-- RIWAYAT & PELACAKAN -->
         <div id="view-history" class="view-section">
             <h3>📜 Riwayat & Pelacakan Kurir</h3>
+            <p style="font-size: 12px; color: #666; margin-bottom: 12px;">👉 Tekan salah satu kartu pesanan di bawah untuk melihat detail posisi kurir dan peta pengiriman!</p>
             <div id="history-container">
                 <p style="color: #777; text-align: center; margin-top: 30px;">Belum ada riwayat transaksi.</p>
             </div>
@@ -432,7 +451,6 @@ flashmart_html = '''
     </div>
 
     <script>
-        // Tutup Splash Screen otomatis dengan transisi mulus setelah 1.8 detik
         window.addEventListener('load', function() {
             setTimeout(function() {
                 const splash = document.getElementById('splash-screen');
@@ -785,11 +803,20 @@ flashmart_html = '''
             const earnedPoints = Math.floor(grandTotal / 10000);
             points += earnedPoints;
             document.getElementById('user-points').innerText = points + ' Poin';
-            const now = new Date().toLocaleString('id-ID');
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            
+            // Estimasi Tiba 2 Hari ke Depan
+            let arrivalDate = new Date(now);
+            arrivalDate.setDate(now.getDate() + 2);
+            const arrivalStr = arrivalDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
 
             let receiptHtml = '';
+            let itemsSummaryArray = [];
             for (let id in cart) {
                 const item = cart[id];
+                itemsSummaryArray.push(item.name + ' (' + item.qty + 'x)');
                 receiptHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
                     <span style="flex: 2;">${item.name}</span>
                     <span style="flex: 1; text-align: center;">${item.qty}</span>
@@ -797,7 +824,7 @@ flashmart_html = '''
                 </div>`;
             }
             document.getElementById('receipt-items-list').innerHTML = receiptHtml;
-            document.getElementById('receipt-meta').innerHTML = "Waktu: " + now + "<br>Metode: " + method;
+            document.getElementById('receipt-meta').innerHTML = "Waktu: " + dateStr + " " + timeStr + "<br>Metode: " + method;
             document.getElementById('receipt-subtotal').innerText = "Rp " + subtotal.toLocaleString('id-ID');
             
             if (discount > 0) {
@@ -812,11 +839,16 @@ flashmart_html = '''
             document.getElementById('receipt-change').innerText = "Rp " + change.toLocaleString('id-ID');
 
             history.unshift({
-                date: now,
+                orderId: "FM-" + Math.floor(100000 + Math.random() * 900000),
+                date: dateStr + " | " + timeStr,
+                arrivalEst: arrivalStr,
                 total: grandTotal,
                 payment: method,
+                items: itemsSummaryArray.join(', '),
                 earned: earnedPoints,
-                status: "Selesai & Lunas ✅"
+                status: "Dalam Perjalanan Kurir 🚚",
+                courier: "FlashExpress (Kurir VIP)",
+                location: "Sorting Center Gudang Utama (Jakarta / Hub Terdekat)"
             });
 
             cart = {};
@@ -839,9 +871,11 @@ flashmart_html = '''
             const earnedPoints = Math.floor(price / 10000);
             points += earnedPoints;
             document.getElementById('user-points').innerText = points + ' Poin';
-            const now = new Date().toLocaleString('id-ID');
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 
-            document.getElementById('receipt-meta').innerHTML = "Waktu: " + now + "<br>Layanan: " + currentDigitalType + " (" + provider + ")<br>Pembayaran: " + paymentMethod;
+            document.getElementById('receipt-meta').innerHTML = "Waktu: " + dateStr + " " + timeStr + "<br>Layanan: " + currentDigitalType + " (" + provider + ")";
             document.getElementById('receipt-items-list').innerHTML = `
                 <div style="display: flex; justify-content: space-between;">
                     <span style="flex: 2;">${currentDigitalType} - ${provider}<br><small>Tujuan: ${target}</small></span>
@@ -856,11 +890,16 @@ flashmart_html = '''
             document.getElementById('receipt-change').innerText = "Rp 0";
 
             history.unshift({
-                date: now,
+                orderId: "PPOB-" + Math.floor(100000 + Math.random() * 900000),
+                date: dateStr + " | " + timeStr,
+                arrivalEst: "Instant (Detik Ini)",
                 total: price,
                 payment: currentDigitalType + " (" + paymentMethod + ")",
+                items: currentDigitalType + " " + provider + " (" + target + ")",
                 earned: earnedPoints,
-                status: currentDigitalType + " Berhasil & Sukses ✅"
+                status: currentDigitalType + " Berhasil & Sukses ✅",
+                courier: "Sistem Otomatis PPOB",
+                location: "Server Pusat Operator (Online)"
             });
 
             document.getElementById('digital-target').value = '';
@@ -872,6 +911,39 @@ flashmart_html = '''
             switchTab('history', document.querySelectorAll('.nav-item')[3]);
         }
 
+        function closeTrackingModal() {
+            document.getElementById('tracking-detail-modal').style.display = 'none';
+        }
+
+        function showTrackingDetail(index) {
+            const tx = history[index];
+            const detailModal = document.getElementById('tracking-detail-modal');
+            const content = document.getElementById('tracking-detail-content');
+
+            content.innerHTML = `
+                <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+                    <strong>No. Resi / ID:</strong> ${tx.orderId}<br>
+                    <strong>Waktu Pesan:</strong> ${tx.date}<br>
+                    <strong>Estimasi Tiba:</strong> <span style="color: #03AC03; font-weight: bold;">${tx.arrivalEst}</span><br>
+                    <strong>Kurir Pengantar:</strong> ${tx.courier}<br>
+                    <strong>Metode Bayar:</strong> ${tx.payment}
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>Isi Paket:</strong><br>
+                    <span style="color: #555;">${tx.items}</span>
+                </div>
+                <div style="background: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 8px; font-weight: bold; margin-bottom: 12px; font-size: 12px;">
+                    📍 Posisi Terkini:<br>
+                    ${tx.location}
+                </div>
+                <div style="border: 2px dashed #03AC03; border-radius: 8px; overflow: hidden; background: #fff; text-align: center;">
+                    <iframe width="100%" height="160" style="border:0;" loading="lazy" allowfullscreen src="https://maps.google.com/maps?q=-6.2088,106.8456&z=14&output=embed"></iframe>
+                    <div style="font-size: 11px; padding: 6px; color: #555; background: #f1f8e9;">🗺️ Simulasi Live Tracking Kurir FlashMart</div>
+                </div>
+            `;
+            detailModal.style.display = 'flex';
+        }
+
         function renderHistory() {
             const container = document.getElementById('history-container');
             if (history.length === 0) {
@@ -879,15 +951,17 @@ flashmart_html = '''
                 return;
             }
 
-            container.innerHTML = history.map(tx => `
-                <div class="tracker-box">
-                    <div style="font-size: 11px; color: #888;">` + tx.date + ` • ` + tx.payment + `</div>
-                    <div style="font-weight: bold; font-size: 14px; margin: 4px 0;">Total: Rp ` + tx.total.toLocaleString('id-ID') + `</div>
-                    <div style="color: #FA591D; font-size: 12px; font-weight: bold;">Status: ` + tx.status + `</div>
-                    <div class="stepper">
-                        <span>📦 Proses</span>
-                        <span>⚡ Terkirim</span>
-                        <span>🏡 Selesai</span>
+            container.innerHTML = history.map((tx, idx) => `
+                <div class="tracker-box" onclick="showTrackingDetail(${idx})">
+                    <div style="display: flex; justify-content: space-between; font-size: 11px; color: #888;">
+                        <span>📦 ${tx.orderId}</span>
+                        <span>📅 Estimasi: ${tx.arrivalEst}</span>
+                    </div>
+                    <div style="font-weight: bold; font-size: 13px; margin: 4px 0; color: var(--text-color);">${tx.items}</div>
+                    <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Total: Rp ${tx.total.toLocaleString('id-ID')} (${tx.payment})</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+                        <span style="color: #03AC03; font-size: 12px; font-weight: bold;">Status: ${tx.status}</span>
+                        <span style="font-size: 11px; background: #e8f5e9; color: #2e7d32; padding: 3px 8px; border-radius: 4px; font-weight: bold;">🔍 Cek Peta</span>
                     </div>
                 </div>
             `).join('');
