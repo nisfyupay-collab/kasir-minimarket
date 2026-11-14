@@ -169,7 +169,50 @@ flashmart_html = '''
         .view-section { display: none; padding: 15px; }
         .view-section.active { display: block; }
         
-        .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding: 10px 0; }
+        /* KERANJANG ALA MARKETPLACE MODERN (SHOPEE STYLE) */
+        .cart-store-group {
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px;
+            margin-bottom: 12px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+        .cart-store-header {
+            padding: 10px 12px; border-bottom: 1px solid var(--border-color); display: flex;
+            align-items: center; gap: 8px; font-weight: bold; font-size: 13px; background: rgba(3, 172, 3, 0.04);
+        }
+        .cart-item-card {
+            display: flex; align-items: center; gap: 10px; padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .cart-item-card:last-child { border-bottom: none; }
+        .cart-checkbox { width: 18px; height: 18px; accent-color: #FA591D; cursor: pointer; flex-shrink: 0; }
+        .cart-item-icon {
+            font-size: 30px; width: 54px; height: 54px; background: var(--bg-color); border-radius: 10px;
+            display: flex; justify-content: center; align-items: center; flex-shrink: 0; border: 1px solid var(--border-color);
+        }
+        .cart-item-info { flex: 1; min-width: 0; }
+        .cart-item-title {
+            font-weight: 600; font-size: 13px; color: var(--text-color); margin-bottom: 4px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .cart-item-price { color: #FA591D; font-weight: bold; font-size: 13px; }
+        .qty-stepper {
+            display: inline-flex; align-items: center; border: 1px solid var(--border-color);
+            border-radius: 6px; overflow: hidden; margin-top: 6px;
+        }
+        .qty-stepper button {
+            background: var(--bg-color); border: none; color: var(--text-color); width: 24px; height: 24px;
+            font-weight: bold; cursor: pointer; font-size: 13px;
+        }
+        .qty-stepper span { padding: 0 10px; font-size: 12px; font-weight: bold; }
+        .btn-del-item {
+            background: none; border: none; color: #999; font-size: 16px; cursor: pointer; padding: 4px;
+        }
+        .btn-del-item:hover { color: #FA591D; }
+        .cart-select-all-bar {
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px;
+            padding: 10px 12px; margin-bottom: 12px; display: flex; justify-content: space-between;
+            align-items: center; font-size: 13px; font-weight: 600;
+        }
+
         .profile-card { background: linear-gradient(135deg, #03AC03 0%, #42B549 100%); color: white; padding: 16px; border-radius: 16px; margin-bottom: 15px; }
         .tracker-box { 
             background: var(--card-bg); border: 1px solid var(--border-color); padding: 14px; border-radius: 12px; margin-bottom: 12px;
@@ -241,9 +284,7 @@ flashmart_html = '''
                 <h3 style="margin: 0; font-size: 16px; color: #03AC03;">📍 Detail Pelacakan Paket</h3>
                 <button onclick="closeTrackingModal()" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #777;">✕</button>
             </div>
-            <div id="tracking-detail-content" style="font-size: 13px; line-height: 1.6;">
-                <!-- Diisi via JavaScript -->
-            </div>
+            <div id="tracking-detail-content" style="font-size: 13px; line-height: 1.6;"></div>
             <button class="ripple-btn" onclick="closeTrackingModal()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 15px; cursor: pointer; font-size: 13px;">Tutup</button>
         </div>
     </div>
@@ -298,20 +339,23 @@ flashmart_html = '''
             <div class="product-grid" id="product-list"></div>
         </div>
 
-        <!-- KERANJANG & CHECKOUT -->
+        <!-- KERANJANG & CHECKOUT (MODEL KERANJANG SHOPEE) -->
         <div id="view-cart" class="view-section">
-            <h3>🛒 Keranjang Belanja</h3>
+            <h3 style="margin-top: 0;">🛒 Keranjang Saya</h3>
             <div id="cart-items-container">
                 <p style="color: #777; text-align: center; margin-top: 30px;">Keranjang masih kosong.</p>
             </div>
-            <div id="cart-summary" style="display:none; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
-                <input type="text" id="voucher-input" placeholder="Kode Voucher (FLASHMARTINA)" class="admin-input">
-                <button class="ripple-btn" onclick="applyVoucher()" style="background: #333; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-bottom: 15px;">Gunakan Voucher</button>
+            <div id="cart-summary" style="display:none; margin-top: 15px; background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px;">
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 6px; color: #FA591D;">🎟️ Voucher FlashMart</div>
+                <div style="display: flex; gap: 6px; margin-bottom: 12px;">
+                    <input type="text" id="voucher-input" placeholder="Masukkan kode (FLASHMARTINA)" class="admin-input" style="margin-bottom: 0; flex: 1;">
+                    <button class="ripple-btn" onclick="applyVoucher()" style="background: #FA591D; color: white; border: none; padding: 0 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: bold;">Pakai</button>
+                </div>
                 
-                <div style="font-size: 14px; margin-bottom: 5px;">Subtotal: <span id="subtotal-text" style="float: right; font-weight: bold;">Rp 0</span></div>
-                <div id="discount-row" style="font-size: 14px; margin-bottom: 5px; color: #03AC03; display: none;">Diskon: <span id="discount-text" style="float: right; font-weight: bold;">- Rp 0</span></div>
+                <div style="font-size: 13px; margin-bottom: 5px;">Subtotal Produk Dipilih: <span id="subtotal-text" style="float: right; font-weight: bold;">Rp 0</span></div>
+                <div id="discount-row" style="font-size: 13px; margin-bottom: 5px; color: #03AC03; display: none;">Diskon Voucher: <span id="discount-text" style="float: right; font-weight: bold;">- Rp 0</span></div>
                 
-                <div style="margin: 15px 0;">
+                <div style="margin: 12px 0;">
                     <label style="font-size: 13px; font-weight: bold;">Metode Pembayaran:</label>
                     <select id="payment-method" class="admin-input" style="margin-top: 5px;" onchange="toggleQR()">
                         <option value="Tunai">Tunai / Cash (Bayar di Kasir)</option>
@@ -321,10 +365,10 @@ flashmart_html = '''
                     </select>
                 </div>
 
-                <div id="cash-payment-box" style="margin-bottom: 15px;">
+                <div id="cash-payment-box" style="margin-bottom: 12px;">
                     <label style="font-size: 13px; font-weight: bold;">Nominal Uang Pembeli (Rp):</label>
                     <input type="number" id="cash-given" placeholder="Contoh: 100000" class="admin-input" style="margin-top: 5px;" oninput="calculateChange()">
-                    <div style="font-size: 14px; font-weight: bold; color: #03AC03; margin-top: 4px;" id="change-text">Uang Kembalian: Rp 0</div>
+                    <div style="font-size: 13px; font-weight: bold; color: #03AC03; margin-top: 4px;" id="change-text">Uang Kembalian: Rp 0</div>
                 </div>
 
                 <div id="qris-display" class="qr-box" style="display: none;">
@@ -333,9 +377,13 @@ flashmart_html = '''
                     <div style="font-size: 11px; color: #666; margin-top: 5px;">Dapat di-scan memakai GoPay, OVO, Dana & M-Banking.</div>
                 </div>
 
-                <div style="font-size: 16px; font-weight: bold; margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 10px;">Total: <span id="grandtotal-text" style="float: right; color: #FA591D;">Rp 0</span></div>
-                
-                <button class="ripple-btn" onclick="checkout()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; margin-top: 15px; cursor: pointer;">💳 Selesaikan Transaksi & Cetak Struk</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; border-top: 1px dashed var(--border-color); padding-top: 12px;">
+                    <div>
+                        <div style="font-size: 11px; color: #777;">Total Pembayaran</div>
+                        <div id="grandtotal-text" style="font-size: 18px; font-weight: bold; color: #FA591D;">Rp 0</div>
+                    </div>
+                    <button class="ripple-btn" id="btn-checkout-main" onclick="checkout()" style="background: #FA591D; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px;">Checkout (0)</button>
+                </div>
             </div>
         </div>
 
@@ -591,6 +639,28 @@ flashmart_html = '''
                     <option value="20000">Top Up Saldo / Voucher 20.000 (Rp 20.000)</option>
                     <option value="50000">Top Up Saldo / Voucher 50.000 (Rp 50.000)</option>
                     <option value="60000">Diamond / UC Special Item (Rp 60.000)</option>
+                    <option value="100500">Token PLN 100.000 (Rp 100.500)</option>
+                    <option value="200500">Token PLN 200.000 (Rp 200.500)</option>
+                `;
+            } else if (type === 'E-Money') {
+                titleLabel.innerText = "🎮 Top Up E-Wallet & Games";
+                targetLabel.innerText = "2. Masukkan No. Akun / User ID Game:";
+                targetInput.placeholder = "Contoh: 081234567890 / ID Game / Zone ID";
+                providerGroup.style.display = 'block';
+                labelProvider.innerText = "1. Pilih E-Wallet / Game:";
+                document.getElementById('digital-provider').innerHTML = `
+                    <option value="GoPay">GoPay Customer</option>
+                    <option value="DANA">DANA Dompet Digital</option>
+                    <option value="OVO">OVO Cash</option>
+                    <option value="ShopeePay">ShopeePay</option>
+                    <option value="Mobile Legends">Mobile Legends (Moonton)</option>
+                    <option value="Free Fire">Free Fire (Garena)</option>
+                    <option value="PUBG Mobile">PUBG Mobile</option>
+                `;
+                nominalSelect.innerHTML = `
+                    <option value="20000">Top Up Saldo / Voucher 20.000 (Rp 20.000)</option>
+                    <option value="50000">Top Up Saldo / Voucher 50.000 (Rp 50.000)</option>
+                    <option value="60000">Diamond / UC Special Item (Rp 60.000)</option>
                     <option value="105000">Top Up Besar 100.000 (Rp 105.000)</option>
                 `;
             }
@@ -607,9 +677,15 @@ flashmart_html = '''
             document.getElementById('digital-qr-box').style.display = (method === 'QRIS' || method === 'Transfer Bank') ? 'block' : 'none';
         }
 
+        function getSelectedSubtotal() {
+            return Object.values(cart)
+                .filter(item => item.selected)
+                .reduce((sum, item) => sum + (item.price * item.qty), 0);
+        }
+
         function calculateChange() {
-            let subtotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0);
-            const discount = discountActive ? 10000 : 0;
+            let subtotal = getSelectedSubtotal();
+            const discount = (discountActive && subtotal > 0) ? 10000 : 0;
             const grandTotal = Math.max(0, subtotal - discount);
             const cashGiven = parseFloat(document.getElementById('cash-given').value) || 0;
             const change = cashGiven - grandTotal;
@@ -691,8 +767,12 @@ flashmart_html = '''
                 return;
             }
             prod.stock -= 1;
-            if (cart[id]) { cart[id].qty += 1; } 
-            else { cart[id] = { ...prod, qty: 1, store: currentStore }; }
+            if (cart[id]) { 
+                cart[id].qty += 1; 
+                cart[id].selected = true;
+            } else { 
+                cart[id] = { ...prod, qty: 1, store: currentStore, selected: true }; 
+            }
             filterProducts();
             alert(prod.name + " ditambahkan ke keranjang!");
         }
@@ -700,6 +780,43 @@ flashmart_html = '''
         function buyNow(id) {
             addToCart(id);
             switchTab('cart', document.querySelectorAll('.nav-item')[1]);
+        }
+
+        function toggleSelectItem(id) {
+            if (cart[id]) {
+                cart[id].selected = !cart[id].selected;
+                renderCart();
+            }
+        }
+
+        function toggleSelectAll(checked) {
+            for (let id in cart) {
+                cart[id].selected = checked;
+            }
+            renderCart();
+        }
+
+        function toggleSelectStore(storeName, checked) {
+            for (let id in cart) {
+                if (cart[id].store === storeName) {
+                    cart[id].selected = checked;
+                }
+            }
+            renderCart();
+        }
+
+        function removeFromCart(id) {
+            if (!cart[id]) return;
+            for (let s in storesData) {
+                let found = storesData[s].find(p => p.id == id);
+                if (found) {
+                    found.stock += cart[id].qty;
+                    break;
+                }
+            }
+            delete cart[id];
+            renderCart();
+            filterProducts();
         }
 
         function renderCart() {
@@ -714,30 +831,64 @@ flashmart_html = '''
             }
 
             summary.style.display = 'block';
-            let html = '';
-            let subtotal = 0;
+            const allSelected = keys.every(id => cart[id].selected);
+            const selectedCount = keys.filter(id => cart[id].selected).length;
 
+            // Kelompokkan barang berdasarkan Toko (Gaya Keranjang Shopee)
+            const groupedByStore = {};
             keys.forEach(id => {
                 const item = cart[id];
-                const totalItem = item.price * item.qty;
-                subtotal += totalItem;
-                html += `
-                    <div class="cart-item">
-                        <div>
-                            <div style="font-weight: bold; font-size: 13px;">` + item.icon + ` ` + item.name + `</div>
-                            <div style="font-size: 11px; color: #03AC03; font-weight: bold;">Toko: FlashMart ` + item.store + `</div>
-                            <div style="font-size: 12px; color: #888;">Rp ` + item.price.toLocaleString('id-ID') + ` x ` + item.qty + `</div>
-                        </div>
-                        <div>
-                            <button onclick="changeQty(` + id + `, -1)">-</button>
-                            <span style="margin: 0 8px; font-weight: bold;">` + item.qty + `</span>
-                            <button onclick="changeQty(` + id + `, 1)">+</button>
-                        </div>
-                    </div>
-                `;
+                if (!groupedByStore[item.store]) groupedByStore[item.store] = [];
+                groupedByStore[item.store].push(item);
             });
+
+            let html = `
+                <div class="cart-select-all-bar">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" class="cart-checkbox" ${allSelected ? 'checked' : ''} onchange="toggleSelectAll(this.checked)">
+                        <span>Pilih Semua (${keys.length})</span>
+                    </label>
+                    <span style="font-size: 12px; color: #FA591D;">${selectedCount} dipilih</span>
+                </div>
+            `;
+
+            for (let storeName in groupedByStore) {
+                const storeItems = groupedByStore[storeName];
+                const allStoreSelected = storeItems.every(it => it.selected);
+
+                html += `
+                    <div class="cart-store-group">
+                        <div class="cart-store-header">
+                            <input type="checkbox" class="cart-checkbox" ${allStoreSelected ? 'checked' : ''} onchange="toggleSelectStore('${storeName}', this.checked)">
+                            <span>🏪 FlashMart ${storeName}</span>
+                        </div>
+                `;
+
+                storeItems.forEach(item => {
+                    html += `
+                        <div class="cart-item-card">
+                            <input type="checkbox" class="cart-checkbox" ${item.selected ? 'checked' : ''} onchange="toggleSelectItem(${item.id})">
+                            <div class="cart-item-icon">${item.icon}</div>
+                            <div class="cart-item-info">
+                                <div class="cart-item-title">${item.name}</div>
+                                <div class="cart-item-price">Rp ${item.price.toLocaleString('id-ID')}</div>
+                                <div class="qty-stepper">
+                                    <button onclick="changeQty(${item.id}, -1)">-</button>
+                                    <span>${item.qty}</span>
+                                    <button onclick="changeQty(${item.id}, 1)">+</button>
+                                </div>
+                            </div>
+                            <button class="btn-del-item" title="Hapus barang" onclick="removeFromCart(${item.id})">🗑️</button>
+                        </div>
+                    `;
+                });
+
+                html += `</div>`;
+            }
+
             container.innerHTML = html;
-            updateSummary(subtotal);
+            let subtotal = getSelectedSubtotal();
+            updateSummary(subtotal, selectedCount);
             calculateChange();
         }
 
@@ -770,13 +921,13 @@ flashmart_html = '''
                 discountActive = false;
                 alert("❌ Kode Voucher tidak valid.");
             }
-            let subtotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0);
-            updateSummary(subtotal);
+            const selectedCount = Object.keys(cart).filter(id => cart[id].selected).length;
+            updateSummary(getSelectedSubtotal(), selectedCount);
             calculateChange();
         }
 
-        function updateSummary(subtotal) {
-            const discount = discountActive ? 10000 : 0;
+        function updateSummary(subtotal, selectedCount) {
+            const discount = (discountActive && subtotal > 0) ? 10000 : 0;
             const grandTotal = Math.max(0, subtotal - discount);
             document.getElementById('subtotal-text').innerText = 'Rp ' + subtotal.toLocaleString('id-ID');
             const discRow = document.getElementById('discount-row');
@@ -785,11 +936,18 @@ flashmart_html = '''
                 document.getElementById('discount-text').innerText = '- Rp ' + discount.toLocaleString('id-ID');
             } else { discRow.style.display = 'none'; }
             document.getElementById('grandtotal-text').innerText = 'Rp ' + grandTotal.toLocaleString('id-ID');
+            document.getElementById('btn-checkout-main').innerText = 'Checkout (' + selectedCount + ')';
         }
 
         function checkout() {
-            let subtotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0);
-            const discount = discountActive ? 10000 : 0;
+            const selectedIds = Object.keys(cart).filter(id => cart[id].selected);
+            if (selectedIds.length === 0) {
+                alert("Centang minimal 1 barang di keranjang terlebih dahulu untuk checkout!");
+                return;
+            }
+
+            let subtotal = getSelectedSubtotal();
+            const discount = (discountActive && subtotal > 0) ? 10000 : 0;
             const grandTotal = Math.max(0, subtotal - discount);
             const method = document.getElementById('payment-method').value;
             const cashGiven = parseFloat(document.getElementById('cash-given').value) || grandTotal;
@@ -807,14 +965,13 @@ flashmart_html = '''
             const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
             const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
             
-            // Estimasi Tiba 2 Hari ke Depan
             let arrivalDate = new Date(now);
             arrivalDate.setDate(now.getDate() + 2);
             const arrivalStr = arrivalDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
 
             let receiptHtml = '';
             let itemsSummaryArray = [];
-            for (let id in cart) {
+            selectedIds.forEach(id => {
                 const item = cart[id];
                 itemsSummaryArray.push(item.name + ' (' + item.qty + 'x)');
                 receiptHtml += `<div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
@@ -822,7 +979,9 @@ flashmart_html = '''
                     <span style="flex: 1; text-align: center;">${item.qty}</span>
                     <span style="flex: 1; text-align: right;">Rp ${(item.price * item.qty).toLocaleString('id-ID')}</span>
                 </div>`;
-            }
+                delete cart[id]; // Hapus hanya item yang di-checkout
+            });
+
             document.getElementById('receipt-items-list').innerHTML = receiptHtml;
             document.getElementById('receipt-meta').innerHTML = "Waktu: " + dateStr + " " + timeStr + "<br>Metode: " + method;
             document.getElementById('receipt-subtotal').innerText = "Rp " + subtotal.toLocaleString('id-ID');
@@ -851,7 +1010,6 @@ flashmart_html = '''
                 location: "Sorting Center Gudang Utama (Jakarta / Hub Terdekat)"
             });
 
-            cart = {};
             discountActive = false;
             document.getElementById('cash-given').value = '';
             document.getElementById('success-modal').style.display = 'flex';
@@ -894,7 +1052,7 @@ flashmart_html = '''
                 date: dateStr + " | " + timeStr,
                 arrivalEst: "Instant (Detik Ini)",
                 total: price,
-                payment: currentDigitalType + " (" + paymentMethod + ")",
+           payment: currentDigitalType + " (" + paymentMethod + ")",
                 items: currentDigitalType + " " + provider + " (" + target + ")",
                 earned: earnedPoints,
                 status: currentDigitalType + " Berhasil & Sukses ✅",
