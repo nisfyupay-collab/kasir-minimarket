@@ -40,7 +40,7 @@ flashmart_html = '''
             transition: background 0.3s, color 0.3s;
         }
 
-        /* SPLASH SCREEN SUPER HIDUP & DINAMIS */
+        /* SPLASH SCREEN ANIMASI HIDUP */
         #splash-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -238,7 +238,7 @@ flashmart_html = '''
                 <h3 style="margin:0;">⚡ FlashMart Store</h3>
                 <div class="search-bar">
                     <span>🔍</span>
-                    <input type="text" id="search-box" placeholder="Cari kebutuhan harian / pulsa..." oninput="filterProducts()">
+                    <input type="text" id="search-box" placeholder="Cari kebutuhan harian / pulsa / HP..." oninput="filterProducts()">
                 </div>
             </div>
 
@@ -442,29 +442,38 @@ flashmart_html = '''
             "Pusat": [
                 { id: 101, name: "Minyak Goreng 2L", price: 38000, stock: 25, category: "Sembako", icon: "🍳" },
                 { id: 102, name: "Beras Premium 5kg", price: 69000, stock: 15, category: "Sembako", icon: "🌾" },
-                { id: 103, name: "Susu UHT Ultra 1L", price: 19500, stock: 30, category: "Minuman", icon: "🥛" },
-                { id: 104, name: "Mie Instan (1 Dus)", price: 115000, stock: 12, category: "Sembako", icon: "📦" },
+                { id: 103, name: "Gula Pasir Kristal 1kg", price: 17500, stock: 35, category: "Sembako", icon: "🍬" },
+                { id: 104, name: "Tepung Terigu 1kg", price: 14000, stock: 30, category: "Sembako", icon: "🌾" },
                 { id: 105, name: "Telur Ayam Negeri 1kg", price: 28000, stock: 20, category: "Sembako", icon: "🥚" },
-                { id: 106, name: "Kopi Bubuk Hitam 380g", price: 16500, stock: 18, category: "Minuman", icon: "☕" },
-                { id: 107, name: "Sabun Mandi Cair 450ml", price: 24000, stock: 14, category: "Perawatan", icon: "🧼" },
-                { id: 108, name: "Shampoo Anti-Dandruff", price: 32000, stock: 10, category: "Perawatan", icon: "🧴" },
-                { id: 109, name: "Kipas Angin Meja Mini", price: 125000, stock: 5, category: "Elektronik", icon: "🌀" },
-                { id: 110, name: "Keripik Singkong Balado", price: 12000, stock: 40, category: "Camilan", icon: "🍟" }
+                { id: 106, name: "Mie Instan (1 Dus Isi 40)", price: 115000, stock: 12, category: "Sembako", icon: "📦" },
+                { id: 107, name: "Susu UHT Ultra 1L", price: 19500, stock: 30, category: "Minuman", icon: "🥛" },
+                { id: 108, name: "Kopi Bubuk Hitam 380g", price: 16500, stock: 18, category: "Minuman", icon: "☕" },
+                { id: 109, name: "Teh Celup Melati (Isi 25)", price: 9500, stock: 25, category: "Minuman", icon: "🍵" },
+                { id: 110, name: "Sabun Mandi Cair 450ml", price: 24000, stock: 14, category: "Perawatan", icon: "🧼" },
+                { id: 111, name: "Shampoo Anti-Dandruff 340ml", price: 32000, stock: 10, category: "Perawatan", icon: "🧴" },
+                { id: 112, name: "Pasta Gigi Herbal 190g", price: 15500, stock: 22, category: "Perawatan", icon: "🦷" },
+                { id: 113, name: "Smartphone Android 4G RAM 4GB", price: 1450000, stock: 4, category: "Elektronik", icon: "📱" },
+                { id: 114, name: "Powerbank Fast Charging 10000mAh", price: 185000, stock: 8, category: "Elektronik", icon: "🔋" },
+                { id: 115, name: "Kipas Angin Meja Mini USB", price: 125000, stock: 5, category: "Elektronik", icon: "🌀" },
+                { id: 116, name: "Headset Gaming Bass Ekstra", price: 75000, stock: 12, category: "Elektronik", icon: "🎧" },
+                { id: 117, name: "Keripik Singkong Balado", price: 12000, stock: 40, category: "Camilan", icon: "🍟" },
+                { id: 118, name: "Biskuit Cokelat Kelapa", price: 14000, stock: 25, category: "Camilan", icon: "🍪" }
             ],
             "Express": [
                 { id: 201, name: "Air Mineral 600ml (1 Dus)", price: 35000, stock: 50, category: "Minuman", icon: "💧" },
-                { id: 202, name: "Roti Tawar Gandum", price: 18000, stock: 15, category: "Camilan", icon: "🍞" },
+                { id: 202, name: "Roti Tawar Gandum Spesial", price: 18000, stock: 15, category: "Camilan", icon: "🍞" },
                 { id: 203, name: "Susu Kotak Kecil 250ml", price: 6000, stock: 60, category: "Minuman", icon: "🧃" },
                 { id: 204, name: "Cokelat Batang Premium", price: 15000, stock: 25, category: "Camilan", icon: "🍫" },
                 { id: 205, name: "Baterai Alkali AA (Isi 2)", price: 22000, stock: 30, category: "Elektronik", icon: "🔋" },
                 { id: 206, name: "Tisu Basah Antiseptik", price: 11000, stock: 35, category: "Perawatan", icon: "🧻" }
             ],
             "Grosir": [
-                { id: 301, name: "Beras Karung 25kg", price: 330000, stock: 8, category: "Sembako", icon: "🛍️" },
+                { id: 301, name: "Beras Karung Grosir 25kg", price: 330000, stock: 8, category: "Sembako", icon: "🛍️" },
                 { id: 302, name: "Minyak Goreng Jerigen 5L", price: 92000, stock: 10, category: "Sembako", icon: "🛢️" },
-                { id: 303, name: "Gula Pasir 10kg", price: 145000, stock: 12, category: "Sembako", icon: "🍬" },
-                { id: 304, name: "Deterjen Bubuk 5kg", price: 68000, stock: 15, category: "Perawatan", icon: "🧼" },
-                { id: 305, name: "Mie Instan (3 Dus Sekaligus)", price: 340000, stock: 6, category: "Sembako", icon: "📦" }
+                { id: 303, name: "Gula Pasir Karung 10kg", price: 145000, stock: 12, category: "Sembako", icon: "🍬" },
+                { id: 304, name: "Deterjen Bubuk Cuci 5kg", price: 68000, stock: 15, category: "Perawatan", icon: "🧼" },
+                { id: 305, name: "Mie Instan (3 Dus Sekaligus)", price: 340000, stock: 6, category: "Sembako", icon: "📦" },
+                { id: 306, name: "Kabel Data Type-C Fast Charging (Grosir 5pcs)", price: 75000, stock: 10, category: "Elektronik", icon: "🔌" }
             ]
         };
 
@@ -485,13 +494,22 @@ flashmart_html = '''
             const targetInput = document.getElementById('digital-target');
             const providerGroup = document.getElementById('field-provider-group');
             const nominalSelect = document.getElementById('digital-nominal');
+            const labelProvider = document.getElementById('label-provider');
 
             if (type === 'Pulsa') {
                 titleLabel.innerText = "📱 Isi Pulsa Seluler";
                 targetLabel.innerText = "2. Masukkan Nomor HP:";
                 targetInput.placeholder = "Contoh: 081234567890";
                 providerGroup.style.display = 'block';
-                document.getElementById('label-provider').innerText = "1. Pilih Operator Seluler:";
+                labelProvider.innerText = "1. Pilih Operator Seluler:";
+                document.getElementById('digital-provider').innerHTML = `
+                    <option value="Telkomsel">Telkomsel</option>
+                    <option value="Indosat">Indosat Ooredoo</option>
+                    <option value="XL">XL Axiata</option>
+                    <option value="Tri">Tri (3)</option>
+                    <option value="Smartfren">Smartfren</option>
+                    <option value="Axis">Axis</option>
+                `;
                 nominalSelect.innerHTML = `
                     <option value="11000">Pulsa 10.000 (Rp 11.000)</option>
                     <option value="26000">Pulsa 25.000 (Rp 26.000)</option>
@@ -503,7 +521,13 @@ flashmart_html = '''
                 targetLabel.innerText = "2. Masukkan Nomor HP / Modem:";
                 targetInput.placeholder = "Contoh: 081234567890";
                 providerGroup.style.display = 'block';
-                document.getElementById('label-provider').innerText = "1. Pilih Provider Internet:";
+                labelProvider.innerText = "1. Pilih Provider Internet:";
+                document.getElementById('digital-provider').innerHTML = `
+                    <option value="Telkomsel Data">Telkomsel Data</option>
+                    <option value="Indosat Freedom">Indosat Freedom</option>
+                    <option value="XL Xtra Combo">XL Xtra Combo</option>
+                    <option value="Tri AlwaysOn">Tri Aon</option>
+                `;
                 nominalSelect.innerHTML = `
                     <option value="25000">Paket Freedom 3GB (Rp 25.000)</option>
                     <option value="55000">Paket Internet 15GB (Rp 55.000)</option>
@@ -521,16 +545,25 @@ flashmart_html = '''
                     <option value="200500">Token PLN 200.000 (Rp 200.500)</option>
                 `;
             } else if (type === 'E-Money') {
-                titleLabel.innerText = "🎮 Top Up E-Money & Games";
+                titleLabel.innerText = "🎮 Top Up E-Wallet & Games";
                 targetLabel.innerText = "2. Masukkan No. Akun / User ID Game:";
-                targetInput.placeholder = "Contoh: 081234567890 / ID Game";
+                targetInput.placeholder = "Contoh: 081234567890 / ID Game / Zone ID";
                 providerGroup.style.display = 'block';
-                document.getElementById('label-provider').innerText = "1. Pilih E-Wallet / Game:";
+                labelProvider.innerText = "1. Pilih E-Wallet / Game:";
+                document.getElementById('digital-provider').innerHTML = `
+                    <option value="GoPay">GoPay Customer</option>
+                    <option value="DANA">DANA Dompet Digital</option>
+                    <option value="OVO">OVO Cash</option>
+                    <option value="ShopeePay">ShopeePay</option>
+                    <option value="Mobile Legends">Mobile Legends (Moonton)</option>
+                    <option value="Free Fire">Free Fire (Garena)</option>
+                    <option value="PUBG Mobile">PUBG Mobile</option>
+                `;
                 nominalSelect.innerHTML = `
-                    <option value="20000">GoPay / DANA / OVO 20.000 (Rp 20.000)</option>
-                    <option value="50000">GoPay / DANA / OVO 50.000 (Rp 50.000)</option>
-                    <option value="60000">Diamond FreeFire 140 Items (Rp 60.000)</option>
-                    <option value="105000">UC PUBG Mobile 325+25 (Rp 105.000)</option>
+                    <option value="20000">Top Up Saldo / Voucher 20.000 (Rp 20.000)</option>
+                    <option value="50000">Top Up Saldo / Voucher 50.000 (Rp 50.000)</option>
+                    <option value="60000">Diamond / UC Special Item (Rp 60.000)</option>
+                    <option value="105000">Top Up Besar 100.000 (Rp 105.000)</option>
                 `;
             }
         }
@@ -784,11 +817,12 @@ flashmart_html = '''
 
         function processDigitalPayment() {
             const target = document.getElementById('digital-target').value.trim();
+            const provider = document.getElementById('digital-provider').value;
             const price = parseInt(document.getElementById('digital-nominal').value);
             const paymentMethod = document.getElementById('digital-payment').value;
 
-            if (!target || target.length < 5) {
-                alert("Masukkan nomor tujuan / ID pelanggan yang valid!");
+            if (!target || target.length < 3) {
+                alert("Masukkan nomor tujuan / ID akun yang valid!");
                 return;
             }
 
@@ -797,10 +831,10 @@ flashmart_html = '''
             document.getElementById('user-points').innerText = points + ' Poin';
             const now = new Date().toLocaleString('id-ID');
 
-            document.getElementById('receipt-meta').innerHTML = "Waktu: " + now + "<br>Layanan: " + currentDigitalType + "<br>Pembayaran: " + paymentMethod;
+            document.getElementById('receipt-meta').innerHTML = "Waktu: " + now + "<br>Layanan: " + currentDigitalType + " (" + provider + ")<br>Pembayaran: " + paymentMethod;
             document.getElementById('receipt-items-list').innerHTML = `
                 <div style="display: flex; justify-content: space-between;">
-                    <span style="flex: 2;">${currentDigitalType} (${target})</span>
+                    <span style="flex: 2;">${currentDigitalType} - ${provider}<br><small>Tujuan: ${target}</small></span>
                     <span style="flex: 1; text-align: center;">1</span>
                     <span style="flex: 1; text-align: right;">Rp ${price.toLocaleString('id-ID')}</span>
                 </div>
@@ -885,4 +919,3 @@ flashmart_html = '''
 '''
 
 components.html(flashmart_html, height=880, scrolling=True)
-         
