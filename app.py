@@ -238,14 +238,14 @@ flashmart_html = '''
                 <h3 style="margin:0;">⚡ FlashMart Store</h3>
                 <div class="search-bar">
                     <span>🔍</span>
-                    <input type="text" id="search-box" placeholder="Cari kebutuhan harian / pulsa / HP..." oninput="filterProducts()">
+                    <input type="text" id="search-box" placeholder="Cari baju, HP, sembako, skincare..." oninput="filterProducts()">
                 </div>
             </div>
 
             <div class="store-selector">
                 <span>🏪 Pilih Toko:</span>
                 <select id="store-select" onchange="changeStore()">
-                    <option value="Pusat">FlashMart Pusat (Lengkap)</option>
+                    <option value="Pusat">FlashMart Pusat (Super Lengkap)</option>
                     <option value="Express">FlashMart Express (Kilat)</option>
                     <option value="Grosir">FlashMart Grosir (Partai Besar)</option>
                 </select>
@@ -260,13 +260,16 @@ flashmart_html = '''
                 <div class="digital-item ripple-btn" onclick="openDigital('E-Money')">🎮 E-Money</div>
             </div>
 
+            <!-- KATEGORI SUPER LENGKAP -->
             <div class="category-scroll" id="category-container">
                 <div class="cat-chip active" onclick="selectCategory('Semua', this)">Semua</div>
-                <div class="cat-chip" onclick="selectCategory('Sembako', this)">Sembako</div>
-                <div class="cat-chip" onclick="selectCategory('Minuman', this)">Minuman</div>
-                <div class="cat-chip" onclick="selectCategory('Perawatan', this)">Perawatan</div>
-                <div class="cat-chip" onclick="selectCategory('Elektronik', this)">Elektronik</div>
-                <div class="cat-chip" onclick="selectCategory('Camilan', this)">Camilan</div>
+                <div class="cat-chip" onclick="selectCategory('Sembako', this)">🍚 Sembako</div>
+                <div class="cat-chip" onclick="selectCategory('Fashion', this)">👕 Fashion</div>
+                <div class="cat-chip" onclick="selectCategory('Elektronik', this)">📱 Elektronik</div>
+                <div class="cat-chip" onclick="selectCategory('Skincare', this)">✨ Skincare</div>
+                <div class="cat-chip" onclick="selectCategory('Minuman', this)">🧃 Minuman</div>
+                <div class="cat-chip" onclick="selectCategory('Perabotan', this)">🪑 Perabotan</div>
+                <div class="cat-chip" onclick="selectCategory('Camilan', this)">🍪 Camilan</div>
             </div>
 
             <div class="banner">
@@ -389,12 +392,14 @@ flashmart_html = '''
                 <input type="number" id="new-stock" placeholder="Jumlah Stok" class="admin-input">
                 <select id="new-category" class="admin-input">
                     <option value="Sembako">Sembako</option>
-                    <option value="Minuman">Minuman</option>
-                    <option value="Perawatan">Perawatan</option>
+                    <option value="Fashion">Fashion</option>
                     <option value="Elektronik">Elektronik</option>
+                    <option value="Skincare">Skincare</option>
+                    <option value="Minuman">Minuman</option>
+                    <option value="Perabotan">Perabotan</option>
                     <option value="Camilan">Camilan</option>
                 </select>
-                <input type="text" id="new-icon" placeholder="Emoji Ikon (Contoh: 🍪)" class="admin-input">
+                <input type="text" id="new-icon" placeholder="Emoji Ikon (Contoh: 🧥)" class="admin-input">
                 <button class="ripple-btn" onclick="addNewProduct()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer;">Simpan Produk</button>
             </div>
 
@@ -440,40 +445,45 @@ flashmart_html = '''
 
         const storesData = {
             "Pusat": [
-                { id: 101, name: "Minyak Goreng 2L", price: 38000, stock: 25, category: "Sembako", icon: "🍳" },
-                { id: 102, name: "Beras Premium 5kg", price: 69000, stock: 15, category: "Sembako", icon: "🌾" },
-                { id: 103, name: "Gula Pasir Kristal 1kg", price: 17500, stock: 35, category: "Sembako", icon: "🍬" },
-                { id: 104, name: "Tepung Terigu 1kg", price: 14000, stock: 30, category: "Sembako", icon: "🌾" },
-                { id: 105, name: "Telur Ayam Negeri 1kg", price: 28000, stock: 20, category: "Sembako", icon: "🥚" },
-                { id: 106, name: "Mie Instan (1 Dus Isi 40)", price: 115000, stock: 12, category: "Sembako", icon: "📦" },
-                { id: 107, name: "Susu UHT Ultra 1L", price: 19500, stock: 30, category: "Minuman", icon: "🥛" },
-                { id: 108, name: "Kopi Bubuk Hitam 380g", price: 16500, stock: 18, category: "Minuman", icon: "☕" },
-                { id: 109, name: "Teh Celup Melati (Isi 25)", price: 9500, stock: 25, category: "Minuman", icon: "🍵" },
-                { id: 110, name: "Sabun Mandi Cair 450ml", price: 24000, stock: 14, category: "Perawatan", icon: "🧼" },
-                { id: 111, name: "Shampoo Anti-Dandruff 340ml", price: 32000, stock: 10, category: "Perawatan", icon: "🧴" },
-                { id: 112, name: "Pasta Gigi Herbal 190g", price: 15500, stock: 22, category: "Perawatan", icon: "🦷" },
-                { id: 113, name: "Smartphone Android 4G RAM 4GB", price: 1450000, stock: 4, category: "Elektronik", icon: "📱" },
-                { id: 114, name: "Powerbank Fast Charging 10000mAh", price: 185000, stock: 8, category: "Elektronik", icon: "🔋" },
-                { id: 115, name: "Kipas Angin Meja Mini USB", price: 125000, stock: 5, category: "Elektronik", icon: "🌀" },
-                { id: 116, name: "Headset Gaming Bass Ekstra", price: 75000, stock: 12, category: "Elektronik", icon: "🎧" },
-                { id: 117, name: "Keripik Singkong Balado", price: 12000, stock: 40, category: "Camilan", icon: "🍟" },
-                { id: 118, name: "Biskuit Cokelat Kelapa", price: 14000, stock: 25, category: "Camilan", icon: "🍪" }
+                { id: 101, name: "Beras Premium Super 5kg", price: 69000, stock: 25, category: "Sembako", icon: "🌾" },
+                { id: 102, name: "Minyak Goreng Pouch 2L", price: 38000, stock: 30, category: "Sembako", icon: "🍳" },
+                { id: 103, name: "Gula Pasir Putih 1kg", price: 17500, stock: 40, category: "Sembako", icon: "🍬" },
+                { id: 104, name: "Telur Ayam Negeri 1kg", price: 28000, stock: 20, category: "Sembako", icon: "🥚" },
+                { id: 105, name: "Mie Instan Soto (1 Dus)", price: 115000, stock: 15, category: "Sembako", icon: "📦" },
+                { id: 106, name: "Kemeja Flanel Casual Pria", price: 135000, stock: 12, category: "Fashion", icon: "👔" },
+                { id: 107, name: "Kaos Polos Cotton Combed 30s", price: 55000, stock: 30, category: "Fashion", icon: "👕" },
+                { id: 108, name: "Celana Jeans Slim Fit Pria", price: 185000, stock: 10, category: "Fashion", icon: "👖" },
+                { id: 109, name: "Gamis Syari Wanita Modern", price: 195000, stock: 14, category: "Fashion", icon: "👗" },
+                { id: 110, name: "Smartphone Android 4G RAM 4GB", price: 1450000, stock: 5, category: "Elektronik", icon: "📱" },
+                { id: 111, name: "Powerbank Fast Charging 10000mAh", price: 185000, stock: 8, category: "Elektronik", icon: "🔋" },
+                { id: 112, name: "Headset Gaming Extra Bass", price: 75000, stock: 12, category: "Elektronik", icon: "🎧" },
+                { id: 113, name: "Smartwatch Fitness Tracker", price: 245000, stock: 7, category: "Elektronik", icon: "⌚" },
+                { id: 114, name: "Skincare Brightening Serum 30ml", price: 85000, stock: 20, category: "Skincare", icon: "✨" },
+                { id: 115, name: "Facial Wash Glowing 100ml", price: 35000, stock: 25, category: "Skincare", icon: "🧴" },
+                { id: 116, name: "Sunscreen SPF 50 PA++++", price: 65000, stock: 18, category: "Skincare", icon: "☀️" },
+                { id: 117, name: "Susu UHT Ultra Milk 1L", price: 19500, stock: 30, category: "Minuman", icon: "🥛" },
+                { id: 118, name: "Kopi Hitam Robusta 380g", price: 16500, stock: 22, category: "Minuman", icon: "☕" },
+                { id: 119, name: "Teh Kotak Melati Sosro 300ml", price: 4500, stock: 50, category: "Minuman", icon: "🧃" },
+                { id: 120, name: "Blender Kaca Multifungsi 2L", price: 275000, stock: 6, category: "Perabotan", icon: "🧊" },
+                { id: 121, name: "Set Panci Stainless Anti Lengket", price: 320000, stock: 5, category: "Perabotan", icon: "🍲" },
+                { id: 122, name: "Keripik Singkong Balado Pedas", price: 12000, stock: 45, category: "Camilan", icon: "🍟" },
+                { id: 123, name: "Biskuit Cokelat Kelapa Kaleng", price: 29000, stock: 18, category: "Camilan", icon: "🍪" }
             ],
             "Express": [
-                { id: 201, name: "Air Mineral 600ml (1 Dus)", price: 35000, stock: 50, category: "Minuman", icon: "💧" },
+                { id: 201, name: "Air Mineral Botol 600ml (1 Dus)", price: 35000, stock: 50, category: "Minuman", icon: "💧" },
                 { id: 202, name: "Roti Tawar Gandum Spesial", price: 18000, stock: 15, category: "Camilan", icon: "🍞" },
-                { id: 203, name: "Susu Kotak Kecil 250ml", price: 6000, stock: 60, category: "Minuman", icon: "🧃" },
-                { id: 204, name: "Cokelat Batang Premium", price: 15000, stock: 25, category: "Camilan", icon: "🍫" },
-                { id: 205, name: "Baterai Alkali AA (Isi 2)", price: 22000, stock: 30, category: "Elektronik", icon: "🔋" },
-                { id: 206, name: "Tisu Basah Antiseptik", price: 11000, stock: 35, category: "Perawatan", icon: "🧻" }
+                { id: 203, name: "Masker Medis 3ply (Box isi 50)", price: 25000, stock: 40, category: "Skincare", icon: "😷" },
+                { id: 204, name: "Kabel Data Type-C Fast Charge", price: 35000, stock: 25, category: "Elektronik", icon: "🔌" },
+                { id: 205, name: "Cokelat Batang Premium Cadbury", price: 15000, stock: 30, category: "Camilan", icon: "🍫" },
+                { id: 206, name: "Tisu Basah Antiseptik Travel", price: 11000, stock: 35, category: "Skincare", icon: "🧻" }
             ],
             "Grosir": [
                 { id: 301, name: "Beras Karung Grosir 25kg", price: 330000, stock: 8, category: "Sembako", icon: "🛍️" },
                 { id: 302, name: "Minyak Goreng Jerigen 5L", price: 92000, stock: 10, category: "Sembako", icon: "🛢️" },
                 { id: 303, name: "Gula Pasir Karung 10kg", price: 145000, stock: 12, category: "Sembako", icon: "🍬" },
-                { id: 304, name: "Deterjen Bubuk Cuci 5kg", price: 68000, stock: 15, category: "Perawatan", icon: "🧼" },
+                { id: 304, name: "Deterjen Bubuk Cuci 5kg", price: 68000, stock: 15, category: "Perabotan", icon: "🧼" },
                 { id: 305, name: "Mie Instan (3 Dus Sekaligus)", price: 340000, stock: 6, category: "Sembako", icon: "📦" },
-                { id: 306, name: "Kabel Data Type-C Fast Charging (Grosir 5pcs)", price: 75000, stock: 10, category: "Elektronik", icon: "🔌" }
+                { id: 306, name: "Kardus Kaos Polos Grosir (Isi 10pcs)", price: 450000, stock: 4, category: "Fashion", icon: "👕" }
             ]
         };
 
@@ -611,7 +621,7 @@ flashmart_html = '''
         function renderProducts(listToRender) {
             const list = document.getElementById('product-list');
             if (listToRender.length === 0) {
-                list.innerHTML = '<p style="grid-column: span 2; text-align: center; color: #777;">Tidak ada produk di toko ini.</p>';
+                list.innerHTML = '<p style="grid-column: span 2; text-align: center; color: #777;">Tidak ada produk yang cocok.</p>';
                 return;
             }
             list.innerHTML = listToRender.map(p => `
