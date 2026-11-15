@@ -41,28 +41,36 @@ flashmart_html = '''
             overflow-x: hidden;
         }
 
-        /* SPLASH SCREEN ELEGAN ALA VIDEO SEBELUMNYA */
+        /* SPLASH SCREEN DISESUAIKAN DENGAN TEMA UTAMA FLASHMART */
         #splash-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: #0f1115;
+            background: linear-gradient(135deg, #03AC03 0%, #42B549 50%, #ff9800 100%);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 9999; color: white;
             transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.7s;
         }
         .splash-brand {
-            font-size: 38px; font-weight: 900; letter-spacing: 3px; color: #ffffff;
+            font-size: 42px; font-weight: 900; letter-spacing: 2px; color: #ffffff;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.2);
             opacity: 0; transform: translateY(15px);
             animation: fadeInText 0.8s ease 0.2s forwards;
         }
         .splash-tagline {
-            font-size: 13px; color: #03AC03; margin-top: 8px; letter-spacing: 1.5px;
-            font-weight: bold; opacity: 0; transform: translateY(15px);
+            font-size: 13px; color: #fff; margin-top: 8px; letter-spacing: 1.5px;
+            font-weight: 600; background: rgba(0,0,0,0.15); padding: 4px 12px; border-radius: 20px;
+            opacity: 0; transform: translateY(15px);
             animation: fadeInText 0.8s ease 0.5s forwards;
         }
 
         @keyframes fadeInText {
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ANIMASI TERBANG KE KERANJANG (FLYING ITEM) */
+        .fly-item {
+            position: fixed; z-index: 99999; font-size: 28px; pointer-events: none;
+            transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         #success-modal, #tracking-detail-modal {
@@ -90,63 +98,88 @@ flashmart_html = '''
 
         .app-container {
             max-width: 480px; margin: 0 auto; background: var(--bg-color); min-height: 100vh;
-            padding-bottom: 100px; box-shadow: 0 0 15px rgba(0,0,0,0.05); position: relative;
+            padding-bottom: 110px; box-shadow: 0 0 15px rgba(0,0,0,0.05); position: relative;
         }
-        .header {
-            background: linear-gradient(135deg, #03AC03 0%, #42B549 100%);
-            color: white; padding: 16px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
+
+        /* HEADER GAYA VIDEO 1 */
+        .header-top {
+            display: flex; justify-content: space-between; align-items: center; padding: 16px 15px 10px 15px;
         }
+        .user-profile { display: flex; align-items: center; gap: 10px; }
+        .user-avatar {
+            width: 42px; height: 42px; background: #ddd; border-radius: 50%; overflow: hidden;
+            border: 2px solid #03AC03; display: flex; align-items: center; justify-content: center; font-size: 20px;
+        }
+        .user-name { font-size: 15px; font-weight: bold; color: var(--text-color); }
+        .user-sub { font-size: 11px; color: #777; }
+
+        .search-container { padding: 0 15px 10px 15px; }
         .search-bar {
-            background: #fff; padding: 10px 15px; border-radius: 25px; display: flex; align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-top: 10px;
+            background: var(--card-bg); border: 1px solid var(--border-color); padding: 10px 15px; border-radius: 25px; display: flex; align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
         }
-        .search-bar input { border: none; outline: none; width: 100%; margin-left: 10px; font-size: 14px; background: transparent; color: #333; }
+        .search-bar input { border: none; outline: none; width: 100%; margin-left: 10px; font-size: 14px; background: transparent; color: var(--text-color); }
         
         .store-selector {
-            margin: 12px 15px 0 15px; background: var(--card-bg); border: 1px solid var(--border-color);
+            margin: 0 15px 10px 15px; background: var(--card-bg); border: 1px solid var(--border-color);
             padding: 8px 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: bold;
         }
         .store-selector select { border: none; background: transparent; color: #03AC03; font-weight: bold; outline: none; cursor: pointer; font-size: 13px; }
 
-        .category-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 12px 15px; scrollbar-width: none; }
+        /* KATEGORI SCROLL */
+        .category-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 5px 15px 12px 15px; scrollbar-width: none; }
         .category-scroll::-webkit-scrollbar { display: none; }
         .cat-chip {
-            background: var(--card-bg); border: 1px solid var(--border-color); padding: 6px 14px;
-            border-radius: 20px; font-size: 12px; cursor: pointer; white-space: nowrap; color: var(--text-color); font-weight: 600;
-            transition: all 0.2s;
+            background: var(--card-bg); border: 1px solid var(--border-color); padding: 8px 16px;
+            border-radius: 22px; font-size: 12px; cursor: pointer; white-space: nowrap; color: var(--text-color); font-weight: 600;
+            transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
         .cat-chip.active { background: #03AC03; color: white; border-color: #03AC03; transform: scale(1.05); }
 
-        .banner {
-            margin: 0 15px 15px 15px; background: linear-gradient(135deg, #ff8800, #ffbb00); color: white;
-            padding: 12px; border-radius: 12px; font-weight: bold; text-align: center; font-size: 12px;
+        /* BANNER PROMO ORANYE ALA VIDEO 1 */
+        .promo-banner {
+            margin: 0 15px 15px 15px; background: linear-gradient(135deg, #ff8800 0%, #ff6a00 100%); color: white;
+            padding: 16px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 6px 15px rgba(255,136,0,0.3);
         }
-        
-        .digital-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 0 15px 15px 15px; text-align: center;
-        }
-        .digital-item {
-            background: var(--card-bg); border: 1px solid var(--border-color); padding: 10px 5px; border-radius: 10px;
-            font-size: 11px; font-weight: bold; cursor: pointer; color: var(--text-color); transition: transform 0.2s;
-        }
-        .digital-item:active { transform: scale(0.92); }
+        .promo-text h4 { margin: 0 0 4px 0; font-size: 16px; font-weight: 800; }
+        .promo-text p { margin: 0; font-size: 12px; opacity: 0.9; }
+        .promo-icon { font-size: 38px; }
 
+        /* GRID PRODUK */
+        .section-title { padding: 0 15px 10px 15px; font-weight: bold; font-size: 15px; display: flex; justify-content: space-between; align-items: center; }
         .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 15px; }
         .product-card {
-            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px;
-            text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: transform 0.2s, box-shadow 0.2s; position: relative;
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px;
+            text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.03); transition: transform 0.2s, box-shadow 0.2s; position: relative;
         }
         .product-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.08); }
-        .product-card:active { transform: scale(0.96); }
-        .product-title { font-size: 13px; font-weight: 600; height: 35px; overflow: hidden; margin-bottom: 2px; color: var(--text-color); }
-        .product-stock { font-size: 11px; color: #777; margin-bottom: 5px; }
-        .product-price { color: #FA591D; font-weight: bold; font-size: 14px; margin-bottom: 8px; }
         
-        .btn-group { display: flex; gap: 5px; }
-        .btn-cart { background: #ff9800; color: white; border: none; padding: 7px; border-radius: 6px; font-weight: bold; font-size: 11px; flex: 1; cursor: pointer; }
-        .btn-buy-now { background: #03AC03; color: white; border: none; padding: 7px; border-radius: 6px; font-weight: bold; font-size: 11px; flex: 1; cursor: pointer; }
+        .badge-sale {
+            position: absolute; top: 10px; left: 10px; background: #FA591D; color: white;
+            font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 6px; text-transform: uppercase;
+        }
+        .product-icon-wrap { font-size: 44px; margin: 8px 0; }
+        .product-title { font-size: 13px; font-weight: 700; height: 35px; overflow: hidden; margin-bottom: 2px; color: var(--text-color); }
+        .product-rating { font-size: 11px; color: #888; margin-bottom: 6px; }
+        .product-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
+        .product-price { color: #FA591D; font-weight: bold; font-size: 14px; text-align: left; }
+        
+        .action-buttons { display: flex; gap: 5px; }
+        .btn-mini-cart {
+            width: 32px; height: 32px; background: #fff; border: 1px solid var(--border-color); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: transform 0.2s;
+        }
+        .btn-mini-cart:active { transform: scale(0.85); background: #eee; }
+        
+        .btn-mini-buy {
+            background: #03AC03; color: white; border: none; padding: 6px 10px; border-radius: 8px;
+            font-weight: bold; font-size: 11px; cursor: pointer; transition: transform 0.2s;
+        }
+        .btn-mini-buy:active { transform: scale(0.9); }
 
-        /* BOTTOM NAVIGATION ANIMASI FLOATING CAPSULE (ALA VIDEO KE-3) */
+        /* BOTTOM NAVIGATION ANIMASI KAPSUL MELAYANG */
         .bottom-nav {
             position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
             width: 92%; max-width: 440px; background: var(--nav-bg); 
@@ -162,13 +195,8 @@ flashmart_html = '''
         .nav-icon { font-size: 18px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s; color: #777; }
         .nav-label { font-size: 10px; font-weight: 600; color: #777; margin-top: 2px; transition: opacity 0.3s, transform 0.3s; opacity: 1; }
         
-        /* Indikator kapsul melayang aktif */
-        .nav-item.active .nav-icon {
-            color: #ffffff; transform: translateY(-14px) scale(1.1);
-        }
-        .nav-item.active .nav-label {
-            opacity: 0; transform: translateY(10px); pointer-events: none;
-        }
+        .nav-item.active .nav-icon { color: #ffffff; transform: translateY(-14px) scale(1.1); }
+        .nav-item.active .nav-label { opacity: 0; transform: translateY(10px); pointer-events: none; }
         .nav-pill-bg {
             position: absolute; width: 44px; height: 44px; background: #03AC03;
             border-radius: 50%; top: 2px; left: calc(50% - 22px); z-index: 1;
@@ -181,9 +209,7 @@ flashmart_html = '''
             display: none; padding: 15px; opacity: 0; transform: translateY(12px);
             transition: opacity 0.35s ease, transform 0.35s ease;
         }
-        .view-section.active { 
-            display: block; opacity: 1; transform: translateY(0); 
-        }
+        .view-section.active { display: block; opacity: 1; transform: translateY(0); }
         
         .cart-store-group {
             background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px;
@@ -218,9 +244,7 @@ flashmart_html = '''
             font-weight: bold; cursor: pointer; font-size: 13px;
         }
         .qty-stepper span { padding: 0 10px; font-size: 12px; font-weight: bold; }
-        .btn-del-item {
-            background: none; border: none; color: #999; font-size: 16px; cursor: pointer; padding: 4px;
-        }
+        .btn-del-item { background: none; border: none; color: #999; font-size: 16px; cursor: pointer; padding: 4px; }
         .btn-del-item:hover { color: #FA591D; }
         .cart-select-all-bar {
             background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px;
@@ -248,7 +272,7 @@ flashmart_html = '''
 </head>
 <body data-theme="light">
 
-    <!-- SPLASH SCREEN ELEGAN -->
+    <!-- SPLASH SCREEN DENGAN TEMA WARNA FLASHMART -->
     <div id="splash-screen">
         <div class="splash-brand">FlashMart</div>
         <div class="splash-tagline">⚡ All your needs in one place</div>
@@ -302,51 +326,61 @@ flashmart_html = '''
 
     <div class="app-container">
         
-        <!-- BERANDA -->
+        <!-- BERANDA GAYA VIDEO 1 -->
         <div id="view-home" class="view-section active" style="padding: 0 0 15px 0;">
-            <div class="header">
-                <h3 style="margin:0;">⚡ FlashMart Store</h3>
+            <div class="header-top">
+                <div class="user-profile">
+                    <div class="user-avatar">👤</div>
+                    <div>
+                        <div class="user-name">Jenny Leow</div>
+                        <div class="user-sub">FlashMart VIP Member</div>
+                    </div>
+                </div>
+                <div onclick="switchTab('account', 4, document.querySelectorAll('.nav-item')[4])" style="font-size: 20px; cursor: pointer;">⚙️</div>
+            </div>
+
+            <div class="search-container">
                 <div class="search-bar">
                     <span>🔍</span>
-                    <input type="text" id="search-box" placeholder="Cari baju, HP, sembako, skincare..." oninput="filterProducts()">
+                    <input type="text" id="search-box" placeholder="Cari 1.200+ barang makanan, minuman, dll..." oninput="filterProducts()">
                 </div>
             </div>
 
             <div class="store-selector">
                 <span>🏪 Pilih Toko:</span>
                 <select id="store-select" onchange="changeStore()">
-                    <option value="Pusat">FlashMart Pusat (Super Lengkap)</option>
+                    <option value="Pusat">FlashMart Pusat (1.200+ Barang)</option>
                     <option value="Express">FlashMart Express (Kilat)</option>
                     <option value="Grosir">FlashMart Grosir (Partai Besar)</option>
                 </select>
             </div>
 
-            <!-- QUICK LINK DIGITAL -->
-            <div style="padding: 12px 15px 5px 15px; font-weight: bold; font-size: 13px;">📱 Layanan Pulsa & PPOB</div>
-            <div class="digital-grid">
-                <div class="digital-item ripple-btn" onclick="openDigital('Pulsa')">📱 Pulsa</div>
-                <div class="digital-item ripple-btn" onclick="openDigital('Kuota Data')">🌐 Kuota Data</div>
-                <div class="digital-item ripple-btn" onclick="openDigital('Token PLN')">⚡ Token PLN</div>
-                <div class="digital-item ripple-btn" onclick="openDigital('E-Money')">🎮 E-Money</div>
+            <div class="promo-banner">
+                <div class="promo-text">
+                    <h4>Get 30% OFF</h4>
+                    <p>On your first order with code <b>FLASHMARTINA</b></p>
+                </div>
+                 <div class="promo-icon">🍔</div>
             </div>
 
-            <!-- KATEGORI SUPER LENGKAP -->
+            <!-- KATEGORI ALA VIDEO 1 -->
             <div class="category-scroll" id="category-container">
-                <div class="cat-chip active" onclick="selectCategory('Semua', this)">Semua</div>
-                <div class="cat-chip" onclick="selectCategory('Sembako', this)">🍚 Sembako</div>
-                <div class="cat-chip" onclick="selectCategory('Fashion', this)">👕 Fashion</div>
-                <div class="cat-chip" onclick="selectCategory('Elektronik', this)">📱 Elektronik</div>
-                <div class="cat-chip" onclick="selectCategory('Skincare', this)">✨ Skincare</div>
+                <div class="cat-chip active" onclick="selectCategory('Semua', this)">🔥 All</div>
+                <div class="cat-chip" onclick="selectCategory('Burger', this)">🍔 Burger</div>
+                <div class="cat-chip" onclick="selectCategory('Pizza', this)">🍕 Pizza</div>
+                <div class="cat-chip" onclick="selectCategory('Sushi', this)">🍣 Sushi</div>
                 <div class="cat-chip" onclick="selectCategory('Minuman', this)">🧃 Minuman</div>
-                <div class="cat-chip" onclick="selectCategory('Perabotan', this)">🪑 Perabotan</div>
+                <div class="cat-chip" onclick="selectCategory('Sembako', this)">🍚 Sembako</div>
                 <div class="cat-chip" onclick="selectCategory('Camilan', this)">🍪 Camilan</div>
+                <div class="cat-chip" onclick="selectCategory('Skincare', this)">✨ Skincare</div>
+                <div class="cat-chip" onclick="selectCategory('Elektronik', this)">📱 Elektronik</div>
             </div>
 
-            <div class="banner">
-                🔥 Gunakan Voucher <b>FLASHMARTINA</b> untuk Diskon Rp 10.000!
+            <div class="section-title">
+                <span id="store-title-label">Popular Now (1.200+ Items)</span>
+                <span style="font-size: 12px; color: #03AC03; font-weight: bold;" id="total-count-badge">Menampilkan Semua</span>
             </div>
-
-            <div style="padding: 0 15px 10px 15px; font-weight: bold; font-size: 14px;" id="store-title-label">Katalog Produk - FlashMart Pusat</div>
+            
             <div class="product-grid" id="product-list"></div>
         </div>
 
@@ -356,7 +390,7 @@ flashmart_html = '''
             <div id="cart-items-container">
                 <p style="color: #777; text-align: center; margin-top: 30px;">Keranjang masih kosong.</p>
             </div>
-             <div id="cart-summary" style="display:none; margin-top: 15px; background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px;">
+            <div id="cart-summary" style="display:none; margin-top: 15px; background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px;">
                 <div style="font-size: 12px; font-weight: bold; margin-bottom: 6px; color: #FA591D;">🎟️ Voucher FlashMart</div>
                 <div style="display: flex; gap: 6px; margin-bottom: 12px;">
                     <input type="text" id="voucher-input" placeholder="Masukkan kode (FLASHMARTINA)" class="admin-input" style="margin-bottom: 0; flex: 1;">
@@ -455,8 +489,8 @@ flashmart_html = '''
         <div id="view-account" class="view-section">
             <h3>👤 Akun & Kelola Stok</h3>
             <div class="profile-card">
-                <div style="font-size: 18px; font-weight: bold;">⚡ Pelanggan Setia</div>
-                <div style="font-size: 13px; opacity: 0.9; margin-top: 4px;">No: 08123456789 • Gold VIP</div>
+                <div style="font-size: 18px; font-weight: bold;">⚡ Jenny Leow (Gold VIP)</div>
+                <div style="font-size: 13px; opacity: 0.9; margin-top: 4px;">No: 08123456789 • 1.200+ Barang Ready</div>
                 <div style="background: rgba(255,255,255,0.25); padding: 8px 12px; border-radius: 10px; margin-top: 12px; display: flex; justify-content: space-between; font-weight: bold;">
                     <span>⭐ Saldo Poin A-Voucher</span>
                     <span id="user-points">150 Poin</span>
@@ -469,15 +503,14 @@ flashmart_html = '''
                 <input type="number" id="new-price" placeholder="Harga (Rp)" class="admin-input">
                 <input type="number" id="new-stock" placeholder="Jumlah Stok" class="admin-input">
                 <select id="new-category" class="admin-input">
-                    <option value="Sembako">Sembako</option>
-                    <option value="Fashion">Fashion</option>
-                    <option value="Elektronik">Elektronik</option>
-                    <option value="Skincare">Skincare</option>
+                    <option value="Burger">Burger</option>
+                    <option value="Pizza">Pizza</option>
+                    <option value="Sushi">Sushi</option>
                     <option value="Minuman">Minuman</option>
-                    <option value="Perabotan">Perabotan</option>
+                    <option value="Sembako">Sembako</option>
                     <option value="Camilan">Camilan</option>
                 </select>
-                <input type="text" id="new-icon" placeholder="Emoji Ikon (Contoh: 🧥)" class="admin-input">
+                <input type="text" id="new-icon" placeholder="Emoji Ikon (Contoh: 🍔)" class="admin-input">
                 <button class="ripple-btn" onclick="addNewProduct()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer;">Simpan Produk</button>
             </div>
 
@@ -493,11 +526,11 @@ flashmart_html = '''
         <div class="bottom-nav">
             <div class="nav-pill-bg" id="nav-pill"></div>
             <button class="nav-item active" onclick="switchTab('home', 0, this)">
-                <div class="nav-icon">🏠</div>
+                <div class="nav-icon" id="icon-home">🏠</div>
                 <div class="nav-label">Beranda</div>
             </button>
             <button class="nav-item" onclick="switchTab('cart', 1, this)">
-                <div class="nav-icon">🛒</div>
+                <div class="nav-icon" id="icon-cart">🛒</div>
                 <div class="nav-label">Keranjang</div>
             </button>
             <button class="nav-item" onclick="switchTab('pulsa', 2, this)">
@@ -523,54 +556,59 @@ flashmart_html = '''
                     splash.style.opacity = '0';
                     splash.style.visibility = 'hidden';
                 }
-            }, 1600);
+            }, 1400);
             movePill(0);
         });
 
-        const storesData = {
-            "Pusat": [
-                { id: 101, name: "Beras Premium Super 5kg", price: 69000, stock: 25, category: "Sembako", icon: "🌾" },
-                { id: 102, name: "Minyak Goreng Pouch 2L", price: 38000, stock: 30, category: "Sembako", icon: "🍳" },
-                { id: 103, name: "Gula Pasir Putih 1kg", price: 17500, stock: 40, category: "Sembako", icon: "🍬" },
-                { id: 104, name: "Telur Ayam Negeri 1kg", price: 28000, stock: 20, category: "Sembako", icon: "🥚" },
-                { id: 105, name: "Mie Instan Soto (1 Dus)", price: 115000, stock: 15, category: "Sembako", icon: "📦" },
-                { id: 106, name: "Kemeja Flanel Casual Pria", price: 135000, stock: 12, category: "Fashion", icon: "👔" },
-                { id: 107, name: "Kaos Polos Cotton Combed 30s", price: 55000, stock: 30, category: "Fashion", icon: "👕" },
-                { id: 108, name: "Celana Jeans Slim Fit Pria", price: 185000, stock: 10, category: "Fashion", icon: "👖" },
-                { id: 109, name: "Gamis Syari Wanita Modern", price: 195000, stock: 14, category: "Fashion", icon: "👗" },
-                { id: 110, name: "Smartphone Android 4G RAM 4GB", price: 1450000, stock: 5, category: "Elektronik", icon: "📱" },
-                { id: 111, name: "Powerbank Fast Charging 10000mAh", price: 185000, stock: 8, category: "Elektronik", icon: "🔋" },
-                { id: 112, name: "Headset Gaming Extra Bass", price: 75000, stock: 12, category: "Elektronik", icon: "🎧" },
-                { id: 113, name: "Smartwatch Fitness Tracker", price: 245000, stock: 7, category: "Elektronik", icon: "⌚" },
-                { id: 114, name: "Skincare Brightening Serum 30ml", price: 85000, stock: 20, category: "Skincare", icon: "✨" },
-                { id: 115, name: "Facial Wash Glowing 100ml", price: 35000, stock: 25, category: "Skincare", icon: "🧴" },
-                { id: 116, name: "Sunscreen SPF 50 PA++++", price: 65000, stock: 18, category: "Skincare", icon: "☀️" },
-                { id: 117, name: "Susu UHT Ultra Milk 1L", price: 19500, stock: 30, category: "Minuman", icon: "🥛" },
-                { id: 118, name: "Kopi Hitam Robusta 380g", price: 16500, stock: 22, category: "Minuman", icon: "☕" },
-                { id: 119, name: "Teh Kotak Melati Sosro 300ml", price: 4500, stock: 50, category: "Minuman", icon: "🧃" },
-                { id: 120, name: "Blender Kaca Multifungsi 2L", price: 275000, stock: 6, category: "Perabotan", icon: "🧊" },
-                { id: 121, name: "Set Panci Stainless Anti Lengket", price: 320000, stock: 5, category: "Perabotan", icon: "🍲" },
-                { id: 122, name: "Keripik Singkong Balado Pedas", price: 12000, stock: 45, category: "Camilan", icon: "🍟" },
-                { id: 123, name: "Biskuit Cokelat Kelapa Kaleng", price: 29000, stock: 18, category: "Camilan", icon: "🍪" }
-            ],
-            "Express": [
-                { id: 201, name: "Air Mineral Botol 600ml (1 Dus)", price: 35000, stock: 50, category: "Minuman", icon: "💧" },
-                { id: 202, name: "Roti Tawar Gandum Spesial", price: 18000, stock: 15, category: "Camilan", icon: "🍞" },
-                { id: 203, name: "Masker Medis 3ply (Box isi 50)", price: 25000, stock: 40, category: "Skincare", icon: "😷" },
-                { id: 204, name: "Kabel Data Type-C Fast Charge", price: 35000, stock: 25, category: "Elektronik", icon: "🔌" },
-                { id: 205, name: "Cokelat Batang Premium Cadbury", price: 15000, stock: 30, category: "Camilan", icon: "🍫" },
-                { id: 206, name: "Tisu Basah Antiseptik Travel", price: 11000, stock: 35, category: "Skincare", icon: "🧻" }
-            ],
-            "Grosir": [
-                { id: 301, name: "Beras Karung Grosir 25kg", price: 330000, stock: 8, category: "Sembako", icon: "🛍️" },
-                { id: 302, name: "Minyak Goreng Jerigen 5L", price: 92000, stock: 10, category: "Sembako", icon: "🛢️" },
-                { id: 303, name: "Gula Pasir Karung 10kg", price: 145000, stock: 12, category: "Sembako", icon: "🍬" },
-                { id: 304, name: "Deterjen Bubuk Cuci 5kg", price: 68000, stock: 15, category: "Perabotan", icon: "🧼" },
-                { id: 305, name: "Mie Instan (3 Dus Sekaligus)", price: 340000, stock: 6, category: "Sembako", icon: "📦" },
-                { id: 306, name: "Kardus Kaos Polos Grosir (Isi 10pcs)", price: 450000, stock: 4, category: "Fashion", icon: "👕" }
-            ]
-        };
+        // GENERATE 1.200+ BARANG OTOMATIS
+        function generateMassiveStore() {
+            const baseItems = [
+                { name: "Margherita Pizza", price: 120000, cat: "Pizza", icon: "🍕", rating: "4.8" },
+                { name: "Wagyu Burger Deluxe", price: 85000, cat: "Burger", icon: "🍔", rating: "4.9" },
+                { name: "Salmon Nigiri Sushi", price: 95000, cat: "Sushi", icon: "🍣", rating: "4.7" },
+                { name: "Caramel Latte Ice", price: 32000, cat: "Minuman", icon: "🧃", rating: "4.8" },
+                { name: "Truffle Pasta creamy", price: 110000, cat: "Pizza", icon: "🍝", rating: "4.9" },
+                { name: "Caesar Salad Fresh", price: 45000, cat: "Camilan", icon: "🥗", rating: "4.6" },
+                { name: "Beras Premium 5kg", price: 69000, cat: "Sembako", icon: "🌾", rating: "4.9" },
+                { name: "Minyak Goreng 2L", price: 38000, cat: "Sembako", icon: "🍳", rating: "4.8" },
+                { name: "Skincare Serum Glow", price: 85000, cat: "Skincare", icon: "✨", rating: "4.7" },
+                { name: "Smartphone 4G RAM 4GB", price: 1450000, cat: "Elektronik", icon: "📱", rating: "4.8" }
+            ];
 
+            const categories = ["Burger", "Pizza", "Sushi", "Minuman", "Sembako", "Camilan", "Skincare", "Elektronik"];
+            const icons = { "Burger": "🍔", "Pizza": "🍕", "Sushi": "🍣", "Minuman": "🧃", "Sembako": "🌾", "Camilan": "🍪", "Skincare": "✨", "Elektronik": "📱" };
+
+            let listPusat = [];
+            let idCounter = 1000;
+
+            // Masukkan data dasar
+            baseItems.forEach((item, idx) => {
+                listPusat.push({ id: idCounter++, name: item.name, price: item.price, stock: 50, category: item.cat, icon: item.icon, rating: item.rating });
+            });
+
+            // Generate hingga total 1.250 barang
+            for (let i = 1; i <= 1240; i++) {
+                let cat = categories[i % categories.length];
+                let priceRand = 15000 + ((i * 37) % 250000);
+                listPusat.push({
+                    id: idCounter++,
+                    name: cat + " Special Edition #" + i,
+                    price: priceRand,
+                    stock: 25 + (i % 40),
+                    category: cat,
+                    icon: icons[cat],
+                    rating: (4.0 + ((i % 10) * 0.1)).toFixed(1)
+                });
+            }
+
+            return {
+                "Pusat": listPusat,
+                "Express": listPusat.slice(0, 400).map(item => ({ ...item, price: item.price + 5000 })),
+                "Grosir": listPusat.slice(0, 300).map(item => ({ ...item, price: Math.round(item.price * 0.85) }))
+            };
+        }
+
+        const storesData = generateMassiveStore();
         let currentStore = "Pusat";
         let cart = {};
         let points = 150;
@@ -587,6 +625,31 @@ flashmart_html = '''
                 const itemLeft = items[index].offsetLeft;
                 pill.style.left = (itemLeft + (itemWidth / 2) - 22) + 'px';
             }
+        }
+
+        // ANIMASI TERBANG KE KERANJANG (FLYING ITEM)
+        function flyToCartAnimation(event) {
+            const cartIcon = document.getElementById('icon-cart');
+            if (!cartIcon) return;
+
+            const targetRect = cartIcon.getBoundingClientRect();
+            const flyer = document.createElement('div');
+            flyer.className = 'fly-item';
+            flyer.innerText = '🛒';
+            flyer.style.left = event.clientX + 'px';
+            flyer.style.top = event.clientY + 'px';
+            document.body.appendChild(flyer);
+
+            setTimeout(() => {
+                flyer.style.left = (targetRect.left + 10) + 'px';
+                flyer.style.top = (targetRect.top + 10) + 'px';
+                flyer.style.transform = 'scale(0.3)';
+                flyer.style.opacity = '0';
+            }, 20);
+
+            setTimeout(() => {
+                flyer.remove();
+            }, 750);
         }
 
         function openDigital(type) {
@@ -611,8 +674,6 @@ flashmart_html = '''
                     <option value="Indosat">Indosat Ooredoo</option>
                     <option value="XL">XL Axiata</option>
                     <option value="Tri">Tri (3)</option>
-                    <option value="Smartfren">Smartfren</option>
-                    <option value="Axis">Axis</option>
                 `;
                 nominalSelect.innerHTML = `
                     <option value="11000">Pulsa 10.000 (Rp 11.000)</option>
@@ -630,7 +691,6 @@ flashmart_html = '''
                     <option value="Telkomsel Data">Telkomsel Data</option>
                     <option value="Indosat Freedom">Indosat Freedom</option>
                     <option value="XL Xtra Combo">XL Xtra Combo</option>
-                    <option value="Tri AlwaysOn">Tri Aon</option>
                 `;
                 nominalSelect.innerHTML = `
                     <option value="25000">Paket Freedom 3GB (Rp 25.000)</option>
@@ -646,28 +706,23 @@ flashmart_html = '''
                     <option value="20500">Token PLN 20.000 (Rp 20.500)</option>
                     <option value="50500">Token PLN 50.000 (Rp 50.500)</option>
                     <option value="100500">Token PLN 100.000 (Rp 100.500)</option>
-                    <option value="200500">Token PLN 200.000 (Rp 200.500)</option>
                 `;
             } else if (type === 'E-Money') {
                 titleLabel.innerText = "🎮 Top Up E-Wallet & Games";
                 targetLabel.innerText = "2. Masukkan No. Akun / User ID Game:";
-                targetInput.placeholder = "Contoh: 081234567890 / ID Game / Zone ID";
+                targetInput.placeholder = "Contoh: 081234567890 / ID Game";
                 providerGroup.style.display = 'block';
                 labelProvider.innerText = "1. Pilih E-Wallet / Game:";
                 document.getElementById('digital-provider').innerHTML = `
                     <option value="GoPay">GoPay Customer</option>
                     <option value="DANA">DANA Dompet Digital</option>
-                    <option value="OVO">OVO Cash</option>
-                    <option value="ShopeePay">ShopeePay</option>
                     <option value="Mobile Legends">Mobile Legends (Moonton)</option>
                     <option value="Free Fire">Free Fire (Garena)</option>
-                    <option value="PUBG Mobile">PUBG Mobile</option>
                 `;
                 nominalSelect.innerHTML = `
-                    <option value="20000">Top Up Saldo / Voucher 20.000 (Rp 20.000)</option>
-                    <option value="50000">Top Up Saldo / Voucher 50.000 (Rp 50.000)</option>
-                    <option value="60000">Diamond / UC Special Item (Rp 60.000)</option>
-                    <option value="105000">Top Up Besar 100.000 (Rp 105.000)</option>
+                    <option value="20000">Top Up Saldo 20.000 (Rp 20.000)</option>
+                    <option value="50000">Top Up Saldo 50.000 (Rp 50.000)</option>
+                    <option value="105000">Top Up 100.000 (Rp 105.000)</option>
                 `;
             }
         }
@@ -708,7 +763,7 @@ flashmart_html = '''
 
         function changeStore() {
             currentStore = document.getElementById('store-select').value;
-            document.getElementById('store-title-label').innerText = "Katalog Produk - FlashMart " + currentStore;
+            document.getElementById('store-title-label').innerText = "Popular Now (" + storesData[currentStore].length + "+ Items)";
             activeCategory = 'Semua';
             document.querySelectorAll('.cat-chip').forEach((el, index) => {
                 if (index === 0) el.classList.add('active');
@@ -720,19 +775,28 @@ flashmart_html = '''
 
         function renderProducts(listToRender) {
             const list = document.getElementById('product-list');
+            document.getElementById('total-count-badge').innerText = listToRender.length + " Barang";
+            
             if (listToRender.length === 0) {
-                list.innerHTML = '<p style="grid-column: span 2; text-align: center; color: #777;">Tidak ada produk yang cocok.</p>';
+                list.innerHTML = '<p style="grid-column: span 2; text-align: center; color: #777;">Tidak ada barang yang cocok.</p>';
                 return;
             }
-            list.innerHTML = listToRender.map(p => `
+
+            // Batasi render max 100 item per halaman agar aplikasi tetap sangat ngebut dan ringan
+            const displaySlice = listToRender.slice(0, 100);
+
+            list.innerHTML = displaySlice.map(p => `
                 <div class="product-card">
-                    <div style="font-size: 34px;">` + p.icon + `</div>
+                    <div class="badge-sale">SALE</div>
+                    <div class="product-icon-wrap">` + p.icon + `</div>
                     <div class="product-title">` + p.name + `</div>
-                    <div class="product-stock">Stok: ` + p.stock + `</div>
-                    <div class="product-price">Rp ` + p.price.toLocaleString('id-ID') + `</div>
-                    <div class="btn-group">
-                        <button class="btn-cart ripple-btn" onclick="addToCart(` + p.id + `)">+ Keranjang</button>
-                        <button class="btn-buy-now ripple-btn" onclick="buyNow(` + p.id + `)">Beli</button>
+                    <div class="product-rating">⭐ ` + p.rating + ` (Stok: ` + p.stock + `)</div>
+                    <div class="product-footer">
+                        <div class="product-price">Rp ` + p.price.toLocaleString('id-ID') + `</div>
+                        <div class="action-buttons">
+                            <button class="btn-mini-cart" title="Tambah ke Keranjang" onclick="addToCart(event, ` + p.id + `)">+</button>
+                            <button class="btn-mini-buy ripple-btn" onclick="buyNowDirect(` + p.id + `)">Beli</button>
+                        </div>
                     </div>
                 </div>
             `).join('');
@@ -767,7 +831,7 @@ flashmart_html = '''
             if (tabName === 'history') renderHistory();
         }
 
-        function addToCart(id) {
+        function addToCart(event, id) {
             const prod = storesData[currentStore].find(p => p.id === id);
             if (prod.stock <= 0) {
                 alert("Stok barang habis!");
@@ -781,11 +845,24 @@ flashmart_html = '''
                 cart[id] = { ...prod, qty: 1, store: currentStore, selected: true }; 
             }
             filterProducts();
-            alert(prod.name + " ditambahkan ke keranjang!");
+            flyToCartAnimation(event);
         }
 
-        function buyNow(id) {
-            addToCart(id);
+        // TOMBOL BELI: LANGSUNG DIARAHKAN KE CHECKOUT (TANPA MASUK KERANJANG)
+        function buyNowDirect(id) {
+            const prod = storesData[currentStore].find(p => p.id === id);
+            if (prod.stock <= 0) {
+                alert("Stok barang habis!");
+                return;
+            }
+            
+            // Kosongkan cart lalu masukkan khusus produk ini saja agar langsung siap dicheckout
+            cart = {};
+            prod.stock -= 1;
+            cart[id] = { ...prod, qty: 1, store: currentStore, selected: true };
+
+            filterProducts();
+            // Langsung pindah ke tab Keranjang/Checkout
             switchTab('cart', 1, document.querySelectorAll('.nav-item')[1]);
         }
 
@@ -1170,7 +1247,7 @@ flashmart_html = '''
             const price = parseInt(document.getElementById('new-price').value);
             const stock = parseInt(document.getElementById('new-stock').value);
             const category = document.getElementById('new-category').value;
-            const icon = document.getElementById('new-icon').value.trim() || "📦";
+            const icon = document.getElementById('new-icon').value.trim() || "🍔";
 
             if (!name || isNaN(price) || isNaN(stock)) {
                 alert("Mohon lengkapi data produk dengan benar!");
@@ -1178,7 +1255,7 @@ flashmart_html = '''
             }
 
             const newId = Date.now();
-            storesData[currentStore].push({ id: newId, name, price, stock, category, icon });
+            storesData[currentStore].unshift({ id: newId, name, price, stock, category, icon, rating: "5.0" });
             
             document.getElementById('new-name').value = '';
             document.getElementById('new-price').value = '';
@@ -1200,4 +1277,4 @@ flashmart_html = '''
 </html>
 '''
 
-components.html(flashmart_html, height=880, scrolling=True)
+components.html(flashmart_html, height=900, scrolling=True)
