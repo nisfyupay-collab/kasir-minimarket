@@ -41,47 +41,28 @@ flashmart_html = '''
             overflow-x: hidden;
         }
 
-        /* SPLASH SCREEN ULTRA MODERN & HIDUP */
+        /* SPLASH SCREEN ELEGAN ALA VIDEO SEBELUMNYA */
         #splash-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #1b5e20 0%, #03AC03 50%, #000000 100%);
+            background: #0f1115;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 9999; color: white;
-            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+            transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.7s;
         }
-        .splash-ring {
-            position: absolute; width: 140px; height: 140px; border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%; animation: rippleSplash 1.5s infinite ease-out;
+        .splash-brand {
+            font-size: 38px; font-weight: 900; letter-spacing: 3px; color: #ffffff;
+            opacity: 0; transform: translateY(15px);
+            animation: fadeInText 0.8s ease 0.2s forwards;
         }
-        .splash-logo-box {
-            position: relative; width: 100px; height: 100px; background: white; color: #03AC03;
-            display: flex; justify-content: center; align-items: center; border-radius: 30px;
-            font-size: 54px; box-shadow: 0 0 40px rgba(3, 172, 3, 0.8);
-            animation: bounceZoom 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-        .splash-title {
-            font-size: 32px; font-weight: 900; margin-top: 20px; letter-spacing: 2px;
-            background: linear-gradient(45deg, #ffffff, #a5d6a7);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: slideUpText 1s ease 0.3s forwards; opacity: 0; transform: translateY(20px);
-        }
-        .splash-subtitle {
-            font-size: 13px; color: #c8e6c9; margin-top: 6px; letter-spacing: 1px;
-            animation: slideUpText 1s ease 0.5s forwards; opacity: 0; transform: translateY(20px);
+        .splash-tagline {
+            font-size: 13px; color: #03AC03; margin-top: 8px; letter-spacing: 1.5px;
+            font-weight: bold; opacity: 0; transform: translateY(15px);
+            animation: fadeInText 0.8s ease 0.5s forwards;
         }
 
-        @keyframes bounceZoom {
-            0% { transform: scale(0) rotate(-45deg); opacity: 0; }
-            70% { transform: scale(1.1) rotate(5deg); opacity: 1; }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-        @keyframes slideUpText {
+        @keyframes fadeInText {
             to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes rippleSplash {
-            0% { transform: scale(0.8); opacity: 1; }
-            100% { transform: scale(1.8); opacity: 0; }
         }
 
         #success-modal, #tracking-detail-modal {
@@ -109,7 +90,7 @@ flashmart_html = '''
 
         .app-container {
             max-width: 480px; margin: 0 auto; background: var(--bg-color); min-height: 100vh;
-            padding-bottom: 90px; box-shadow: 0 0 15px rgba(0,0,0,0.05); position: relative;
+            padding-bottom: 100px; box-shadow: 0 0 15px rgba(0,0,0,0.05); position: relative;
         }
         .header {
             background: linear-gradient(135deg, #03AC03 0%, #42B549 100%);
@@ -165,16 +146,37 @@ flashmart_html = '''
         .btn-cart { background: #ff9800; color: white; border: none; padding: 7px; border-radius: 6px; font-weight: bold; font-size: 11px; flex: 1; cursor: pointer; }
         .btn-buy-now { background: #03AC03; color: white; border: none; padding: 7px; border-radius: 6px; font-weight: bold; font-size: 11px; flex: 1; cursor: pointer; }
 
+        /* BOTTOM NAVIGATION ANIMASI FLOATING CAPSULE (ALA VIDEO KE-3) */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-            width: 100%; max-width: 480px; background: var(--nav-bg); display: flex; justify-content: space-around;
-            padding: 10px 0; border-top: 1px solid var(--border-color); z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.03);
+            position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+            width: 92%; max-width: 440px; background: var(--nav-bg); 
+            display: flex; justify-content: space-around; align-items: center;
+            padding: 8px 6px; border-radius: 35px; border: 1px solid var(--border-color);
+            z-index: 100; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
-        .nav-item { text-align: center; font-size: 11px; color: #777; cursor: pointer; background: none; border: none; outline: none; transition: color 0.2s; }
-        .nav-item.active { color: #03AC03; font-weight: bold; transform: scale(1.05); }
-        .nav-item div { font-size: 20px; transition: transform 0.2s; }
+        .nav-item {
+            position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            width: 60px; height: 48px; background: transparent; border: none; outline: none; cursor: pointer;
+            z-index: 2; transition: transform 0.2s ease;
+        }
+        .nav-icon { font-size: 18px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s; color: #777; }
+        .nav-label { font-size: 10px; font-weight: 600; color: #777; margin-top: 2px; transition: opacity 0.3s, transform 0.3s; opacity: 1; }
+        
+        /* Indikator kapsul melayang aktif */
+        .nav-item.active .nav-icon {
+            color: #ffffff; transform: translateY(-14px) scale(1.1);
+        }
+        .nav-item.active .nav-label {
+            opacity: 0; transform: translateY(10px); pointer-events: none;
+        }
+        .nav-pill-bg {
+            position: absolute; width: 44px; height: 44px; background: #03AC03;
+            border-radius: 50%; top: 2px; left: calc(50% - 22px); z-index: 1;
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 6px 15px rgba(3, 172, 3, 0.4);
+        }
 
-        /* ANIMASI PERPINDAHAN TAB (FADE & SLIDE) */
+        /* ANIMASI PERPINDAHAN TAB */
         .view-section { 
             display: none; padding: 15px; opacity: 0; transform: translateY(12px);
             transition: opacity 0.35s ease, transform 0.35s ease;
@@ -232,7 +234,6 @@ flashmart_html = '''
             cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.03);
         }
         .tracker-box:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color: #03AC03; }
-        .stepper { display: flex; justify-content: space-between; margin-top: 10px; font-size: 11px; color: #03AC03; font-weight: bold; }
         
         .admin-input {
             width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--border-color);
@@ -247,12 +248,10 @@ flashmart_html = '''
 </head>
 <body data-theme="light">
 
-    <!-- SPLASH SCREEN ANIMASI HIDUP ULTRA MODERN -->
+    <!-- SPLASH SCREEN ELEGAN -->
     <div id="splash-screen">
-        <div class="splash-ring"></div>
-        <div class="splash-logo-box">⚡</div>
-        <div class="splash-title">FlashMart</div>
-        <div class="splash-subtitle">Belanja Cepat, Mudah & Terpercaya</div>
+        <div class="splash-brand">FlashMart</div>
+        <div class="splash-tagline">⚡ All your needs in one place</div>
     </div>
 
     <!-- POP-UP MODAL STRUK BELANJA -->
@@ -289,11 +288,11 @@ flashmart_html = '''
         </div>
     </div>
 
-    <!-- MODAL DETAIL & PETA PELACAKAN KURIR -->
+    <!-- MODAL DETAIL / PELACAKAN -->
     <div id="tracking-detail-modal">
         <div class="tracking-card">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 12px;">
-                <h3 style="margin: 0; font-size: 16px; color: #03AC03;">📍 Detail Pelacakan Paket</h3>
+                <h3 id="modal-title-header" style="margin: 0; font-size: 16px; color: #03AC03;">📍 Detail Transaksi</h3>
                 <button onclick="closeTrackingModal()" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #777;">✕</button>
             </div>
             <div id="tracking-detail-content" style="font-size: 13px; line-height: 1.6;"></div>
@@ -357,7 +356,7 @@ flashmart_html = '''
             <div id="cart-items-container">
                 <p style="color: #777; text-align: center; margin-top: 30px;">Keranjang masih kosong.</p>
             </div>
-            <div id="cart-summary" style="display:none; margin-top: 15px; background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px;">
+             <div id="cart-summary" style="display:none; margin-top: 15px; background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px;">
                 <div style="font-size: 12px; font-weight: bold; margin-bottom: 6px; color: #FA591D;">🎟️ Voucher FlashMart</div>
                 <div style="display: flex; gap: 6px; margin-bottom: 12px;">
                     <input type="text" id="voucher-input" placeholder="Masukkan kode (FLASHMARTINA)" class="admin-input" style="margin-bottom: 0; flex: 1;">
@@ -443,10 +442,10 @@ flashmart_html = '''
             </div>
         </div>
 
-        <!-- RIWAYAT & PELACAKAN -->
+        <!-- RIWAYAT & PESANAN -->
         <div id="view-history" class="view-section">
-            <h3>📜 Riwayat & Pelacakan Kurir</h3>
-            <p style="font-size: 12px; color: #666; margin-bottom: 12px;">👉 Tekan salah satu kartu pesanan di bawah untuk melihat detail posisi kurir dan peta pengiriman!</p>
+            <h3>📜 Riwayat Pesanan & Transaksi</h3>
+            <p style="font-size: 12px; color: #666; margin-bottom: 12px;">👉 Tekan kartu pesanan untuk melihat detail lengkap transaksi atau status kurir pengiriman!</p>
             <div id="history-container">
                 <p style="color: #777; text-align: center; margin-top: 30px;">Belum ada riwayat transaksi.</p>
             </div>
@@ -490,22 +489,28 @@ flashmart_html = '''
             </div>
         </div>
 
-        <!-- NAVIGASI BAWAH -->
+        <!-- NAVIGASI BAWAH DENGAN ANIMASI KAPSUL MELAYANG -->
         <div class="bottom-nav">
-            <button class="nav-item active" onclick="switchTab('home', this)">
-                <div>🏠</div>Beranda
+            <div class="nav-pill-bg" id="nav-pill"></div>
+            <button class="nav-item active" onclick="switchTab('home', 0, this)">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Beranda</div>
             </button>
-            <button class="nav-item" onclick="switchTab('cart', this)">
-                <div>🛒</div>Keranjang
+            <button class="nav-item" onclick="switchTab('cart', 1, this)">
+                <div class="nav-icon">🛒</div>
+                <div class="nav-label">Keranjang</div>
             </button>
-            <button class="nav-item" onclick="switchTab('pulsa', this)">
-                <div>📱</div>Digital
+            <button class="nav-item" onclick="switchTab('pulsa', 2, this)">
+                <div class="nav-icon">📱</div>
+                <div class="nav-label">Digital</div>
             </button>
-            <button class="nav-item" onclick="switchTab('history', this)">
-                <div>🚚</div>Lacakan
+            <button class="nav-item" onclick="switchTab('history', 3, this)">
+                <div class="nav-icon">📜</div>
+                <div class="nav-label">Riwayat</div>
             </button>
-            <button class="nav-item" onclick="switchTab('account', this)">
-                <div>👤</div>Akun
+            <button class="nav-item" onclick="switchTab('account', 4, this)">
+                <div class="nav-icon">👤</div>
+                <div class="nav-label">Akun</div>
             </button>
         </div>
     </div>
@@ -518,7 +523,8 @@ flashmart_html = '''
                     splash.style.opacity = '0';
                     splash.style.visibility = 'hidden';
                 }
-            }, 1800);
+            }, 1600);
+            movePill(0);
         });
 
         const storesData = {
@@ -573,9 +579,19 @@ flashmart_html = '''
         let activeCategory = 'Semua';
         let currentDigitalType = 'Pulsa';
 
+        function movePill(index) {
+            const pill = document.getElementById('nav-pill');
+            const items = document.querySelectorAll('.nav-item');
+            if(items[index]) {
+                const itemWidth = items[index].offsetWidth;
+                const itemLeft = items[index].offsetLeft;
+                pill.style.left = (itemLeft + (itemWidth / 2) - 22) + 'px';
+            }
+        }
+
         function openDigital(type) {
             currentDigitalType = type;
-            switchTab('pulsa', document.querySelectorAll('.nav-item')[2]);
+            switchTab('pulsa', 2, document.querySelectorAll('.nav-item')[2]);
             
             const titleLabel = document.getElementById('digital-title-label');
             const targetLabel = document.getElementById('label-target');
@@ -740,11 +756,12 @@ flashmart_html = '''
             renderProducts(filtered);
         }
 
-        function switchTab(tabName, element) {
+        function switchTab(tabName, tabIndex, element) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             document.getElementById('view-' + tabName).classList.add('active');
             if (element) element.classList.add('active');
+            movePill(tabIndex);
 
             if (tabName === 'cart') renderCart();
             if (tabName === 'history') renderHistory();
@@ -769,7 +786,7 @@ flashmart_html = '''
 
         function buyNow(id) {
             addToCart(id);
-            switchTab('cart', document.querySelectorAll('.nav-item')[1]);
+            switchTab('cart', 1, document.querySelectorAll('.nav-item')[1]);
         }
 
         function toggleSelectItem(id) {
@@ -954,10 +971,6 @@ flashmart_html = '''
             const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
             const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
             
-            let arrivalDate = new Date(now);
-            arrivalDate.setDate(now.getDate() + 2);
-            const arrivalStr = arrivalDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-
             let receiptHtml = '';
             let itemsSummaryArray = [];
             selectedIds.forEach(id => {
@@ -986,17 +999,32 @@ flashmart_html = '''
             document.getElementById('receipt-cash').innerText = "Rp " + cashGiven.toLocaleString('id-ID');
             document.getElementById('receipt-change').innerText = "Rp " + change.toLocaleString('id-ID');
 
+            let statusInfo = "Selesai / Lunas ✅";
+            let arrivalEst = "Langsung Tersedia (Cashier/Digital)";
+            let courier = "-";
+            let location = "FlashMart Store (Offline Counter)";
+
+            if (method === 'COD') {
+                let arrivalDate = new Date(now);
+                arrivalDate.setDate(now.getDate() + 2);
+                arrivalEst = arrivalDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                statusInfo = "Dalam Perjalanan Kurir 🚚";
+                courier = "FlashExpress (Kurir VIP COD)";
+                location = "Sorting Center Gudang Utama (Jakarta / Hub Terdekat)";
+            }
+
             history.unshift({
                 orderId: "FM-" + Math.floor(100000 + Math.random() * 900000),
                 date: dateStr + " | " + timeStr,
-                arrivalEst: arrivalStr,
+                arrivalEst: arrivalEst,
                 total: grandTotal,
                 payment: method,
                 items: itemsSummaryArray.join(', '),
                 earned: earnedPoints,
-                status: "Dalam Perjalanan Kurir 🚚",
-                courier: "FlashExpress (Kurir VIP)",
-                location: "Sorting Center Gudang Utama (Jakarta / Hub Terdekat)"
+                status: statusInfo,
+                courier: courier,
+                location: location,
+                isCod: (method === 'COD')
             });
 
             discountActive = false;
@@ -1046,7 +1074,8 @@ flashmart_html = '''
                 earned: earnedPoints,
                 status: currentDigitalType + " Berhasil & Sukses ✅",
                 courier: "Sistem Otomatis PPOB",
-                location: "Server Pusat Operator (Online)"
+                location: "Server Pusat Operator (Online)",
+                isCod: false
             });
 
             document.getElementById('digital-target').value = '';
@@ -1055,39 +1084,61 @@ flashmart_html = '''
 
         function closeModal() {
             document.getElementById('success-modal').style.display = 'none';
-            switchTab('history', document.querySelectorAll('.nav-item')[3]);
+            switchTab('history', 3, document.querySelectorAll('.nav-item')[3]);
         }
 
         function closeTrackingModal() {
             document.getElementById('tracking-detail-modal').style.display = 'none';
         }
 
-        function showTrackingDetail(index) {
+        function showDetailModal(index) {
             const tx = history[index];
             const detailModal = document.getElementById('tracking-detail-modal');
             const content = document.getElementById('tracking-detail-content');
+            const titleHeader = document.getElementById('modal-title-header');
 
-            content.innerHTML = `
-                <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; margin-bottom: 10px;">
-                    <strong>No. Resi / ID:</strong> ${tx.orderId}<br>
-                    <strong>Waktu Pesan:</strong> ${tx.date}<br>
-                    <strong>Estimasi Tiba:</strong> <span style="color: #03AC03; font-weight: bold;">${tx.arrivalEst}</span><br>
-                    <strong>Kurir Pengantar:</strong> ${tx.courier}<br>
-                    <strong>Metode Bayar:</strong> ${tx.payment}
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <strong>Isi Paket:</strong><br>
-                    <span style="color: #555;">${tx.items}</span>
-                </div>
-                <div style="background: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 8px; font-weight: bold; margin-bottom: 12px; font-size: 12px;">
-                    📍 Posisi Terkini:<br>
-                    ${tx.location}
-                </div>
-                <div style="border: 2px dashed #03AC03; border-radius: 8px; overflow: hidden; background: #fff; text-align: center;">
-                    <iframe width="100%" height="160" style="border:0;" loading="lazy" allowfullscreen src="https://maps.google.com/maps?q=-6.2088,106.8456&z=14&output=embed"></iframe>
-                    <div style="font-size: 11px; padding: 6px; color: #555; background: #f1f8e9;">🗺️ Simulasi Live Tracking Kurir FlashMart</div>
-                </div>
-            `;
+            if (tx.isCod) {
+                titleHeader.innerText = "📍 Pelacakan Kurir & Pengiriman COD";
+                content.innerHTML = `
+                    <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+                        <strong>No. Pesanan / Resi:</strong> ${tx.orderId}<br>
+                        <strong>Waktu Pesan:</strong> ${tx.date}<br>
+                        <strong>Estimasi Tiba:</strong> <span style="color: #03AC03; font-weight: bold;">${tx.arrivalEst}</span><br>
+                        <strong>Kurir Pengantar:</strong> ${tx.courier}<br>
+                        <strong>Metode Bayar:</strong> ${tx.payment}
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Isi Paket:</strong><br>
+                        <span style="color: #555;">${tx.items}</span>
+                    </div>
+                    <div style="background: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 8px; font-weight: bold; margin-bottom: 12px; font-size: 12px;">
+                        📍 Posisi Terkini Kurir:<br>
+                        ${tx.location}
+                    </div>
+                    <div style="border: 2px dashed #03AC03; border-radius: 8px; overflow: hidden; background: #fff; text-align: center;">
+                        <iframe width="100%" height="160" style="border:0;" loading="lazy" allowfullscreen src="https://maps.google.com/maps?q=-6.2088,106.8456&z=14&output=embed"></iframe>
+                        <div style="font-size: 11px; padding: 6px; color: #555; background: #f1f8e9;">🗺️ Simulasi Live Tracking Kurir FlashMart</div>
+                    </div>
+                `;
+            } else {
+                titleHeader.innerText = "🧾 Detail Transaksi & Pembayaran";
+                content.innerHTML = `
+                    <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+                        <strong>ID Transaksi:</strong> ${tx.orderId}<br>
+                        <strong>Waktu:</strong> ${tx.date}<br>
+                        <strong>Metode Pembayaran:</strong> <span style="color: #FA591D; font-weight: bold;">${tx.payment}</span><br>
+                        <strong>Status:</strong> <span style="color: #03AC03; font-weight: bold;">${tx.status}</span>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Rincian Item / Layanan:</strong><br>
+                        <span style="color: #555;">${tx.items}</span>
+                    </div>
+                    <div style="background: #fff3e0; color: #e65100; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 12px;">
+                        💡 Keterangan:<br>
+                        Transaksi non-COD diselesaikan secara instan / tunai di kasir tanpa pengiriman kurir fisik. Terima kasih telah berbelanja di FlashMart!
+                    </div>
+                `;
+            }
             detailModal.style.display = 'flex';
         }
 
@@ -1099,16 +1150,16 @@ flashmart_html = '''
             }
 
             container.innerHTML = history.map((tx, idx) => `
-                <div class="tracker-box" onclick="showTrackingDetail(${idx})">
+                <div class="tracker-box" onclick="showDetailModal(${idx})">
                     <div style="display: flex; justify-content: space-between; font-size: 11px; color: #888;">
                         <span>📦 ${tx.orderId}</span>
-                        <span>📅 Estimasi: ${tx.arrivalEst}</span>
+                        <span>💳 ${tx.payment}</span>
                     </div>
                     <div style="font-weight: bold; font-size: 13px; margin: 4px 0; color: var(--text-color);">${tx.items}</div>
-                    <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Total: Rp ${tx.total.toLocaleString('id-ID')} (${tx.payment})</div>
+                    <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Total: Rp ${tx.total.toLocaleString('id-ID')}</div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
                         <span style="color: #03AC03; font-size: 12px; font-weight: bold;">Status: ${tx.status}</span>
-                        <span style="font-size: 11px; background: #e8f5e9; color: #2e7d32; padding: 3px 8px; border-radius: 4px; font-weight: bold;">🔍 Cek Peta</span>
+                        <span style="font-size: 11px; background: ${tx.isCod ? '#e8f5e9' : '#fff3e0'}; color: ${tx.isCod ? '#2e7d32' : '#e65100'}; padding: 3px 8px; border-radius: 4px; font-weight: bold;">${tx.isCod ? '🔍 Cek Peta' : '📄 Lihat Struk'}</span>
                     </div>
                 </div>
             `).join('');
@@ -1149,4 +1200,4 @@ flashmart_html = '''
 </html>
 '''
 
-components.html(flashmart_html, height=880, scrolling=True) 
+components.html(flashmart_html, height=880, scrolling=True)
