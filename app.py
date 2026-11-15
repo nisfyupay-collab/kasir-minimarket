@@ -38,60 +38,65 @@ flashmart_html = '''
             margin: 0;
             padding: 0;
             transition: background 0.3s, color 0.3s;
+            overflow-x: hidden;
         }
 
-        /* SPLASH SCREEN ANIMASI HIDUP */
+        /* SPLASH SCREEN ULTRA MODERN & HIDUP */
         #splash-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #03AC03 0%, #2E7D32 50%, #FF9800 100%);
+            background: radial-gradient(circle at center, #1b5e20 0%, #03AC03 50%, #000000 100%);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 9999; color: white;
-            transition: opacity 0.6s ease, visibility 0.6s ease;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
         }
-        .splash-logo-container {
-            position: relative;
-            display: flex; justify-content: center; align-items: center;
-            animation: pulseGlow 1.8s infinite alternate;
+        .splash-ring {
+            position: absolute; width: 140px; height: 140px; border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%; animation: rippleSplash 1.5s infinite ease-out;
         }
-        .splash-logo {
-            font-size: 72px; background: white; color: #03AC03; width: 110px; height: 110px;
+        .splash-logo-box {
+            position: relative; width: 100px; height: 100px; background: white; color: #03AC03;
             display: flex; justify-content: center; align-items: center; border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
-            animation: bounceInRotate 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+            font-size: 54px; box-shadow: 0 0 40px rgba(3, 172, 3, 0.8);
+            animation: bounceZoom 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
-        .splash-text {
-            font-size: 26px; font-weight: 900; margin-top: 18px; letter-spacing: 1px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            animation: fadeInUp 1s ease 0.3s forwards; opacity: 0;
+        .splash-title {
+            font-size: 32px; font-weight: 900; margin-top: 20px; letter-spacing: 2px;
+            background: linear-gradient(45deg, #ffffff, #a5d6a7);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: slideUpText 1s ease 0.3s forwards; opacity: 0; transform: translateY(20px);
         }
-        .splash-tagline {
-            font-size: 13px; opacity: 0.85; margin-top: 6px;
-            animation: fadeInUp 1s ease 0.5s forwards; opacity: 0;
+        .splash-subtitle {
+            font-size: 13px; color: #c8e6c9; margin-top: 6px; letter-spacing: 1px;
+            animation: slideUpText 1s ease 0.5s forwards; opacity: 0; transform: translateY(20px);
         }
 
-        @keyframes bounceInRotate {
-            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
-            70% { transform: scale(1.15) rotate(15deg); opacity: 1; }
+        @keyframes bounceZoom {
+            0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+            70% { transform: scale(1.1) rotate(5deg); opacity: 1; }
             100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
-        @keyframes fadeInUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        @keyframes slideUpText {
+            to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes pulseGlow {
-            0% { filter: drop-shadow(0 0 10px rgba(255,255,255,0.4)); }
-            100% { filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); }
+        @keyframes rippleSplash {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(1.8); opacity: 0; }
         }
 
         #success-modal, #tracking-detail-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center;
-            z-index: 10000; backdrop-filter: blur(4px); overflow-y: auto; padding: 20px;
+            z-index: 10000; backdrop-filter: blur(5px); overflow-y: auto; padding: 20px;
         }
         .receipt-card, .tracking-card {
             background: var(--card-bg); color: var(--text-color); width: 100%; max-width: 360px; padding: 20px;
             border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); position: relative; margin: auto;
+            animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes modalPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
         .receipt-card { font-family: 'Courier New', Courier, monospace; background: #fff; color: #333; }
         .receipt-card::before {
@@ -127,8 +132,9 @@ flashmart_html = '''
         .cat-chip {
             background: var(--card-bg); border: 1px solid var(--border-color); padding: 6px 14px;
             border-radius: 20px; font-size: 12px; cursor: pointer; white-space: nowrap; color: var(--text-color); font-weight: 600;
+            transition: all 0.2s;
         }
-        .cat-chip.active { background: #03AC03; color: white; border-color: #03AC03; }
+        .cat-chip.active { background: #03AC03; color: white; border-color: #03AC03; transform: scale(1.05); }
 
         .banner {
             margin: 0 15px 15px 15px; background: linear-gradient(135deg, #ff8800, #ffbb00); color: white;
@@ -140,14 +146,16 @@ flashmart_html = '''
         }
         .digital-item {
             background: var(--card-bg); border: 1px solid var(--border-color); padding: 10px 5px; border-radius: 10px;
-            font-size: 11px; font-weight: bold; cursor: pointer; color: var(--text-color);
+            font-size: 11px; font-weight: bold; cursor: pointer; color: var(--text-color); transition: transform 0.2s;
         }
+        .digital-item:active { transform: scale(0.92); }
 
         .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 15px; }
         .product-card {
             background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px;
-            text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: transform 0.2s; position: relative;
+            text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: transform 0.2s, box-shadow 0.2s; position: relative;
         }
+        .product-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.08); }
         .product-card:active { transform: scale(0.96); }
         .product-title { font-size: 13px; font-weight: 600; height: 35px; overflow: hidden; margin-bottom: 2px; color: var(--text-color); }
         .product-stock { font-size: 11px; color: #777; margin-bottom: 5px; }
@@ -160,16 +168,21 @@ flashmart_html = '''
         .bottom-nav {
             position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
             width: 100%; max-width: 480px; background: var(--nav-bg); display: flex; justify-content: space-around;
-            padding: 10px 0; border-top: 1px solid var(--border-color); z-index: 100;
+            padding: 10px 0; border-top: 1px solid var(--border-color); z-index: 100; box-shadow: 0 -4px 10px rgba(0,0,0,0.03);
         }
-        .nav-item { text-align: center; font-size: 11px; color: #777; cursor: pointer; background: none; border: none; outline: none; }
-        .nav-item.active { color: #03AC03; font-weight: bold; }
-        .nav-item div { font-size: 20px; }
+        .nav-item { text-align: center; font-size: 11px; color: #777; cursor: pointer; background: none; border: none; outline: none; transition: color 0.2s; }
+        .nav-item.active { color: #03AC03; font-weight: bold; transform: scale(1.05); }
+        .nav-item div { font-size: 20px; transition: transform 0.2s; }
 
-        .view-section { display: none; padding: 15px; }
-        .view-section.active { display: block; }
+        /* ANIMASI PERPINDAHAN TAB (FADE & SLIDE) */
+        .view-section { 
+            display: none; padding: 15px; opacity: 0; transform: translateY(12px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+        .view-section.active { 
+            display: block; opacity: 1; transform: translateY(0); 
+        }
         
-        /* KERANJANG ALA MARKETPLACE MODERN (SHOPEE STYLE) */
         .cart-store-group {
             background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px;
             margin-bottom: 12px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.03);
@@ -234,13 +247,12 @@ flashmart_html = '''
 </head>
 <body data-theme="light">
 
-    <!-- SPLASH SCREEN ANIMASI HIDUP -->
+    <!-- SPLASH SCREEN ANIMASI HIDUP ULTRA MODERN -->
     <div id="splash-screen">
-        <div class="splash-logo-container">
-            <div class="splash-logo">⚡</div>
-        </div>
-        <div class="splash-text">FlashMart</div>
-        <div class="splash-tagline">Belanja Cepat, Mudah & Terpercaya</div>
+        <div class="splash-ring"></div>
+        <div class="splash-logo-box">⚡</div>
+        <div class="splash-title">FlashMart</div>
+        <div class="splash-subtitle">Belanja Cepat, Mudah & Terpercaya</div>
     </div>
 
     <!-- POP-UP MODAL STRUK BELANJA -->
@@ -339,7 +351,7 @@ flashmart_html = '''
             <div class="product-grid" id="product-list"></div>
         </div>
 
-        <!-- KERANJANG & CHECKOUT (MODEL KERANJANG SHOPEE) -->
+        <!-- KERANJANG & CHECKOUT -->
         <div id="view-cart" class="view-section">
             <h3 style="margin-top: 0;">🛒 Keranjang Saya</h3>
             <div id="cart-items-container">
@@ -639,28 +651,6 @@ flashmart_html = '''
                     <option value="20000">Top Up Saldo / Voucher 20.000 (Rp 20.000)</option>
                     <option value="50000">Top Up Saldo / Voucher 50.000 (Rp 50.000)</option>
                     <option value="60000">Diamond / UC Special Item (Rp 60.000)</option>
-                    <option value="100500">Token PLN 100.000 (Rp 100.500)</option>
-                    <option value="200500">Token PLN 200.000 (Rp 200.500)</option>
-                `;
-            } else if (type === 'E-Money') {
-                titleLabel.innerText = "🎮 Top Up E-Wallet & Games";
-                targetLabel.innerText = "2. Masukkan No. Akun / User ID Game:";
-                targetInput.placeholder = "Contoh: 081234567890 / ID Game / Zone ID";
-                providerGroup.style.display = 'block';
-                labelProvider.innerText = "1. Pilih E-Wallet / Game:";
-                document.getElementById('digital-provider').innerHTML = `
-                    <option value="GoPay">GoPay Customer</option>
-                    <option value="DANA">DANA Dompet Digital</option>
-                    <option value="OVO">OVO Cash</option>
-                    <option value="ShopeePay">ShopeePay</option>
-                    <option value="Mobile Legends">Mobile Legends (Moonton)</option>
-                    <option value="Free Fire">Free Fire (Garena)</option>
-                    <option value="PUBG Mobile">PUBG Mobile</option>
-                `;
-                nominalSelect.innerHTML = `
-                    <option value="20000">Top Up Saldo / Voucher 20.000 (Rp 20.000)</option>
-                    <option value="50000">Top Up Saldo / Voucher 50.000 (Rp 50.000)</option>
-                    <option value="60000">Diamond / UC Special Item (Rp 60.000)</option>
                     <option value="105000">Top Up Besar 100.000 (Rp 105.000)</option>
                 `;
             }
@@ -834,7 +824,6 @@ flashmart_html = '''
             const allSelected = keys.every(id => cart[id].selected);
             const selectedCount = keys.filter(id => cart[id].selected).length;
 
-            // Kelompokkan barang berdasarkan Toko (Gaya Keranjang Shopee)
             const groupedByStore = {};
             keys.forEach(id => {
                 const item = cart[id];
@@ -979,7 +968,7 @@ flashmart_html = '''
                     <span style="flex: 1; text-align: center;">${item.qty}</span>
                     <span style="flex: 1; text-align: right;">Rp ${(item.price * item.qty).toLocaleString('id-ID')}</span>
                 </div>`;
-                delete cart[id]; // Hapus hanya item yang di-checkout
+                delete cart[id];
             });
 
             document.getElementById('receipt-items-list').innerHTML = receiptHtml;
@@ -1052,7 +1041,7 @@ flashmart_html = '''
                 date: dateStr + " | " + timeStr,
                 arrivalEst: "Instant (Detik Ini)",
                 total: price,
-           payment: currentDigitalType + " (" + paymentMethod + ")",
+                payment: currentDigitalType + " (" + paymentMethod + ")",
                 items: currentDigitalType + " " + provider + " (" + target + ")",
                 earned: earnedPoints,
                 status: currentDigitalType + " Berhasil & Sukses ✅",
@@ -1160,4 +1149,4 @@ flashmart_html = '''
 </html>
 '''
 
-components.html(flashmart_html, height=880, scrolling=True)
+components.html(flashmart_html, height=880, scrolling=True) 
