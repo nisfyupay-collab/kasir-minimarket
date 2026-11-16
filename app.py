@@ -41,7 +41,7 @@ flashmart_html = '''
             overflow-x: hidden;
         }
 
-        /* SPLASH SCREEN DISESUAIKAN DENGAN TEMA UTAMA FLASHMART */
+        /* SPLASH SCREEN TEMA FLASHMART */
         #splash-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -67,20 +67,20 @@ flashmart_html = '''
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ANIMASI TERBANG KE KERANJANG (FLYING ITEM) */
+        /* ANIMASI TERBANG KE KERANJANG */
         .fly-item {
             position: fixed; z-index: 99999; font-size: 28px; pointer-events: none;
             transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        #success-modal, #tracking-detail-modal {
+        #success-modal, #tracking-detail-modal, #add-card-modal, #card-loading-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center;
             z-index: 10000; backdrop-filter: blur(5px); overflow-y: auto; padding: 20px;
         }
-        .receipt-card, .tracking-card {
+        .receipt-card, .tracking-card, .modal-card {
             background: var(--card-bg); color: var(--text-color); width: 100%; max-width: 360px; padding: 20px;
-            border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); position: relative; margin: auto;
+            border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); position: relative; margin: auto;
             animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         @keyframes modalPop {
@@ -101,7 +101,7 @@ flashmart_html = '''
             padding-bottom: 110px; box-shadow: 0 0 15px rgba(0,0,0,0.05); position: relative;
         }
 
-        /* HEADER GAYA VIDEO 1 */
+        /* HEADER */
         .header-top {
             display: flex; justify-content: space-between; align-items: center; padding: 16px 15px 10px 15px;
         }
@@ -136,7 +136,7 @@ flashmart_html = '''
         }
         .cat-chip.active { background: #03AC03; color: white; border-color: #03AC03; transform: scale(1.05); }
 
-        /* BANNER PROMO ORANYE ALA VIDEO 1 */
+        /* BANNER PROMO */
         .promo-banner {
             margin: 0 15px 15px 15px; background: linear-gradient(135deg, #ff8800 0%, #ff6a00 100%); color: white;
             padding: 16px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center;
@@ -179,7 +179,19 @@ flashmart_html = '''
         }
         .btn-mini-buy:active { transform: scale(0.9); }
 
-        /* BOTTOM NAVIGATION ANIMASI KAPSUL MELAYANG */
+        /* WALLET / CARD UI STYLES (ALA VIDEO) */
+        .virtual-card {
+            width: 100%; height: 180px; border-radius: 16px; padding: 18px; color: white;
+            box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2); margin-bottom: 12px; position: relative; overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .virtual-card:hover { transform: scale(1.02); }
+        .card-chip { width: 36px; height: 26px; background: linear-gradient(135deg, #d4af37, #f3e5ab); border-radius: 4px; }
+        .card-number { font-family: monospace; font-size: 15px; letter-spacing: 2px; font-weight: bold; }
+        .card-footer { display: flex; justify-content: space-between; align-items: flex-end; font-size: 12px; }
+
+        /* BOTTOM NAVIGATION */
         .bottom-nav {
             position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
             width: 92%; max-width: 440px; background: var(--nav-bg); 
@@ -204,7 +216,7 @@ flashmart_html = '''
             box-shadow: 0 6px 15px rgba(3, 172, 3, 0.4);
         }
 
-        /* ANIMASI PERPINDAHAN TAB */
+        /* VIEW SECTIONS */
         .view-section { 
             display: none; padding: 15px; opacity: 0; transform: translateY(12px);
             transition: opacity 0.35s ease, transform 0.35s ease;
@@ -272,14 +284,62 @@ flashmart_html = '''
 </head>
 <body data-theme="light">
 
-    <!-- SPLASH SCREEN DENGAN TEMA WARNA FLASHMART -->
+    <!-- SPLASH SCREEN TEMA FLASHMART -->
     <div id="splash-screen">
         <div class="splash-brand">FlashMart</div>
         <div class="splash-tagline">⚡ All your needs in one place</div>
     </div>
 
+    <!-- MODAL TAMBAH KARTU / E-WALLET (ALA VIDEO) -->
+    <div id="add-card-modal">
+        <div class="modal-card">
+            <h3 style="margin-top:0; color: #03AC03;">💳 Tambah Kartu / E-Wallet</h3>
+            <label style="font-size:12px; font-weight:bold;">Jenis / Nama Layanan:</label>
+            <select id="card-type-input" class="admin-input" style="margin-top:5px;">
+                <option value="Visa Debit">Visa Debit / Credit</option>
+                <option value="Mastercard">Mastercard</option>
+                <option value="DANA E-Wallet">DANA</option>
+                <option value="GoPay">GoPay</option>
+                <option value="OVO Cash">OVO</option>
+            </select>
+
+            <label style="font-size:12px; font-weight:bold;">Nomor Kartu / No. HP E-Wallet:</label>
+            <input type="text" id="card-num-input" placeholder="4242 •••• •••• 4242" class="admin-input" style="margin-top:5px;">
+
+            <label style="font-size:12px; font-weight:bold;">Nama Pemilik:</label>
+            <input type="text" id="card-holder-input" placeholder="Jenny Leow" value="Jenny Leow" class="admin-input" style="margin-top:5px;">
+
+            <label style="font-size:12px; font-weight:bold;">Warna Kartu:</label>
+            <div style="display: flex; gap: 10px; margin-bottom: 10px; margin-top: 5px;">
+                <div onclick="setCardColor('linear-gradient(135deg, #1e3c72, #2a5298)')" style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #1e3c72, #2a5298); cursor:pointer; border:2px solid #fff;"></div>
+                <div onclick="setCardColor('linear-gradient(135deg, #0f2027, #203a43, #2c5364)')" style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #0f2027, #203a43, #2c5364); cursor:pointer;"></div>
+                <div onclick="setCardColor('linear-gradient(135deg, #03AC03, #134e13)')" style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #03AC03, #134e13); cursor:pointer;"></div>
+                <div onclick="setCardColor('linear-gradient(135deg, #ff8c00, #e65100)')" style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #ff8c00, #e65100); cursor:pointer;"></div>
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-top: 15px;">
+                <button class="ripple-btn" onclick="closeAddCardModal()" style="background: #ccc; color: #333; border: none; flex:1; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Batal</button>
+                <button class="ripple-btn" onclick="submitNewCard()" style="background: #03AC03; color: white; border: none; flex:1; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Simpan Kartu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL LOADING ANIMASI KARTU (ALA VIDEO: Verifying -> Connect -> Secure -> Success) -->
+    <div id="card-loading-modal">
+        <div class="modal-card" style="text-align: center; padding: 25px;">
+            <div style="font-size: 38px; margin-bottom: 10px;">🔒</div>
+            <h3 style="margin: 0 0 5px 0;">Menambahkan Kartu</h3>
+            <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Mohon tunggu sebentar...</p>
+            <div id="loading-steps" style="font-size: 13px; font-weight: bold; color: #03AC03; line-height: 1.8;">
+                ✓ Verifying card details...<br>
+                <span id="step-connect" style="opacity: 0.4;">⚡ Connecting to bank server...</span><br>
+                <span id="step-secure" style="opacity: 0.4;">🛡️ Securing encryption token...</span>
+            </div>
+        </div>
+    </div>
+
     <!-- POP-UP MODAL STRUK BELANJA -->
-    <div id="success-modal">
+     <div id="success-modal">
         <div class="receipt-card">
             <h3 style="text-align: center; margin: 0 0 5px 0; font-size: 16px; font-weight: 900;">FLASHMART</h3>
             <p style="text-align: center; font-size: 11px; margin: 0 0 10px 0; color: #666;">Jl. Raya Minimarket No. 88, Indonesia</p>
@@ -326,7 +386,7 @@ flashmart_html = '''
 
     <div class="app-container">
         
-        <!-- BERANDA GAYA VIDEO 1 -->
+        <!-- BERANDA -->
         <div id="view-home" class="view-section active" style="padding: 0 0 15px 0;">
             <div class="header-top">
                 <div class="user-profile">
@@ -336,13 +396,13 @@ flashmart_html = '''
                         <div class="user-sub">FlashMart VIP Member</div>
                     </div>
                 </div>
-                <div onclick="switchTab('account', 4, document.querySelectorAll('.nav-item')[4])" style="font-size: 20px; cursor: pointer;">⚙️</div>
+                <div onclick="switchTab('cart', 1, document.querySelectorAll('.nav-item')[1])" style="font-size: 22px; cursor: pointer; position: relative;">🛒</div>
             </div>
 
             <div class="search-container">
                 <div class="search-bar">
                     <span>🔍</span>
-                    <input type="text" id="search-box" placeholder="Cari 1.200+ barang makanan, minuman, dll..." oninput="filterProducts()">
+                    <input type="text" id="search-box" placeholder="Cari 1.200+ barang real di pasaran..." oninput="filterProducts()">
                 </div>
             </div>
 
@@ -363,7 +423,7 @@ flashmart_html = '''
                 <div class="promo-icon">🍔</div>
             </div>
 
-            <!-- KATEGORI ALA VIDEO 1 -->
+            <!-- KATEGORI -->
             <div class="category-scroll" id="category-container">
                 <div class="cat-chip active" onclick="selectCategory('Semua', this)">🔥 All</div>
                 <div class="cat-chip" onclick="selectCategory('Burger', this)">🍔 Burger</div>
@@ -404,10 +464,17 @@ flashmart_html = '''
                     <label style="font-size: 13px; font-weight: bold;">Metode Pembayaran:</label>
                     <select id="payment-method" class="admin-input" style="margin-top: 5px;" onchange="toggleQR()">
                         <option value="Tunai">Tunai / Cash (Bayar di Kasir)</option>
+                        <option value="Card">💳 Kartu / E-Wallet Tersimpan</option>
                         <option value="QRIS">QRIS (Scan & Cashback Instant)</option>
                         <option value="Transfer Bank">Transfer Bank (BCA / Mandiri / BRI)</option>
                         <option value="COD">Bayar di Tempat (COD)</option>
                     </select>
+                </div>
+
+                <!-- PILIHAN KARTU TERHUBUNG -->
+                <div id="saved-card-payment-box" style="margin-bottom: 12px; display: none;">
+                    <label style="font-size: 13px; font-weight: bold;">Pilih Kartu / E-Wallet Pembayaran:</label>
+                    <select id="selected-saved-card" class="admin-input" style="margin-top: 5px;"></select>
                 </div>
 
                 <div id="cash-payment-box" style="margin-bottom: 12px;">
@@ -485,9 +552,9 @@ flashmart_html = '''
             </div>
         </div>
 
-        <!-- AKUN -->
+        <!-- AKUN & PENGATURAN KARTU / E-WALLET -->
         <div id="view-account" class="view-section">
-            <h3>👤 Akun & Kelola Stok</h3>
+            <h3>👤 Akun & Dompet Kartu</h3>
             <div class="profile-card">
                 <div style="font-size: 18px; font-weight: bold;">⚡ Jenny Leow (Gold VIP)</div>
                 <div style="font-size: 13px; opacity: 0.9; margin-top: 4px;">No: 08123456789 • 1.200+ Barang Ready</div>
@@ -495,6 +562,15 @@ flashmart_html = '''
                     <span>⭐ Saldo Poin A-Voucher</span>
                     <span id="user-points">150 Poin</span>
                 </div>
+            </div>
+
+            <!-- SECTION DOMPET KARTU & E-WALLET -->
+            <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h4 style="margin: 0; color: #03AC03;">💳 Kartu & E-Wallet Terhubung</h4>
+                    <button class="ripple-btn" onclick="openAddCardModal()" style="background: #03AC03; color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer;">+ Tambah Kartu</button>
+                </div>
+                <div id="saved-cards-container"></div>
             </div>
 
             <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px;">
@@ -522,7 +598,7 @@ flashmart_html = '''
             </div>
         </div>
 
-        <!-- NAVIGASI BAWAH DENGAN ANIMASI KAPSUL MELAYANG -->
+        <!-- NAVIGASI BAWAH -->
         <div class="bottom-nav">
             <div class="nav-pill-bg" id="nav-pill"></div>
             <button class="nav-item active" onclick="switchTab('home', 0, this)">
@@ -558,53 +634,231 @@ flashmart_html = '''
                 }
             }, 1400);
             movePill(0);
+            renderSavedCards();
         });
 
-        // GENERATE 1.200+ BARANG OTOMATIS
-        function generateMassiveStore() {
-            const baseItems = [
-                { name: "Margherita Pizza", price: 120000, cat: "Pizza", icon: "🍕", rating: "4.8" },
-                { name: "Wagyu Burger Deluxe", price: 85000, cat: "Burger", icon: "🍔", rating: "4.9" },
-                { name: "Salmon Nigiri Sushi", price: 95000, cat: "Sushi", icon: "🍣", rating: "4.7" },
-                { name: "Caramel Latte Ice", price: 32000, cat: "Minuman", icon: "🧃", rating: "4.8" },
-                { name: "Truffle Pasta creamy", price: 110000, cat: "Pizza", icon: "🍝", rating: "4.9" },
-                { name: "Caesar Salad Fresh", price: 45000, cat: "Camilan", icon: "🥗", rating: "4.6" },
-                { name: "Beras Premium 5kg", price: 69000, cat: "Sembako", icon: "🌾", rating: "4.9" },
-                { name: "Minyak Goreng 2L", price: 38000, cat: "Sembako", icon: "🍳", rating: "4.8" },
-                { name: "Skincare Serum Glow", price: 85000, cat: "Skincare", icon: "✨", rating: "4.7" },
-                { name: "Smartphone 4G RAM 4GB", price: 1450000, cat: "Elektronik", icon: "📱", rating: "4.8" }
-            ];
+        // DATA KARTU & E-WALLET TERHUBUNG
+        let savedCards = [
+            { id: 1, type: "Visa Debit", number: "4242 •••• •••• 8821", holder: "Jenny Leow", balance: "Rp 4.250.000", color: "linear-gradient(135deg, #1e3c72, #2a5298)" },
+            { id: 2, type: "DANA E-Wallet", number: "0812-3456-7890", holder: "Jenny Leow", balance: "Rp 1.120.000", color: "linear-gradient(135deg, #0080ff, #004080)" }
+        ];
 
-            const categories = ["Burger", "Pizza", "Sushi", "Minuman", "Sembako", "Camilan", "Skincare", "Elektronik"];
-            const icons = { "Burger": "🍔", "Pizza": "🍕", "Sushi": "🍣", "Minuman": "🧃", "Sembako": "🌾", "Camilan": "🍪", "Skincare": "✨", "Elektronik": "📱" };
+        let selectedCardColor = "linear-gradient(135deg, #1e3c72, #2a5298)";
+
+        function setCardColor(color) {
+            selectedCardColor = color;
+        }
+
+        function openAddCardModal() {
+            document.getElementById('add-card-modal').style.display = 'flex';
+        }
+
+        function closeAddCardModal() {
+            document.getElementById('add-card-modal').style.display = 'none';
+        }
+
+        function submitNewCard() {
+            const type = document.getElementById('card-type-input').value;
+            const number = document.getElementById('card-num-input').value.trim() || "4242 •••• •••• 9999";
+            const holder = document.getElementById('card-holder-input').value.trim() || "Jenny Leow";
+
+            closeAddCardModal();
+            
+            // Tampilkan animasi loading verifikasi kartu ala video
+            const loadingModal = document.getElementById('card-loading-modal');
+            loadingModal.style.display = 'flex';
+
+            setTimeout(() => {
+                document.getElementById('step-connect').style.opacity = '1';
+            }, 700);
+
+            setTimeout(() => {
+                document.getElementById('step-secure').style.opacity = '1';
+            }, 1400);
+
+            setTimeout(() => {
+                loadingModal.style.display = 'none';
+                savedCards.push({
+                    id: Date.now(),
+                    type: type,
+                    number: number,
+                    holder: holder,
+                    balance: "Rp 2.500.000",
+                    color: selectedCardColor
+                });
+                renderSavedCards();
+                alert("🎉 Kartu / E-Wallet Berhasil Ditambahkan & Terverifikasi!");
+            }, 2100);
+        }
+
+        function renderSavedCards() {
+            const container = document.getElementById('saved-cards-container');
+            const checkoutSelect = document.getElementById('selected-saved-card');
+
+            if (savedCards.length === 0) {
+                container.innerHTML = '<p style="font-size:12px; color:#777; text-align:center;">Belum ada kartu atau e-wallet yang ditambahkan.</p>';
+                checkoutSelect.innerHTML = '<option value="">-- Belum ada kartu --</option>';
+                return;
+            }
+
+            container.innerHTML = savedCards.map(c => `
+                <div class="virtual-card" style="background: ${c.color};">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <div style="font-size:11px; opacity:0.8;">${c.type}</div>
+                            <div style="font-size:15px; font-weight:bold;">${c.balance}</div>
+                        </div>
+                        <div class="card-chip"></div>
+                    </div>
+                    <div class="card-number">${c.number}</div>
+                    <div class="card-footer">
+                        <div>
+                            <div style="font-size:9px; opacity:0.7;">CARD HOLDER</div>
+                            <div style="font-size:12px; font-weight:bold;">${c.holder}</div>
+                        </div>
+                        <div style="font-size:16px; font-weight:bold; font-style:italic;">VISA / MC</div>
+                    </div>
+                </div>
+            `).join('');
+
+            checkoutSelect.innerHTML = savedCards.map(c => `
+                <option value="${c.type} (${c.number})">${c.type} - ${c.number} (${c.balance})</option>
+            `).join('');
+        }
+
+        // GENERATE 1.200+ BARANG DENGAN NAMA PRODUK ASLI DI PASARAN (TANPA SPESIAL EDITION BERULANG)
+        function generateMassiveStore() {
+            const rawCatalog = {
+                "Burger": [
+                    { name: "Beef Burger Deluxe", price: 35000, icon: "🍔" },
+                    { name: "Cheese Burger Special", price: 40000, icon: "🍔" },
+                    { name: "Double Crispy Chicken Burger", price: 45000, icon: "🍔" },
+                    { name: "Spicy Volcano Burger", price: 48000, icon: "🍔" },
+                    { name: "Egg Mayo Burger", price: 30000, icon: "🍔" },
+                    { name: "Blackpepper Beef Burger", price: 52000, icon: "🍔" },
+                    { name: "Fish Fillet Burger", price: 38000, icon: "🍔" },
+                    { name: "Mushroom Melt Burger", price: 46000, icon: "🍔" }
+                ],
+                "Pizza": [
+                    { name: "Pepperoni Supreme Pizza", price: 115000, icon: "🍕" },
+                    { name: "Meat Lovers Pizza 12 inch", price: 130000, icon: "🍕" },
+                    { name: "Cheese Mania Pizza", price: 95000, icon: "🍕" },
+                    { name: "Tuna Melt Pizza", price: 110000, icon: "🍕" },
+                    { name: "Hawaiian Chicken Pizza", price: 105000, icon: "🍕" },
+                    { name: "BBQ Smoke Beef Pizza", price: 125000, icon: "🍕" },
+                    { name: "Mushroom Truffle Pizza", price: 140000, icon: "🍕" }
+                ],
+                "Sushi": [
+                    { name: "Salmon Mentai Sushi Roll", price: 65000, icon: "🍣" },
+                    { name: "Tuna Salad Roll", price: 55000, icon: "🍣" },
+                    { name: "Ebi Fry Maki Sushi", price: 58000, icon: "🍣" },
+                    { name: "Dragon Roll Premium", price: 85000, icon: "🍣" },
+                    { name: "California Roll (8 pcs)", price: 50000, icon: "🍣" },
+                    { name: "Spicy Tuna Gunkan", price: 45000, icon: "🍣" },
+                    { name: "Tamago Nigiri Set", price: 38000, icon: "🍣" }
+                ],
+                "Minuman": [
+                    { name: "Aqua Botol Mineral 600ml", price: 4000, icon: "🧃" },
+                    { name: "Teh Botol Sosro 450ml", price: 5500, icon: "🧃" },
+                    { name: "Ultra Milk Cokelat 250ml", price: 6500, icon: "🧃" },
+                    { name: "Kopi Kenangan Mantan", price: 22000, icon: "🧃" },
+                    { name: "Green Tea Ichitan 310ml", price: 7000, icon: "🧃" },
+                    { name: "Coca Cola / Sprite 390ml", price: 8000, icon: "🧃" },
+                    { name: "Pocari Sweat Ion Supply", price: 8500, icon: "🧃" },
+                    { name: "Susu Bear Brand Kaleng", price: 10500, icon: "🧃" },
+                    { name: "Good Day Cappuccino Botol", price: 7500, icon: "🧃" }
+                ],
+                "Sembako": [
+                    { name: "Beras Sentra Ramos 5kg", price: 68000, icon: "🍚" },
+                    { name: "Minyak Goreng Bimoli 2L", price: 39000, icon: "🍳" },
+                    { name: "Gula Pasir Gulaku 1kg", price: 17500, icon: "🍚" },
+                    { name: "Telur Ayam Negeri 1kg", price: 28000, icon: "🍚" },
+                    { name: "Tepung Terigu Segitiga Biru", price: 14000, icon: "🍚" },
+                    { name: "Kecap Manis Bango 550ml", price: 26000, icon: "🍚" },
+                    { name: "Saus Sambal Indofood 335ml", price: 15000, icon: "🍚" },
+                    { name: "Mie Instan Indomie Goreng (1 Dus)", price: 115000, icon: "🍚" },
+                    { name: "Garam Dapur Refina 500g", price: 5000, icon: "🍚" }
+                ],
+                "Camilan": [
+                    { name: "Chitato Snack Sapi Panggang", price: 11000, icon: "🍪" },
+                    { name: "Lays Rumput Laut Snack", price: 11500, icon: "🍪" },
+                    { name: "Biskuit Roma Kelapa", price: 9500, icon: "🍪" },
+                    { name: "Oreo Cokelat Vanilla 133g", price: 10000, icon: "🍪" },
+                    { name: "SilverQueen Chocolate 62g", price: 18500, icon: "🍪" },
+                    { name: "Qtela Keripik Singkong Balado", price: 9000, icon: "🍪" },
+                    { name: "Tango Wafer Cokelat Besar", price: 12000, icon: "🍪" },
+                    { name: "Nabati Richeese Ahh", price: 8000, icon: "🍪" }
+                ],
+                "Skincare": [
+                    { name: "Wardah Facial Wash Aloe 100ml", price: 24000, icon: "✨" },
+                    { name: "Skintific 5X Ceramide Moisturizer", price: 135000, icon: "✨" },
+                    { name: "Emina Bright Stuff Serum", price: 49000, icon: "✨" },
+                    { name: "Azarine Sunscreen SPF 45", price: 65000, icon: "✨" },
+                    { name: "Hada Labo Gokujyun Lotion", price: 42000, icon: "✨" },
+                    { name: "Garnier Bright Complete Serum", price: 78000, icon: "✨" }
+                ],
+                "Elektronik": [
+                    { name: "Kabel Data Type-C Fast Charge", price: 35000, icon: "📱" },
+                    { name: "Powerbank Vivan 10000mAh", price: 185000, icon: "📱" },
+                    { name: "Headset Bluetooth TWS Pro", price: 145000, icon: "📱" },
+                    { name: "Adaptor Charger 20W Fast", price: 95000, icon: "📱" },
+                    { name: "Baterai ABC Alkaline AA (Isi 2)", price: 15000, icon: "📱" },
+                    { name: "Flashdisk SanDisk 32GB USB 3.0", price: 75000, icon: "📱" }
+                ]
+            };
 
             let listPusat = [];
             let idCounter = 1000;
+            const categories = Object.keys(rawCatalog);
 
-            // Masukkan data dasar
-            baseItems.forEach((item, idx) => {
-                listPusat.push({ id: idCounter++, name: item.name, price: item.price, stock: 50, category: item.cat, icon: item.icon, rating: item.rating });
+            categories.forEach(cat => {
+                rawCatalog[cat].forEach(item => {
+                    listPusat.push({
+                        id: idCounter++,
+                        name: item.name,
+                        price: item.price,
+                        stock: 45,
+                        category: cat,
+                        icon: item.icon,
+                        rating: (4.7 + (Math.random() * 0.2)).toFixed(1)
+                    });
+                });
             });
 
-            // Generate hingga total 1.250 barang
-            for (let i = 1; i <= 1240; i++) {
+            // Daftar variasi nama produk natural harian di pasaran
+            const productNamesBank = {
+                "Burger": ["Beef Burger Patty", "Crispy Chicken Burger", "Double Cheese Burger", "Jumbo Beef Burger", "Spicy Chicken Burger", "Teriyaki Burger", "BBQ Burger"],
+                "Pizza": ["Pepperoni Pizza Regular", "Meat Lovers Pizza", "Cheese Overflow Pizza", "Tuna Melt Pizza", "Supreme Chicken Pizza", "BBQ Beef Pizza"],
+                "Sushi": ["Salmon Roll Sushi", "Tuna Maki Sushi", "Ebi Fry Roll", "Dragon Sushi Roll", "California Roll Set", "Spicy Salmon Gunkan"],
+                "Minuman": ["Teh Pucuk Harum 350ml", "Aqua Botol 1.5L", "Sprite Botol 390ml", "Fanta Merah 390ml", "Cimory Yogurt Drink", "NutriSari Jeruk Peras", "Floridina Orange 360ml", "Teh Kotak Sosro 200ml"],
+                "Sembako": ["Beras Ramos Super 10kg", "Minyak Goreng Sania 2L", "Gula Pasir Rose Brand", "Telur Ayam Omega 1kg", "Tepung Beras Rose Brand", "Santan Kara Instan 65ml", "Kecap Manis ABC 525ml", "Saus Tomat Indofood"],
+                "Camilan": ["Chitato Rasa Sapi", "Tango Wafer Vanila", "Roma Malkist Crackers", "Beng Beng Chocolate", "Hello Panda Biscuit", "Good Time Cookies", "Garuda Pilus", "Kacang Dua Kelinci"],
+                "Skincare": ["Wardah UV Shield Sunscreen", "Emina Moisturizing Cream", "Skintific Toner 100ml", "Garnier Micellar Water", "Implora Lip Matte", "Madame Gie Cushion"],
+                "Elektronik": ["Kabel Micro USB Fast", "Charger HP Universal", "Earphone Wired Jack 3.5mm", "Stand Holder HP Meja", "Memory Card 16GB Class 10", "Kabel AUX Audio"]
+            };
+
+            for (let i = 1; i <= 1200; i++) {
                 let cat = categories[i % categories.length];
-                let priceRand = 15000 + ((i * 37) % 250000);
+                let namePool = productNamesBank[cat];
+                let baseName = namePool[i % namePool.length];
+                let baseObj = rawCatalog[cat][0];
+                let priceRand = baseObj.price + ((i * 41) % 75000);
+
                 listPusat.push({
                     id: idCounter++,
-                    name: cat + " Special Edition #" + i,
+                    name: baseName + " V-" + (i % 99 + 1),
                     price: priceRand,
-                    stock: 25 + (i % 40),
+                    stock: 20 + (i % 35),
                     category: cat,
-                    icon: icons[cat],
-                    rating: (4.0 + ((i % 10) * 0.1)).toFixed(1)
+                    icon: baseObj.icon,
+                    rating: (4.5 + ((i % 5) * 0.1)).toFixed(1)
                 });
             }
 
             return {
                 "Pusat": listPusat,
-                "Express": listPusat.slice(0, 400).map(item => ({ ...item, price: item.price + 5000 })),
-                "Grosir": listPusat.slice(0, 300).map(item => ({ ...item, price: Math.round(item.price * 0.85) }))
+                "Express": listPusat.slice(0, 450).map(item => ({ ...item, price: item.price + 2000 })),
+                "Grosir": listPusat.slice(0, 350).map(item => ({ ...item, price: Math.round(item.price * 0.9) }))
             };
         }
 
@@ -627,7 +881,7 @@ flashmart_html = '''
             }
         }
 
-        // ANIMASI TERBANG KE KERANJANG (FLYING ITEM)
+        // ANIMASI TERBANG KE KERANJANG
         function flyToCartAnimation(event) {
             const cartIcon = document.getElementById('icon-cart');
             if (!cartIcon) return;
@@ -695,7 +949,7 @@ flashmart_html = '''
                 nominalSelect.innerHTML = `
                     <option value="25000">Paket Freedom 3GB (Rp 25.000)</option>
                     <option value="55000">Paket Internet 15GB (Rp 55.000)</option>
-                    <option  <option value="100000">Paket Jumbo 40GB (Rp 100.000)</option>
+                    <option value="100000">Paket Jumbo 40GB (Rp 100.000)</option>
                 `;
             } else if (type === 'Token PLN') {
                 titleLabel.innerText = "⚡ Pembelian Token Listrik PLN";
@@ -731,6 +985,7 @@ flashmart_html = '''
             const method = document.getElementById('payment-method').value;
             document.getElementById('qris-display').style.display = (method === 'QRIS') ? 'block' : 'none';
             document.getElementById('cash-payment-box').style.display = (method === 'Tunai') ? 'block' : 'none';
+            document.getElementById('saved-card-payment-box').style.display = (method === 'Card') ? 'block' : 'none';
         }
 
         function toggleDigitalQR() {
@@ -782,7 +1037,6 @@ flashmart_html = '''
                 return;
             }
 
-            // Batasi render max 100 item per halaman agar aplikasi tetap sangat ngebut dan ringan
             const displaySlice = listToRender.slice(0, 100);
 
             list.innerHTML = displaySlice.map(p => `
@@ -829,6 +1083,7 @@ flashmart_html = '''
 
             if (tabName === 'cart') renderCart();
             if (tabName === 'history') renderHistory();
+            if (tabName === 'account') renderSavedCards();
         }
 
         function addToCart(event, id) {
@@ -848,7 +1103,6 @@ flashmart_html = '''
             flyToCartAnimation(event);
         }
 
-        // TOMBOL BELI: LANGSUNG DIARAHKAN KE CHECKOUT (TANPA MASUK KERANJANG)
         function buyNowDirect(id) {
             const prod = storesData[currentStore].find(p => p.id === id);
             if (prod.stock <= 0) {
@@ -856,13 +1110,11 @@ flashmart_html = '''
                 return;
             }
             
-            // Kosongkan cart lalu masukkan khusus produk ini saja agar langsung siap dicheckout
             cart = {};
             prod.stock -= 1;
             cart[id] = { ...prod, qty: 1, store: currentStore, selected: true };
 
             filterProducts();
-            // Langsung pindah ke tab Keranjang/Checkout
             switchTab('cart', 1, document.querySelectorAll('.nav-item')[1]);
         }
 
@@ -1032,7 +1284,13 @@ flashmart_html = '''
             let subtotal = getSelectedSubtotal();
             const discount = (discountActive && subtotal > 0) ? 10000 : 0;
             const grandTotal = Math.max(0, subtotal - discount);
-            const method = document.getElementById('payment-method').value;
+            let method = document.getElementById('payment-method').value;
+            
+            if (method === 'Card') {
+                const selectedCardName = document.getElementById('selected-saved-card').value;
+                method = "Kartu: " + selectedCardName;
+            }
+
             const cashGiven = parseFloat(document.getElementById('cash-given').value) || grandTotal;
             const change = cashGiven - grandTotal;
 
@@ -1081,7 +1339,7 @@ flashmart_html = '''
             let courier = "-";
             let location = "FlashMart Store (Offline Counter)";
 
-            if (method === 'COD') {
+            if (method.includes('COD')) {
                 let arrivalDate = new Date(now);
                 arrivalDate.setDate(now.getDate() + 2);
                 arrivalEst = arrivalDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -1101,7 +1359,7 @@ flashmart_html = '''
                 status: statusInfo,
                 courier: courier,
                 location: location,
-                isCod: (method === 'COD')
+                isCod: method.includes('COD')
             });
 
             discountActive = false;
@@ -1212,7 +1470,7 @@ flashmart_html = '''
                     </div>
                     <div style="background: #fff3e0; color: #e65100; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 12px;">
                         💡 Keterangan:<br>
-                        Transaksi non-COD diselesaikan secara instan / tunai di kasir tanpa pengiriman kurir fisik. Terima kasih telah berbelanja di FlashMart!
+                        Transaksi diselesaikan secara sukses. Terima kasih telah berbelanja di FlashMart!
                     </div>
                 `;
             }
@@ -1277,4 +1535,4 @@ flashmart_html = '''
 </html>
 '''
 
-components.html(flashmart_html, height=900, scrolling=True)
+components.html(flashmart_html, height=920, scrolling=True)
