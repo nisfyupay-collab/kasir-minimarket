@@ -41,7 +41,7 @@ flashmart_html = '''
             overflow-x: hidden;
         }
 
-        /* SPLASH SCREEN TEMA FLASHMART */
+        /* SPLASH SCREEN DISESUAIKAN DENGAN TEMA UTAMA FLASHMART */
         #splash-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -101,7 +101,7 @@ flashmart_html = '''
             padding-bottom: 110px; box-shadow: 0 0 15px rgba(0,0,0,0.05); position: relative;
         }
 
-        /* HEADER DENGAN IKON KERANJANG DI KANAN ATAS */
+        /* HEADER GAYA VIDEO 1 */
         .header-top {
             display: flex; justify-content: space-between; align-items: center; padding: 16px 15px 10px 15px;
         }
@@ -136,7 +136,7 @@ flashmart_html = '''
         }
         .cat-chip.active { background: #03AC03; color: white; border-color: #03AC03; transform: scale(1.05); }
 
-        /* BANNER PROMO ORANYE */
+        /* BANNER PROMO ORANYE ALA VIDEO 1 */
         .promo-banner {
             margin: 0 15px 15px 15px; background: linear-gradient(135deg, #ff8800 0%, #ff6a00 100%); color: white;
             padding: 16px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center;
@@ -272,7 +272,7 @@ flashmart_html = '''
 </head>
 <body data-theme="light">
 
-    <!-- SPLASH SCREEN TEMA FLASHMART -->
+    <!-- SPLASH SCREEN DENGAN TEMA WARNA FLASHMART -->
     <div id="splash-screen">
         <div class="splash-brand">FlashMart</div>
         <div class="splash-tagline">⚡ All your needs in one place</div>
@@ -326,7 +326,7 @@ flashmart_html = '''
 
     <div class="app-container">
         
-        <!-- BERANDA -->
+        <!-- BERANDA GAYA VIDEO 1 -->
         <div id="view-home" class="view-section active" style="padding: 0 0 15px 0;">
             <div class="header-top">
                 <div class="user-profile">
@@ -336,14 +336,13 @@ flashmart_html = '''
                         <div class="user-sub">FlashMart VIP Member</div>
                     </div>
                 </div>
-                <!-- TOMBOL KERANJANG DI KANAN ATAS -->
-                <div onclick="switchTab('cart', 1, document.querySelectorAll('.nav-item')[1])" style="font-size: 22px; cursor: pointer; position: relative;">🛒</div>
+                <div onclick="switchTab('account', 4, document.querySelectorAll('.nav-item')[4])" style="font-size: 20px; cursor: pointer;">⚙️</div>
             </div>
 
             <div class="search-container">
                 <div class="search-bar">
                     <span>🔍</span>
-                    <input type="text" id="search-box" placeholder="Cari 1.200+ barang real di pasaran..." oninput="filterProducts()">
+                    <input type="text" id="search-box" placeholder="Cari 1.200+ barang makanan, minuman, dll..." oninput="filterProducts()">
                 </div>
             </div>
 
@@ -361,15 +360,10 @@ flashmart_html = '''
                     <h4>Get 30% OFF</h4>
                     <p>On your first order with code <b>FLASHMARTINA</b></p>
                 </div>
-       <div class="promo-banner">
-                <div class="promo-text">
-                    <h4>Get 30% OFF</h4>
-                    <p>On your first order with code <b>FLASHMARTINA</b></p>
-                </div>
                 <div class="promo-icon">🍔</div>
             </div>
 
-            <!-- KATEGORI -->
+            <!-- KATEGORI ALA VIDEO 1 -->
             <div class="category-scroll" id="category-container">
                 <div class="cat-chip active" onclick="selectCategory('Semua', this)">🔥 All</div>
                 <div class="cat-chip" onclick="selectCategory('Burger', this)">🍔 Burger</div>
@@ -528,7 +522,7 @@ flashmart_html = '''
             </div>
         </div>
 
-        <!-- NAVIGASI BAWAH -->
+        <!-- NAVIGASI BAWAH DENGAN ANIMASI KAPSUL MELAYANG -->
         <div class="bottom-nav">
             <div class="nav-pill-bg" id="nav-pill"></div>
             <button class="nav-item active" onclick="switchTab('home', 0, this)">
@@ -566,129 +560,51 @@ flashmart_html = '''
             movePill(0);
         });
 
-        // GENERATE 1.200+ BARANG DENGAN NAMA PRODUK ASLI DI PASARAN
+        // GENERATE 1.200+ BARANG OTOMATIS
         function generateMassiveStore() {
-            const rawCatalog = {
-                "Burger": [
-                    { name: "Beef Burger Deluxe", price: 35000, icon: "🍔" },
-                    { name: "Cheese Burger Special", price: 40000, icon: "🍔" },
-                    { name: "Double Crispy Chicken Burger", price: 45000, icon: "🍔" },
-                    { name: "Spicy Volcano Burger", price: 48000, icon: "🍔" },
-                    { name: "Egg Mayo Burger", price: 30000, icon: "🍔" },
-                    { name: "Blackpepper Beef Burger", price: 52000, icon: "🍔" },
-                    { name: "Fish Fillet Burger", price: 38000, icon: "🍔" },
-                    { name: "Mushroom Melt Burger", price: 46000, icon: "🍔" }
-                ],
-                "Pizza": [
-                    { name: "Pepperoni Supreme Pizza", price: 115000, icon: "🍕" },
-                    { name: "Meat Lovers Pizza 12 inch", price: 130000, icon: "🍕" },
-                    { name: "Cheese Mania Pizza", price: 95000, icon: "🍕" },
-                    { name: "Tuna Melt Pizza", price: 110000, icon: "🍕" },
-                    { name: "Hawaiian Chicken Pizza", price: 105000, icon: "🍕" },
-                    { name: "BBQ Smoke Beef Pizza", price: 125000, icon: "🍕" },
-                    { name: "Mushroom Truffle Pizza", price: 140000, icon: "🍕" }
-                ],
-                "Sushi": [
-                    { name: "Salmon Mentai Sushi Roll", price: 65000, icon: "🍣" },
-                    { name: "Tuna Salad Roll", price: 55000, icon: "🍣" },
-                    { name: "Ebi Fry Maki Sushi", price: 58000, icon: "🍣" },
-                    { name: "Dragon Roll Premium", price: 85000, icon: "🍣" },
-                    { name: "California Roll (8 pcs)", price: 50000, icon: "🍣" },
-                    { name: "Spicy Tuna Gunkan", price: 45000, icon: "🍣" },
-                    { name: "Tamago Nigiri Set", price: 38000, icon: "🍣" }
-                ],
-                "Minuman": [
-                    { name: "Aqua Botol Mineral 600ml", price: 4000, icon: "🧃" },
-                    { name: "Teh Botol Sosro 450ml", price: 5500, icon: "🧃" },
-                    { name: "Ultra Milk Cokelat 250ml", price: 6500, icon: "🧃" },
-                    { name: "Kopi Kenangan Mantan", price: 22000, icon: "🧃" },
-                    { name: "Green Tea Ichitan 310ml", price: 7000, icon: "🧃" },
-                    { name: "Coca Cola / Sprite 390ml", price: 8000, icon: "🧃" },
-                    { name: "Pocari Sweat Ion Supply", price: 8500, icon: "🧃" },
-                    { name: "Susu Bear Brand Kaleng", price: 10500, icon: "🧃" },
-                    { name: "Good Day Cappuccino Botol", price: 7500, icon: "🧃" }
-                ],
-                "Sembako": [
-                    { name: "Beras Sentra Ramos 5kg", price: 68000, icon: "🍚" },
-                    { name: "Minyak Goreng Bimoli 2L", price: 39000, icon: "🍳" },
-                    { name: "Gula Pasir Gulaku 1kg", price: 17500, icon: "🍚" },
-                    { name: "Telur Ayam Negeri 1kg", price: 28000, icon: "🍚" },
-                    { name: "Tepung Terigu Segitiga Biru", price: 14000, icon: "🍚" },
-                    { name: "Kecap Manis Bango 550ml", price: 26000, icon: "🍚" },
-                    { name: "Saus Sambal Indofood 335ml", price: 15000, icon: "🍚" },
-                    { name: "Mie Instan Indomie Goreng (1 Dus)", price: 115000, icon: "🍚" },
-                    { name: "Garam Dapur Refina 500g", price: 5000, icon: "🍚" }
-                ],
-                "Camilan": [
-                    { name: "Chitato Snack Sapi Panggang", price: 11000, icon: "🍪" },
-                    { name: "Lays Rumput Laut Snack", price: 11500, icon: "🍪" },
-                    { name: "Biskuit Roma Kelapa", price: 9500, icon: "🍪" },
-                    { name: "Oreo Cokelat Vanilla 133g", price: 10000, icon: "🍪" },
-                    { name: "SilverQueen Chocolate 62g", price: 18500, icon: "🍪" },
-                    { name: "Qtela Keripik Singkong Balado", price: 9000, icon: "🍪" },
-                    { name: "Tango Wafer Cokelat Besar", price: 12000, icon: "🍪" },
-                    { name: "Nabati Richeese Ahh", price: 8000, icon: "🍪" }
-                ],
-                "Skincare": [
-                    { name: "Wardah Facial Wash Aloe 100ml", price: 24000, icon: "✨" },
-                    { name: "Skintific 5X Ceramide Moisturizer", price: 135000, icon: "✨" },
-                    { name: "Emina Bright Stuff Serum", price: 49000, icon: "✨" },
-                    { name: "Azarine Sunscreen SPF 45", price: 65000, icon: "✨" },
-                    { name: "Hada Labo Gokujyun Lotion", price: 42000, icon: "✨" },
-                    { name: "Garnier Bright Complete Serum", price: 78000, icon: "✨" }
-                ],
-                "Elektronik": [
-                    { name: "Kabel Data Type-C Fast Charge", price: 35000, icon: "📱" },
-                    { name: "Powerbank Vivan 10000mAh", price: 185000, icon: "📱" },
-                    { name: "Headset Bluetooth TWS Pro", price: 145000, icon: "📱" },
-                    { name: "Adaptor Charger 20W Fast", price: 95000, icon: "📱" },
-                    { name: "Baterai ABC Alkaline AA (Isi 2)", price: 15000, icon: "📱" },
-                    { name: "Flashdisk SanDisk 32GB USB 3.0", price: 75000, icon: "📱" }
-                ]
-            };
+            const baseItems = [
+                { name: "Margherita Pizza", price: 120000, cat: "Pizza", icon: "🍕", rating: "4.8" },
+                { name: "Wagyu Burger Deluxe", price: 85000, cat: "Burger", icon: "🍔", rating: "4.9" },
+                { name: "Salmon Nigiri Sushi", price: 95000, cat: "Sushi", icon: "🍣", rating: "4.7" },
+                { name: "Caramel Latte Ice", price: 32000, cat: "Minuman", icon: "🧃", rating: "4.8" },
+                { name: "Truffle Pasta creamy", price: 110000, cat: "Pizza", icon: "🍝", rating: "4.9" },
+                { name: "Caesar Salad Fresh", price: 45000, cat: "Camilan", icon: "🥗", rating: "4.6" },
+                { name: "Beras Premium 5kg", price: 69000, cat: "Sembako", icon: "🌾", rating: "4.9" },
+                { name: "Minyak Goreng 2L", price: 38000, cat: "Sembako", icon: "🍳", rating: "4.8" },
+                { name: "Skincare Serum Glow", price: 85000, cat: "Skincare", icon: "✨", rating: "4.7" },
+                { name: "Smartphone 4G RAM 4GB", price: 1450000, cat: "Elektronik", icon: "📱", rating: "4.8" }
+            ];
+
+            const categories = ["Burger", "Pizza", "Sushi", "Minuman", "Sembako", "Camilan", "Skincare", "Elektronik"];
+            const icons = { "Burger": "🍔", "Pizza": "🍕", "Sushi": "🍣", "Minuman": "🧃", "Sembako": "🌾", "Camilan": "🍪", "Skincare": "✨", "Elektronik": "📱" };
 
             let listPusat = [];
             let idCounter = 1000;
-            const categories = Object.keys(rawCatalog);
 
-            // Masukkan data asli ke list
-            categories.forEach(cat => {
-                rawCatalog[cat].forEach(item => {
-                    listPusat.push({
-                        id: idCounter++,
-                        name: item.name,
-                        price: item.price,
-                        stock: 45,
-                        category: cat,
-                        icon: item.icon,
-                        rating: (4.7 + (Math.random() * 0.2)).toFixed(1)
-                    });
-                });
+            // Masukkan data dasar
+            baseItems.forEach((item, idx) => {
+                listPusat.push({ id: idCounter++, name: item.name, price: item.price, stock: 50, category: item.cat, icon: item.icon, rating: item.rating });
             });
 
-            // Generate otomatis hingga mencapai 1.250 barang dengan variasi nama nyata
-            const adjectives = ["Premium", "Family Pack", "Special Edition", "Organic", "Jumbo Size", "Eco Friendly", "Import Quality", "Best Seller"];
-            for (let i = 1; i <= 1200; i++) {
+            // Generate hingga total 1.250 barang
+            for (let i = 1; i <= 1240; i++) {
                 let cat = categories[i % categories.length];
-                let baseObj = rawCatalog[cat][i % rawCatalog[cat].length];
-                let adj = adjectives[i % adjectives.length];
-                let variantPrice = baseObj.price + ((i % 15) * 1000);
-
+                let priceRand = 15000 + ((i * 37) % 250000);
                 listPusat.push({
                     id: idCounter++,
-                    name: baseObj.name + " (" + adj + " #" + i + ")",
-                    price: variantPrice,
-                    stock: 20 + (i % 35),
+                    name: cat + " Special Edition #" + i,
+                    price: priceRand,
+                    stock: 25 + (i % 40),
                     category: cat,
-                    icon: baseObj.icon,
-                    rating: (4.5 + ((i % 5) * 0.1)).toFixed(1)
+                    icon: icons[cat],
+                    rating: (4.0 + ((i % 10) * 0.1)).toFixed(1)
                 });
             }
 
             return {
                 "Pusat": listPusat,
-                "Express": listPusat.slice(0, 450).map(item => ({ ...item, price: item.price + 2000 })),
-                "Grosir": listPusat.slice(0, 350).map(item => ({ ...item, price: Math.round(item.price * 0.9) }))
+                "Express": listPusat.slice(0, 400).map(item => ({ ...item, price: item.price + 5000 })),
+                "Grosir": listPusat.slice(0, 300).map(item => ({ ...item, price: Math.round(item.price * 0.85) }))
             };
         }
 
@@ -779,7 +695,7 @@ flashmart_html = '''
                 nominalSelect.innerHTML = `
                     <option value="25000">Paket Freedom 3GB (Rp 25.000)</option>
                     <option value="55000">Paket Internet 15GB (Rp 55.000)</option>
-                    <option value="100000">Paket Jumbo 40GB (Rp 100.000)</option>
+                    <option  <option value="100000">Paket Jumbo 40GB (Rp 100.000)</option>
                 `;
             } else if (type === 'Token PLN') {
                 titleLabel.innerText = "⚡ Pembelian Token Listrik PLN";
@@ -866,6 +782,7 @@ flashmart_html = '''
                 return;
             }
 
+            // Batasi render max 100 item per halaman agar aplikasi tetap sangat ngebut dan ringan
             const displaySlice = listToRender.slice(0, 100);
 
             list.innerHTML = displaySlice.map(p => `
@@ -931,6 +848,7 @@ flashmart_html = '''
             flyToCartAnimation(event);
         }
 
+        // TOMBOL BELI: LANGSUNG DIARAHKAN KE CHECKOUT (TANPA MASUK KERANJANG)
         function buyNowDirect(id) {
             const prod = storesData[currentStore].find(p => p.id === id);
             if (prod.stock <= 0) {
@@ -938,11 +856,13 @@ flashmart_html = '''
                 return;
             }
             
+            // Kosongkan cart lalu masukkan khusus produk ini saja agar langsung siap dicheckout
             cart = {};
             prod.stock -= 1;
             cart[id] = { ...prod, qty: 1, store: currentStore, selected: true };
 
             filterProducts();
+            // Langsung pindah ke tab Keranjang/Checkout
             switchTab('cart', 1, document.querySelectorAll('.nav-item')[1]);
         }
 
