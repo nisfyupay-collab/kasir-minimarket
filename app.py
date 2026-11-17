@@ -2,33 +2,37 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 st.set_page_config(
-    page_title="FlashMart",
-    page_icon="⚡",
+    page_title="PasarKlik",
+    page_icon="🛒",
     layout="centered",
     initial_sidebar_state="collapsed",
 )
 
-flashmart_html = '''
+pasarklik_html = '''
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlashMart</title>
+    <title>PasarKlik</title>
     <style>
         :root {
-            --bg-color: #f8f9fa;
+            --bg-color: #f8fafc;
             --card-bg: #ffffff;
-            --text-color: #333333;
+            --text-color: #1e293b;
             --nav-bg: #ffffff;
-            --border-color: #eee;
+            --border-color: #e2e8f0;
+            --primary-color: #0284c7;
+            --primary-gradient: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
         }
         [data-theme="dark"] {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-color: #f1f1f1;
-            --nav-bg: #1e1e1e;
-            --border-color: #333333;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --nav-bg: #1e293b;
+            --border-color: #334155;
+            --primary-color: #38bdf8;
+            --primary-gradient: linear-gradient(135deg, #0284c7 0%, #0284c7 100%);
         }
 
         body {
@@ -41,24 +45,24 @@ flashmart_html = '''
             overflow-x: hidden;
         }
 
-        /* SPLASH SCREEN TEMA FLASHMART */
+        /* SPLASH SCREEN TEMA BIRU PASARKLIK */
         #splash-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #03AC03 0%, #42B549 50%, #ff9800 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #0284c7 60%, #0369a1 100%);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 9999; color: white;
             transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.7s;
         }
         .splash-brand {
             font-size: 42px; font-weight: 900; letter-spacing: 2px; color: #ffffff;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            text-shadow: 0 4px 15px rgba(2, 132, 199, 0.4);
             opacity: 0; transform: translateY(15px);
             animation: fadeInText 0.8s ease 0.2s forwards;
         }
         .splash-tagline {
-            font-size: 13px; color: #fff; margin-top: 8px; letter-spacing: 1.5px;
-            font-weight: 600; background: rgba(0,0,0,0.15); padding: 4px 12px; border-radius: 20px;
+            font-size: 13px; color: #bae6fd; margin-top: 8px; letter-spacing: 1.5px;
+            font-weight: 600; background: rgba(255,255,255,0.1); padding: 4px 14px; border-radius: 20px;
             opacity: 0; transform: translateY(15px);
             animation: fadeInText 0.8s ease 0.5s forwards;
         }
@@ -107,16 +111,16 @@ flashmart_html = '''
         }
         .user-profile { display: flex; align-items: center; gap: 10px; }
         .user-avatar {
-            width: 42px; height: 42px; background: #ddd; border-radius: 50%; overflow: hidden;
-            border: 2px solid #03AC03; display: flex; align-items: center; justify-content: center; font-size: 20px;
+            width: 42px; height: 42px; background: #e0f2fe; border-radius: 50%; overflow: hidden;
+            border: 2px solid #0284c7; display: flex; align-items: center; justify-content: center; font-size: 20px;
         }
         .user-name { font-size: 15px; font-weight: bold; color: var(--text-color); }
-        .user-sub { font-size: 11px; color: #777; }
+        .user-sub { font-size: 11px; color: #64748b; }
 
         .search-container { padding: 0 15px 10px 15px; }
         .search-bar {
             background: var(--card-bg); border: 1px solid var(--border-color); padding: 10px 15px; border-radius: 25px; display: flex; align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
         }
         .search-bar input { border: none; outline: none; width: 100%; margin-left: 10px; font-size: 14px; background: transparent; color: var(--text-color); }
         
@@ -124,7 +128,7 @@ flashmart_html = '''
             margin: 0 15px 10px 15px; background: var(--card-bg); border: 1px solid var(--border-color);
             padding: 8px 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: bold;
         }
-        .store-selector select { border: none; background: transparent; color: #03AC03; font-weight: bold; outline: none; cursor: pointer; font-size: 13px; }
+        .store-selector select { border: none; background: transparent; color: #0284c7; font-weight: bold; outline: none; cursor: pointer; font-size: 13px; }
 
         /* KATEGORI SCROLL */
         .category-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 5px 15px 12px 15px; scrollbar-width: none; }
@@ -134,13 +138,13 @@ flashmart_html = '''
             border-radius: 22px; font-size: 12px; cursor: pointer; white-space: nowrap; color: var(--text-color); font-weight: 600;
             transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-        .cat-chip.active { background: #03AC03; color: white; border-color: #03AC03; transform: scale(1.05); }
+        .cat-chip.active { background: #0284c7; color: white; border-color: #0284c7; transform: scale(1.05); }
 
         /* BANNER PROMO */
         .promo-banner {
-            margin: 0 15px 15px 15px; background: linear-gradient(135deg, #ff8800 0%, #ff6a00 100%); color: white;
+            margin: 0 15px 15px 15px; background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%); color: white;
             padding: 16px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 6px 15px rgba(255,136,0,0.3);
+            box-shadow: 0 6px 15px rgba(2, 132, 199, 0.3);
         }
         .promo-text h4 { margin: 0 0 4px 0; font-size: 16px; font-weight: 800; }
         .promo-text p { margin: 0; font-size: 12px; opacity: 0.9; }
@@ -156,14 +160,14 @@ flashmart_html = '''
         .product-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.08); }
         
         .badge-sale {
-            position: absolute; top: 10px; left: 10px; background: #FA591D; color: white;
+            position: absolute; top: 10px; left: 10px; background: #ea580c; color: white;
             font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 6px; text-transform: uppercase;
         }
         .product-icon-wrap { font-size: 44px; margin: 8px 0; }
         .product-title { font-size: 13px; font-weight: 700; height: 35px; overflow: hidden; margin-bottom: 2px; color: var(--text-color); }
-        .product-rating { font-size: 11px; color: #888; margin-bottom: 6px; }
+        .product-rating { font-size: 11px; color: #64748b; margin-bottom: 6px; }
         .product-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
-        .product-price { color: #FA591D; font-weight: bold; font-size: 14px; text-align: left; }
+        .product-price { color: #ea580c; font-weight: bold; font-size: 14px; text-align: left; }
         
         .action-buttons { display: flex; gap: 5px; }
         .btn-mini-cart {
@@ -171,15 +175,15 @@ flashmart_html = '''
             display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: transform 0.2s;
         }
-        .btn-mini-cart:active { transform: scale(0.85); background: #eee; }
+        .btn-mini-cart:active { transform: scale(0.85); background: #f1f5f9; }
         
         .btn-mini-buy {
-            background: #03AC03; color: white; border: none; padding: 6px 10px; border-radius: 8px;
+            background: #0284c7; color: white; border: none; padding: 6px 10px; border-radius: 8px;
             font-weight: bold; font-size: 11px; cursor: pointer; transition: transform 0.2s;
         }
         .btn-mini-buy:active { transform: scale(0.9); }
 
-        /* WALLET / CARD UI STYLES (ALA VIDEO) */
+        /* WALLET / CARD UI STYLES */
         .virtual-card {
             width: 100%; height: 180px; border-radius: 16px; padding: 18px; color: white;
             box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;
@@ -204,16 +208,16 @@ flashmart_html = '''
             width: 60px; height: 48px; background: transparent; border: none; outline: none; cursor: pointer;
             z-index: 2; transition: transform 0.2s ease;
         }
-        .nav-icon { font-size: 18px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s; color: #777; }
-        .nav-label { font-size: 10px; font-weight: 600; color: #777; margin-top: 2px; transition: opacity 0.3s, transform 0.3s; opacity: 1; }
+        .nav-icon { font-size: 18px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s; color: #64748b; }
+        .nav-label { font-size: 10px; font-weight: 600; color: #64748b; margin-top: 2px; transition: opacity 0.3s, transform 0.3s; opacity: 1; }
         
         .nav-item.active .nav-icon { color: #ffffff; transform: translateY(-14px) scale(1.1); }
         .nav-item.active .nav-label { opacity: 0; transform: translateY(10px); pointer-events: none; }
         .nav-pill-bg {
-            position: absolute; width: 44px; height: 44px; background: #03AC03;
+            position: absolute; width: 44px; height: 44px; background: #0284c7;
             border-radius: 50%; top: 2px; left: calc(50% - 22px); z-index: 1;
             transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 6px 15px rgba(3, 172, 3, 0.4);
+            box-shadow: 0 6px 15px rgba(2, 132, 199, 0.4);
         }
 
         /* VIEW SECTIONS */
@@ -229,14 +233,14 @@ flashmart_html = '''
         }
         .cart-store-header {
             padding: 10px 12px; border-bottom: 1px solid var(--border-color); display: flex;
-            align-items: center; gap: 8px; font-weight: bold; font-size: 13px; background: rgba(3, 172, 3, 0.04);
+            align-items: center; gap: 8px; font-weight: bold; font-size: 13px; background: rgba(2, 132, 199, 0.04);
         }
         .cart-item-card {
             display: flex; align-items: center; gap: 10px; padding: 12px;
             border-bottom: 1px solid var(--border-color);
         }
         .cart-item-card:last-child { border-bottom: none; }
-        .cart-checkbox { width: 18px; height: 18px; accent-color: #FA591D; cursor: pointer; flex-shrink: 0; }
+        .cart-checkbox { width: 18px; height: 18px; accent-color: #0284c7; cursor: pointer; flex-shrink: 0; }
         .cart-item-icon {
             font-size: 30px; width: 54px; height: 54px; background: var(--bg-color); border-radius: 10px;
             display: flex; justify-content: center; align-items: center; flex-shrink: 0; border: 1px solid var(--border-color);
@@ -246,7 +250,7 @@ flashmart_html = '''
             font-weight: 600; font-size: 13px; color: var(--text-color); margin-bottom: 4px;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
-        .cart-item-price { color: #FA591D; font-weight: bold; font-size: 13px; }
+        .cart-item-price { color: #ea580c; font-weight: bold; font-size: 13px; }
         .qty-stepper {
             display: inline-flex; align-items: center; border: 1px solid var(--border-color);
             border-radius: 6px; overflow: hidden; margin-top: 6px;
@@ -256,20 +260,20 @@ flashmart_html = '''
             font-weight: bold; cursor: pointer; font-size: 13px;
         }
         .qty-stepper span { padding: 0 10px; font-size: 12px; font-weight: bold; }
-        .btn-del-item { background: none; border: none; color: #999; font-size: 16px; cursor: pointer; padding: 4px; }
-        .btn-del-item:hover { color: #FA591D; }
+        .btn-del-item { background: none; border: none; color: #94a3b8; font-size: 16px; cursor: pointer; padding: 4px; }
+        .btn-del-item:hover { color: #ea580c; }
         .cart-select-all-bar {
             background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px;
             padding: 10px 12px; margin-bottom: 12px; display: flex; justify-content: space-between;
             align-items: center; font-size: 13px; font-weight: 600;
         }
 
-        .profile-card { background: linear-gradient(135deg, #03AC03 0%, #42B549 100%); color: white; padding: 16px; border-radius: 16px; margin-bottom: 15px; }
+        .profile-card { background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%); color: white; padding: 16px; border-radius: 16px; margin-bottom: 15px; }
         .tracker-box { 
             background: var(--card-bg); border: 1px solid var(--border-color); padding: 14px; border-radius: 12px; margin-bottom: 12px;
             cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.03);
         }
-        .tracker-box:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color: #03AC03; }
+        .tracker-box:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-color: #0284c7; }
         
         .admin-input {
             width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--border-color);
@@ -277,23 +281,23 @@ flashmart_html = '''
         }
 
         .qr-box {
-            background: white; border: 2px dashed #03AC03; padding: 15px; border-radius: 12px; text-align: center; margin: 10px 0;
+            background: white; border: 2px dashed #0284c7; padding: 15px; border-radius: 12px; text-align: center; margin: 10px 0;
         }
         .qr-box img { width: 160px; height: 160px; }
     </style>
 </head>
 <body data-theme="light">
 
-    <!-- SPLASH SCREEN TEMA FLASHMART -->
+    <!-- SPLASH SCREEN PASARKLIK -->
     <div id="splash-screen">
-        <div class="splash-brand">FlashMart</div>
-        <div class="splash-tagline">⚡ All your needs in one place</div>
+        <div class="splash-brand">PasarKlik</div>
+        <div class="splash-tagline">🛒 Belanja Mudah Hanya Sekali Klik</div>
     </div>
 
-    <!-- MODAL TAMBAH KARTU / E-WALLET (ALA VIDEO) -->
+    <!-- MODAL TAMBAH KARTU / E-WALLET -->
     <div id="add-card-modal">
         <div class="modal-card">
-            <h3 style="margin-top:0; color: #03AC03;">💳 Tambah Kartu / E-Wallet</h3>
+            <h3 style="margin-top:0; color: #0284c7;">💳 Tambah Kartu / E-Wallet</h3>
             <label style="font-size:12px; font-weight:bold;">Jenis / Nama Layanan:</label>
             <select id="card-type-input" class="admin-input" style="margin-top:5px;">
                 <option value="Visa Debit">Visa Debit / Credit</option>
@@ -311,26 +315,26 @@ flashmart_html = '''
 
             <label style="font-size:12px; font-weight:bold;">Warna Kartu:</label>
             <div style="display: flex; gap: 10px; margin-bottom: 10px; margin-top: 5px;">
-                <div onclick="setCardColor('linear-gradient(135deg, #1e3c72, #2a5298)')" style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #1e3c72, #2a5298); cursor:pointer; border:2px solid #fff;"></div>
-                <div onclick="setCardColor('linear-gradient(135deg, #0f2027, #203a43, #2c5364)')" style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #0f2027, #203a43, #2c5364); cursor:pointer;"></div>
-                <div onclick="setCardColor('linear-gradient(135deg, #03AC03, #134e13)')" style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #03AC03, #134e13); cursor:pointer;"></div>
-                <div onclick="setCardColor('linear-gradient(135deg, #ff8c00, #e65100)')" style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #ff8c00, #e65100); cursor:pointer;"></div>
+                <div onclick="setCardColor('linear-gradient(135deg, #0284c7, #2563eb)')" style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #0284c7, #2563eb); cursor:pointer; border:2px solid #fff;"></div>
+                <div onclick="setCardColor('linear-gradient(135deg, #0f172a, #334155)')" style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #0f172a, #334155); cursor:pointer;"></div>
+                <div onclick="setCardColor('linear-gradient(135deg, #059669, #047857)')" style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #059669, #047857); cursor:pointer;"></div>
+                <div onclick="setCardColor('linear-gradient(135deg, #ea580c, #c2410c)')" style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, #ea580c, #c2410c); cursor:pointer;"></div>
             </div>
 
             <div style="display: flex; gap: 8px; margin-top: 15px;">
-                <button class="ripple-btn" onclick="closeAddCardModal()" style="background: #ccc; color: #333; border: none; flex:1; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Batal</button>
-                <button class="ripple-btn" onclick="submitNewCard()" style="background: #03AC03; color: white; border: none; flex:1; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Simpan Kartu</button>
+                <button class="ripple-btn" onclick="closeAddCardModal()" style="background: #e2e8f0; color: #334155; border: none; flex:1; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Batal</button>
+                <button class="ripple-btn" onclick="submitNewCard()" style="background: #0284c7; color: white; border: none; flex:1; padding:10px; border-radius:8px; font-weight:bold; cursor:pointer;">Simpan Kartu</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL LOADING ANIMASI KARTU (ALA VIDEO: Verifying -> Connect -> Secure -> Success) -->
+    <!-- MODAL LOADING ANIMASI KARTU -->
     <div id="card-loading-modal">
         <div class="modal-card" style="text-align: center; padding: 25px;">
             <div style="font-size: 38px; margin-bottom: 10px;">🔒</div>
             <h3 style="margin: 0 0 5px 0;">Menambahkan Kartu</h3>
-            <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Mohon tunggu sebentar...</p>
-            <div id="loading-steps" style="font-size: 13px; font-weight: bold; color: #03AC03; line-height: 1.8;">
+            <p style="font-size: 12px; color: #64748b; margin-bottom: 15px;">Mohon tunggu sebentar...</p>
+            <div id="loading-steps" style="font-size: 13px; font-weight: bold; color: #0284c7; line-height: 1.8;">
                 ✓ Verifying card details...<br>
                 <span id="step-connect" style="opacity: 0.4;">⚡ Connecting to bank server...</span><br>
                 <span id="step-secure" style="opacity: 0.4;">🛡️ Securing encryption token...</span>
@@ -339,10 +343,10 @@ flashmart_html = '''
     </div>
 
     <!-- POP-UP MODAL STRUK BELANJA -->
-     <div id="success-modal">
+    <div id="success-modal">
         <div class="receipt-card">
-            <h3 style="text-align: center; margin: 0 0 5px 0; font-size: 16px; font-weight: 900;">FLASHMART</h3>
-            <p style="text-align: center; font-size: 11px; margin: 0 0 10px 0; color: #666;">Jl. Raya Minimarket No. 88, Indonesia</p>
+            <h3 style="text-align: center; margin: 0 0 5px 0; font-size: 16px; font-weight: 900;">PASARKLIK</h3>
+            <p style="text-align: center; font-size: 11px; margin: 0 0 10px 0; color: #666;">Jl. Raya Belanja No. 88, Indonesia</p>
             <div style="font-size: 11px; border-bottom: 1px dashed #333; padding-bottom: 8px; margin-bottom: 8px;" id="receipt-meta">
                 Waktu: 2026-11-10 09:00<br>Kasir: Auto-System v3.5
             </div>
@@ -360,15 +364,15 @@ flashmart_html = '''
                 <div style="display: flex; justify-content: space-between;" id="receipt-disc-row"><span>DISKON:</span><span id="receipt-discount">- Rp 0</span></div>
                 <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 13px; margin: 4px 0;"><span>TOTAL:</span><span id="receipt-total">Rp 0</span></div>
                 <div style="display: flex; justify-content: space-between;"><span>BAYAR:</span><span id="receipt-cash">Rp 0</span></div>
-                <div style="display: flex; justify-content: space-between; font-weight: bold; color: #03AC03;" id="receipt-change-row"><span>KEMBALIAN:</span><span id="receipt-change">Rp 0</span></div>
+                <div style="display: flex; justify-content: space-between; font-weight: bold; color: #0284c7;" id="receipt-change-row"><span>KEMBALIAN:</span><span id="receipt-change">Rp 0</span></div>
             </div>
 
             <div style="text-align: center; margin-top: 15px; font-size: 10px; color: #555;">
                 <p style="margin: 0 0 5px 0;">THANK YOU FOR SHOPPING!</p>
-                <div style="font-size: 16px; letter-spacing: 2px;">*FLASHMART9988*</div>
+                <div style="font-size: 16px; letter-spacing: 2px;">*PASARKLIK9988*</div>
             </div>
 
-            <button class="ripple-btn" onclick="closeModal()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 10px; border-radius: 6px; font-weight: bold; margin-top: 15px; font-size: 12px; cursor: pointer;">Selesai & Tutup Struk</button>
+            <button class="ripple-btn" onclick="closeModal()" style="background: #0284c7; color: white; border: none; width: 100%; padding: 10px; border-radius: 6px; font-weight: bold; margin-top: 15px; font-size: 12px; cursor: pointer;">Selesai & Tutup Struk</button>
         </div>
     </div>
 
@@ -376,11 +380,11 @@ flashmart_html = '''
     <div id="tracking-detail-modal">
         <div class="tracking-card">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 12px;">
-                <h3 id="modal-title-header" style="margin: 0; font-size: 16px; color: #03AC03;">📍 Detail Transaksi</h3>
+                <h3 id="modal-title-header" style="margin: 0; font-size: 16px; color: #0284c7;">📍 Detail Transaksi</h3>
                 <button onclick="closeTrackingModal()" style="background: none; border: none; font-size: 18px; cursor: pointer; color: #777;">✕</button>
             </div>
             <div id="tracking-detail-content" style="font-size: 13px; line-height: 1.6;"></div>
-            <button class="ripple-btn" onclick="closeTrackingModal()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 15px; cursor: pointer; font-size: 13px;">Tutup</button>
+            <button class="ripple-btn" onclick="closeTrackingModal()" style="background: #0284c7; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 15px; cursor: pointer; font-size: 13px;">Tutup</button>
         </div>
     </div>
 
@@ -393,7 +397,7 @@ flashmart_html = '''
                     <div class="user-avatar">👤</div>
                     <div>
                         <div class="user-name">Jenny Leow</div>
-                        <div class="user-sub">FlashMart VIP Member</div>
+                        <div class="user-sub">PasarKlik VIP Member</div>
                     </div>
                 </div>
                 <div onclick="switchTab('cart', 1, document.querySelectorAll('.nav-item')[1])" style="font-size: 22px; cursor: pointer; position: relative;">🛒</div>
@@ -409,18 +413,18 @@ flashmart_html = '''
             <div class="store-selector">
                 <span>🏪 Pilih Toko:</span>
                 <select id="store-select" onchange="changeStore()">
-                    <option value="Pusat">FlashMart Pusat (1.200+ Barang)</option>
-                    <option value="Express">FlashMart Express (Kilat)</option>
-                    <option value="Grosir">FlashMart Grosir (Partai Besar)</option>
+                    <option value="Pusat">PasarKlik Pusat (1.200+ Barang)</option>
+                    <option value="Express">PasarKlik Express (Kilat)</option>
+                    <option value="Grosir">PasarKlik Grosir (Partai Besar)</option>
                 </select>
             </div>
 
             <div class="promo-banner">
                 <div class="promo-text">
                     <h4>Get 30% OFF</h4>
-                    <p>On your first order with code <b>FLASHMARTINA</b></p>
+                    <p>On your first order with code <b>PASARKLIK</b></p>
                 </div>
-                <div class="promo-icon">🍔</div>
+                <div class="promo-icon">🛒</div>
             </div>
 
             <!-- KATEGORI -->
@@ -438,7 +442,7 @@ flashmart_html = '''
 
             <div class="section-title">
                 <span id="store-title-label">Popular Now (1.200+ Items)</span>
-                <span style="font-size: 12px; color: #03AC03; font-weight: bold;" id="total-count-badge">Menampilkan Semua</span>
+                <span style="font-size: 12px; color: #0284c7; font-weight: bold;" id="total-count-badge">Menampilkan Semua</span>
             </div>
             
             <div class="product-grid" id="product-list"></div>
@@ -451,14 +455,14 @@ flashmart_html = '''
                 <p style="color: #777; text-align: center; margin-top: 30px;">Keranjang masih kosong.</p>
             </div>
             <div id="cart-summary" style="display:none; margin-top: 15px; background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px;">
-                <div style="font-size: 12px; font-weight: bold; margin-bottom: 6px; color: #FA591D;">🎟️ Voucher FlashMart</div>
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 6px; color: #ea580c;">🎟️ Voucher PasarKlik</div>
                 <div style="display: flex; gap: 6px; margin-bottom: 12px;">
-                    <input type="text" id="voucher-input" placeholder="Masukkan kode (FLASHMARTINA)" class="admin-input" style="margin-bottom: 0; flex: 1;">
-                    <button class="ripple-btn" onclick="applyVoucher()" style="background: #FA591D; color: white; border: none; padding: 0 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: bold;">Pakai</button>
+                    <input type="text" id="voucher-input" placeholder="Masukkan kode (PASARKLIK)" class="admin-input" style="margin-bottom: 0; flex: 1;">
+                    <button class="ripple-btn" onclick="applyVoucher()" style="background: #ea580c; color: white; border: none; padding: 0 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: bold;">Pakai</button>
                 </div>
                 
                 <div style="font-size: 13px; margin-bottom: 5px;">Subtotal Produk Dipilih: <span id="subtotal-text" style="float: right; font-weight: bold;">Rp 0</span></div>
-                <div id="discount-row" style="font-size: 13px; margin-bottom: 5px; color: #03AC03; display: none;">Diskon Voucher: <span id="discount-text" style="float: right; font-weight: bold;">- Rp 0</span></div>
+                <div id="discount-row" style="font-size: 13px; margin-bottom: 5px; color: #0284c7; display: none;">Diskon Voucher: <span id="discount-text" style="float: right; font-weight: bold;">- Rp 0</span></div>
                 
                 <div style="margin: 12px 0;">
                     <label style="font-size: 13px; font-weight: bold;">Metode Pembayaran:</label>
@@ -480,21 +484,21 @@ flashmart_html = '''
                 <div id="cash-payment-box" style="margin-bottom: 12px;">
                     <label style="font-size: 13px; font-weight: bold;">Nominal Uang Pembeli (Rp):</label>
                     <input type="number" id="cash-given" placeholder="Contoh: 100000" class="admin-input" style="margin-top: 5px;" oninput="calculateChange()">
-                    <div style="font-size: 13px; font-weight: bold; color: #03AC03; margin-top: 4px;" id="change-text">Uang Kembalian: Rp 0</div>
+                    <div style="font-size: 13px; font-weight: bold; color: #0284c7; margin-top: 4px;" id="change-text">Uang Kembalian: Rp 0</div>
                 </div>
 
                 <div id="qris-display" class="qr-box" style="display: none;">
                     <div style="font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px;">Scan Kode QRIS Di Bawah Ini:</div>
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=FLASHMART-PAYMENT-QRIS" alt="QRIS Code">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=PASARKLIK-PAYMENT-QRIS" alt="QRIS Code">
                     <div style="font-size: 11px; color: #666; margin-top: 5px;">Dapat di-scan memakai GoPay, OVO, Dana & M-Banking.</div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; border-top: 1px dashed var(--border-color); padding-top: 12px;">
                     <div>
-                        <div style="font-size: 11px; color: #777;">Total Pembayaran</div>
-                        <div id="grandtotal-text" style="font-size: 18px; font-weight: bold; color: #FA591D;">Rp 0</div>
+                        <div style="font-size: 11px; color: #64748b;">Total Pembayaran</div>
+                        <div id="grandtotal-text" style="font-size: 18px; font-weight: bold; color: #ea580c;">Rp 0</div>
                     </div>
-                    <button class="ripple-btn" id="btn-checkout-main" onclick="checkout()" style="background: #FA591D; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px;">Checkout (0)</button>
+                    <button class="ripple-btn" id="btn-checkout-main" onclick="checkout()" style="background: #ea580c; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px;">Checkout (0)</button>
                 </div>
             </div>
         </div>
@@ -536,23 +540,23 @@ flashmart_html = '''
 
                 <div id="digital-qr-box" class="qr-box">
                     <div style="font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px;">Scan QRIS Pembayaran:</div>
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=FLASHMART-DIGITAL" alt="QRIS">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=PASARKLIK-DIGITAL" alt="QRIS">
                 </div>
 
-                <button class="ripple-btn" onclick="processDigitalPayment()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px;">⚡ Bayar & Proses Transaksi</button>
+                <button class="ripple-btn" onclick="processDigitalPayment()" style="background: #0284c7; color: white; border: none; width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px;">⚡ Bayar & Proses Transaksi</button>
             </div>
         </div>
 
         <!-- RIWAYAT & PESANAN -->
         <div id="view-history" class="view-section">
             <h3>📜 Riwayat Pesanan & Transaksi</h3>
-            <p style="font-size: 12px; color: #666; margin-bottom: 12px;">👉 Tekan kartu pesanan untuk melihat detail lengkap transaksi atau status kurir pengiriman!</p>
+            <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">👉 Tekan kartu pesanan untuk melihat detail lengkap transaksi atau status kurir pengiriman!</p>
             <div id="history-container">
                 <p style="color: #777; text-align: center; margin-top: 30px;">Belum ada riwayat transaksi.</p>
             </div>
         </div>
 
-        <!-- AKUN & PENGATURAN KARTU / E-WALLET -->
+        <!-- AKUN & PENGATURAN KARTU -->
         <div id="view-account" class="view-section">
             <h3>👤 Akun & Dompet Kartu</h3>
             <div class="profile-card">
@@ -564,17 +568,16 @@ flashmart_html = '''
                 </div>
             </div>
 
-            <!-- SECTION DOMPET KARTU & E-WALLET -->
             <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <h4 style="margin: 0; color: #03AC03;">💳 Kartu & E-Wallet Terhubung</h4>
-                    <button class="ripple-btn" onclick="openAddCardModal()" style="background: #03AC03; color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer;">+ Tambah Kartu</button>
+                    <h4 style="margin: 0; color: #0284c7;">💳 Kartu & E-Wallet Terhubung</h4>
+                    <button class="ripple-btn" onclick="openAddCardModal()" style="background: #0284c7; color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer;">+ Tambah Kartu</button>
                 </div>
                 <div id="saved-cards-container"></div>
             </div>
 
             <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; margin-bottom: 15px;">
-                <h4 style="margin-top: 0; color: #03AC03;">📦 Tambah Produk Baru</h4>
+                <h4 style="margin-top: 0; color: #0284c7;">📦 Tambah Produk Baru</h4>
                 <input type="text" id="new-name" placeholder="Nama Produk" class="admin-input">
                 <input type="number" id="new-price" placeholder="Harga (Rp)" class="admin-input">
                 <input type="number" id="new-stock" placeholder="Jumlah Stok" class="admin-input">
@@ -587,7 +590,7 @@ flashmart_html = '''
                     <option value="Camilan">Camilan</option>
                 </select>
                 <input type="text" id="new-icon" placeholder="Emoji Ikon (Contoh: 🍔)" class="admin-input">
-                <button class="ripple-btn" onclick="addNewProduct()" style="background: #03AC03; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer;">Simpan Produk</button>
+                <button class="ripple-btn" onclick="addNewProduct()" style="background: #0284c7; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer;">Simpan Produk</button>
             </div>
 
             <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 12px;">
@@ -637,13 +640,12 @@ flashmart_html = '''
             renderSavedCards();
         });
 
-        // DATA KARTU & E-WALLET TERHUBUNG
         let savedCards = [
-            { id: 1, type: "Visa Debit", number: "4242 •••• •••• 8821", holder: "Jenny Leow", balance: "Rp 4.250.000", color: "linear-gradient(135deg, #1e3c72, #2a5298)" },
-            { id: 2, type: "DANA E-Wallet", number: "0812-3456-7890", holder: "Jenny Leow", balance: "Rp 1.120.000", color: "linear-gradient(135deg, #0080ff, #004080)" }
+            { id: 1, type: "Visa Debit", number: "4242 •••• •••• 8821", holder: "Jenny Leow", balance: "Rp 4.250.000", color: "linear-gradient(135deg, #0284c7, #2563eb)" },
+            { id: 2, type: "DANA E-Wallet", number: "0812-3456-7890", holder: "Jenny Leow", balance: "Rp 1.120.000", color: "linear-gradient(135deg, #0f172a, #334155)" }
         ];
 
-        let selectedCardColor = "linear-gradient(135deg, #1e3c72, #2a5298)";
+        let selectedCardColor = "linear-gradient(135deg, #0284c7, #2563eb)";
 
         function setCardColor(color) {
             selectedCardColor = color;
@@ -662,9 +664,8 @@ flashmart_html = '''
             const number = document.getElementById('card-num-input').value.trim() || "4242 •••• •••• 9999";
             const holder = document.getElementById('card-holder-input').value.trim() || "Jenny Leow";
 
-            closeAddCardModal();
+           closeAddCardModal();
             
-            // Tampilkan animasi loading verifikasi kartu ala video
             const loadingModal = document.getElementById('card-loading-modal');
             loadingModal.style.display = 'flex';
 
@@ -696,7 +697,7 @@ flashmart_html = '''
             const checkoutSelect = document.getElementById('selected-saved-card');
 
             if (savedCards.length === 0) {
-                container.innerHTML = '<p style="font-size:12px; color:#777; text-align:center;">Belum ada kartu atau e-wallet yang ditambahkan.</p>';
+                container.innerHTML = '<p style="font-size:12px; color:#64748b; text-align:center;">Belum ada kartu atau e-wallet yang ditambahkan.</p>';
                 checkoutSelect.innerHTML = '<option value="">-- Belum ada kartu --</option>';
                 return;
             }
@@ -726,7 +727,6 @@ flashmart_html = '''
             `).join('');
         }
 
-        // GENERATE 1.200+ BARANG DENGAN NAMA PRODUK ASLI DI PASARAN (TANPA SPESIAL EDITION BERULANG)
         function generateMassiveStore() {
             const rawCatalog = {
                 "Burger": [
@@ -825,7 +825,6 @@ flashmart_html = '''
                 });
             });
 
-            // Daftar variasi nama produk natural harian di pasaran
             const productNamesBank = {
                 "Burger": ["Beef Burger Patty", "Crispy Chicken Burger", "Double Cheese Burger", "Jumbo Beef Burger", "Spicy Chicken Burger", "Teriyaki Burger", "BBQ Burger"],
                 "Pizza": ["Pepperoni Pizza Regular", "Meat Lovers Pizza", "Cheese Overflow Pizza", "Tuna Melt Pizza", "Supreme Chicken Pizza", "BBQ Beef Pizza"],
@@ -881,7 +880,6 @@ flashmart_html = '''
             }
         }
 
-        // ANIMASI TERBANG KE KERANJANG
         function flyToCartAnimation(event) {
             const cartIcon = document.getElementById('icon-cart');
             if (!cartIcon) return;
@@ -1009,10 +1007,10 @@ flashmart_html = '''
             const changeText = document.getElementById('change-text');
             if (change >= 0) {
                 changeText.innerText = "Uang Kembalian: Rp " + change.toLocaleString('id-ID');
-                changeText.style.color = "#03AC03";
+                changeText.style.color = "#0284c7";
             } else {
                 changeText.innerText = "Uang Kurang: Rp " + Math.abs(change).toLocaleString('id-ID');
-                changeText.style.color = "#FA591D";
+                changeText.style.color = "#ea580c";
             }
         }
 
@@ -1183,7 +1181,7 @@ flashmart_html = '''
                         <input type="checkbox" class="cart-checkbox" ${allSelected ? 'checked' : ''} onchange="toggleSelectAll(this.checked)">
                         <span>Pilih Semua (${keys.length})</span>
                     </label>
-                    <span style="font-size: 12px; color: #FA591D;">${selectedCount} dipilih</span>
+                    <span style="font-size: 12px; color: #ea580c;">${selectedCount} dipilih</span>
                 </div>
             `;
 
@@ -1195,7 +1193,7 @@ flashmart_html = '''
                     <div class="cart-store-group">
                         <div class="cart-store-header">
                             <input type="checkbox" class="cart-checkbox" ${allStoreSelected ? 'checked' : ''} onchange="toggleSelectStore('${storeName}', this.checked)">
-                            <span>🏪 FlashMart ${storeName}</span>
+                            <span>🏪 PasarKlik ${storeName}</span>
                         </div>
                 `;
 
@@ -1249,7 +1247,7 @@ flashmart_html = '''
 
         function applyVoucher() {
             const code = document.getElementById('voucher-input').value.trim().toUpperCase();
-            if (code === 'FLASHMARTINA') {
+            if (code === 'PASARKLIK') {
                 discountActive = true;
                 alert("🎉 Voucher Berhasil Digunakan! Potongan Rp 10.000");
             } else {
@@ -1337,19 +1335,19 @@ flashmart_html = '''
             let statusInfo = "Selesai / Lunas ✅";
             let arrivalEst = "Langsung Tersedia (Cashier/Digital)";
             let courier = "-";
-            let location = "FlashMart Store (Offline Counter)";
+            let location = "PasarKlik Store (Offline Counter)";
 
             if (method.includes('COD')) {
                 let arrivalDate = new Date(now);
                 arrivalDate.setDate(now.getDate() + 2);
                 arrivalEst = arrivalDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
                 statusInfo = "Dalam Perjalanan Kurir 🚚";
-                courier = "FlashExpress (Kurir VIP COD)";
+                courier = "PasarKlik Express (Kurir VIP COD)";
                 location = "Sorting Center Gudang Utama (Jakarta / Hub Terdekat)";
             }
 
             history.unshift({
-                orderId: "FM-" + Math.floor(100000 + Math.random() * 900000),
+                orderId: "PK-" + Math.floor(100000 + Math.random() * 900000),
                 date: dateStr + " | " + timeStr,
                 arrivalEst: arrivalEst,
                 total: grandTotal,
@@ -1438,7 +1436,7 @@ flashmart_html = '''
                     <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; margin-bottom: 10px;">
                         <strong>No. Pesanan / Resi:</strong> ${tx.orderId}<br>
                         <strong>Waktu Pesan:</strong> ${tx.date}<br>
-                        <strong>Estimasi Tiba:</strong> <span style="color: #03AC03; font-weight: bold;">${tx.arrivalEst}</span><br>
+                        <strong>Estimasi Tiba:</strong> <span style="color: #0284c7; font-weight: bold;">${tx.arrivalEst}</span><br>
                         <strong>Kurir Pengantar:</strong> ${tx.courier}<br>
                         <strong>Metode Bayar:</strong> ${tx.payment}
                     </div>
@@ -1446,13 +1444,13 @@ flashmart_html = '''
                         <strong>Isi Paket:</strong><br>
                         <span style="color: #555;">${tx.items}</span>
                     </div>
-                    <div style="background: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 8px; font-weight: bold; margin-bottom: 12px; font-size: 12px;">
+                    <div style="background: #e0f2fe; color: #0369a1; padding: 10px; border-radius: 8px; font-weight: bold; margin-bottom: 12px; font-size: 12px;">
                         📍 Posisi Terkini Kurir:<br>
                         ${tx.location}
                     </div>
-                    <div style="border: 2px dashed #03AC03; border-radius: 8px; overflow: hidden; background: #fff; text-align: center;">
+                     <div style="border: 2px dashed #0284c7; border-radius: 8px; overflow: hidden; background: #fff; text-align: center;">
                         <iframe width="100%" height="160" style="border:0;" loading="lazy" allowfullscreen src="https://maps.google.com/maps?q=-6.2088,106.8456&z=14&output=embed"></iframe>
-                        <div style="font-size: 11px; padding: 6px; color: #555; background: #f1f8e9;">🗺️ Simulasi Live Tracking Kurir FlashMart</div>
+                        <div style="font-size: 11px; padding: 6px; color: #555; background: #f0f9ff;">🗺️ Simulasi Live Tracking Kurir PasarKlik</div>
                     </div>
                 `;
             } else {
@@ -1461,16 +1459,16 @@ flashmart_html = '''
                     <div style="background: var(--bg-color); padding: 10px; border-radius: 8px; margin-bottom: 10px;">
                         <strong>ID Transaksi:</strong> ${tx.orderId}<br>
                         <strong>Waktu:</strong> ${tx.date}<br>
-                        <strong>Metode Pembayaran:</strong> <span style="color: #FA591D; font-weight: bold;">${tx.payment}</span><br>
-                        <strong>Status:</strong> <span style="color: #03AC03; font-weight: bold;">${tx.status}</span>
+                        <strong>Metode Pembayaran:</strong> <span style="color: #ea580c; font-weight: bold;">${tx.payment}</span><br>
+                        <strong>Status:</strong> <span style="color: #0284c7; font-weight: bold;">${tx.status}</span>
                     </div>
                     <div style="margin-bottom: 10px;">
                         <strong>Rincian Item / Layanan:</strong><br>
                         <span style="color: #555;">${tx.items}</span>
                     </div>
-                    <div style="background: #fff3e0; color: #e65100; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 12px;">
+                    <div style="background: #ffedd5; color: #c2410c; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 12px;">
                         💡 Keterangan:<br>
-                        Transaksi diselesaikan secara sukses. Terima kasih telah berbelanja di FlashMart!
+                        Transaksi diselesaikan secara sukses. Terima kasih telah berbelanja di PasarKlik!
                     </div>
                 `;
             }
@@ -1493,8 +1491,8 @@ flashmart_html = '''
                     <div style="font-weight: bold; font-size: 13px; margin: 4px 0; color: var(--text-color);">${tx.items}</div>
                     <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Total: Rp ${tx.total.toLocaleString('id-ID')}</div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
-                        <span style="color: #03AC03; font-size: 12px; font-weight: bold;">Status: ${tx.status}</span>
-                        <span style="font-size: 11px; background: ${tx.isCod ? '#e8f5e9' : '#fff3e0'}; color: ${tx.isCod ? '#2e7d32' : '#e65100'}; padding: 3px 8px; border-radius: 4px; font-weight: bold;">${tx.isCod ? '🔍 Cek Peta' : '📄 Lihat Struk'}</span>
+                        <span style="color: #0284c7; font-size: 12px; font-weight: bold;">Status: ${tx.status}</span>
+                        <span style="font-size: 11px; background: ${tx.isCod ? '#e0f2fe' : '#ffedd5'}; color: ${tx.isCod ? '#0369a1' : '#c2410c'}; padding: 3px 8px; border-radius: 4px; font-weight: bold;">${tx.isCod ? '🔍 Cek Peta' : '📄 Lihat Struk'}</span>
                     </div>
                 </div>
             `).join('');
@@ -1535,4 +1533,4 @@ flashmart_html = '''
 </html>
 '''
 
-components.html(flashmart_html, height=920, scrolling=True)
+components.html(pasarklik_html, height=920, scrolling=True)
